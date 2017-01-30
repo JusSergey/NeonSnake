@@ -31,7 +31,8 @@ void GameClient::read()
 
     }
 
-    callbackRead(pdata);
+    if (statusThread)
+        callbackRead(pdata);
 
 }
 

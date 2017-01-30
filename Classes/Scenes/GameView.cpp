@@ -6,6 +6,7 @@
 #include "math/MathUtil.h"
 #include "Sound/Audio.h"
 #include "Data/DataSetting.h"
+#include <iostream>
 
 #define PLAYER 0
 #define PLAYER1 0
@@ -26,13 +27,11 @@ GameView::~GameView()
 {
     if (server){
         delete server;
-        localPlayer = nullptr;
+        server = nullptr;
     }
 
-    if (localPlayer){
-        delete localPlayer;
-        localPlayer = nullptr;
-    }
+    localPlayer = nullptr;
+
 }
 
 Scene* GameView::createScene(int level, int bitmaskGame, int bitmaskGN)
@@ -88,6 +87,7 @@ bool GameView::init()
     origin = Director::getInstance()->getVisibleOrigin();
 
     gameNavigatorLayer = nullptr;
+    localPlayer = nullptr;
     playerActor = nullptr;
     botActor    = nullptr;
     eat         = nullptr;
@@ -152,7 +152,7 @@ bool GameView::init()
 
     if (bitmaskInitsGameLayer & InitLocalPlayer){
         initLocalPlayer();
-        snake[PLAYER2] = localPlayer;
+//        snake[PLAYER2] = localPlayer;
     }
 
     updateShaderPointsOfLevel();
@@ -552,10 +552,10 @@ std::function<void ()> GameView::getCallbackRestart()
 {
     return [this]() -> void {
         log("Restart");
-        if (server){
-            delete server;
-            server = nullptr;
-        }
+//        if (server){
+//            delete server;
+//            server = nullptr;
+//        }
         Director::getInstance()->resume();
         GameView::GoToGameView(levelIndex, bitmaskInitsGameLayer);
     };

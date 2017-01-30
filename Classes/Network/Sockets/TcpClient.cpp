@@ -5,10 +5,6 @@
 #include <err.h>
 #include <fcntl.h>
 
-//#define UpdateSender 12
-//#define UpdateRecver 30
-//#define toMsec(count) (1.f / (count) * 1000)
-
 TcpClient::TcpClient(const std::string &ip, u_short port) :
     TcpSocket(ip, port)
 {
@@ -42,15 +38,13 @@ void TcpClient::loop()
 
 void TcpClient::loopReceiver()
 {
-    if (recv(fd, buffer, 1024, MSG_NOSIGNAL) > 0) {
+    if (recv(fd, buffer, 1024, MSG_NOSIGNAL) > 0)
         read();
-    }
 }
 
 void TcpClient::loopSender()
 {
     send(fd, msgToSend.c_str(), msgToSend.size()+1, MSG_NOSIGNAL);
-
 }
 
 std::string TcpClient::getMsgToSend() const

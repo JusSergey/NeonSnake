@@ -38,7 +38,7 @@ void TcpSocket::unlockFD(int _fd)
 {
     int f;
 
-    if ((f = fcntl(_fd, F_GETFL, 0            )) == -1 ||
+    if ((f = fcntl(_fd, F_GETFL, 0x00000000000)) == -1 ||
              fcntl(_fd, F_SETFL, f | O_NONBLOCK) == -1)
     {
         err(1, "fcntl()");

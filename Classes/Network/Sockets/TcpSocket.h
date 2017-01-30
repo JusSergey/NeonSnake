@@ -25,6 +25,10 @@ public:
     TcpSocket(const std::string &ip, u_short port);
    ~TcpSocket();
 
+    inline bool getStatus() {
+        return statusThread;
+    }
+
 protected:
     int timeListener,
         timeSender  ,

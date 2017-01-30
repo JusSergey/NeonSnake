@@ -1,6 +1,6 @@
 #include "LocalPlayer.h"
 #include "Data/DataSetting.h"
-//#include "Constant.h"
+#include <iostream>
 
 USING_NS_CC;
 
@@ -14,6 +14,7 @@ bool LocalPlayer::init()
 
     isRunningServer = false;
 
+    gameClient = nullptr;
     listen = nullptr;
     eat = nullptr;
 
@@ -36,8 +37,17 @@ void LocalPlayer::initGameClient()
     log("prev my rename");
     setName(NameBotOrOpponent);
 
-    schedule([this](float){
+    static const char *NameSch = "SendInfoToServer";
+
+    schedule([this, NameSch](float){
+
+//        if (gameClient && !gameClient->getStatus()) {
+//            unschedule(NameSch);
+//            return;
+//        }
+
         std::string message;
+
         if (listen) {
             message += GameClient::TypeData::Snake_t;
             message += UserData::playerName + ' ';
@@ -51,15 +61,12 @@ void LocalPlayer::initGameClient()
             message += StringUtils::toString((int)eat->getPositionY()) + '\n';
         }
         gameClient->setMsgToSend(message);
-    }, updateServer, "sendmessagestoserver");
+
+    }, updateServer, NameSch);
 
 }
 
-void LocalPlayer::movingHead(float delta)
-{
-//    head->setPosition(currentPos);
-//    head->runAction(MoveTo::create(delta, currentPos));
-}
+void LocalPlayer::movingHead(float delta) { }
 
 Snake *LocalPlayer::getListen() const
 {
@@ -99,4 +106,5 @@ void LocalPlayer::setIsRunningServer(bool value)
 LocalPlayer::~LocalPlayer()
 {
     delete gameClient;
+    gameClient = nullptr;
 }
