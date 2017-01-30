@@ -4,6 +4,8 @@
 #include "string.h"
 #include <iostream>
 
+// created by qt. Sergey Juice
+
 TcpSocket::TcpSocket(const std::string &ip, u_short port) :
     fd(-1),
     ip(ip),
