@@ -38,7 +38,7 @@ void TcpClient::loop()
 
 void TcpClient::loopReceiver()
 {
-    if (recv(fd, buffer, 1024, MSG_NOSIGNAL) > 0)
+    if (recv(fd, buffer, 1024, MSG_WAITALL) > 0)
         read();
 }
 

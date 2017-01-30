@@ -152,7 +152,7 @@ bool GameView::init()
 
     if (bitmaskInitsGameLayer & InitLocalPlayer){
         initLocalPlayer();
-//        snake[PLAYER2] = localPlayer;
+        snake[PLAYER2] = localPlayer;
     }
 
     updateShaderPointsOfLevel();
