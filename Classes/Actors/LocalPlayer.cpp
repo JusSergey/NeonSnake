@@ -41,10 +41,10 @@ void LocalPlayer::initGameClient()
 
     schedule([this, NameSch](float){
 
-//        if (gameClient && !gameClient->getStatus()) {
-//            unschedule(NameSch);
-//            return;
-//        }
+        if (gameClient && !gameClient->getStatus()) {
+            unschedule(NameSch);
+            return;
+        }
 
         std::string message;
 
