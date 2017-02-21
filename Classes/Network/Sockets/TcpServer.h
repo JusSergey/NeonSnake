@@ -37,7 +37,6 @@ public:
     void loopListener();
     void loopReceiver();
     void loopSender();
-    void printInfo();
 
 protected:
     virtual void read() = 0;

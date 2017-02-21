@@ -30,7 +30,7 @@ private:
     PregameSwitchTypeGameLayer *pregameSwitchTypeGameLayer;
     NetworkSettingLayer        *networkSettingLayer;
 
-    mutable bool isClickStartServer;
+//    mutable bool isClickStartServer;
 
 private:
     void clickStart();

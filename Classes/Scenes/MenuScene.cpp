@@ -165,8 +165,8 @@ std::function<void ()> MenuScene::getCallbackMusicButton() const
 std::function<void (Ref *)> MenuScene::getCallbackStartServer() const
 {
     return [this](Ref*){
-        pregameSwitchTypeGameLayer->setFlagStartServer(true);
-        isClickStartServer = true;
+        StartServer = !StartServer;
+        pregameSwitchTypeGameLayer->setFlagStartServer(StartServer);
     };
 }
 

@@ -12,35 +12,43 @@ LOCAL_MODULE := MyGame_shared
 LOCAL_MODULE_FILENAME := libMyGame
 
 LOCAL_SRC_FILES := hellocpp/main.cpp \
-  ../../Classes/Jus.cpp \
   ../../Classes/AppDelegate.cpp \
-  ../../Classes/MyBodyParser.cpp \
-  ../../Classes/Layers/PregameSwitchTypeGameLayer.cpp \
-  ../../Classes/Layers/PregameSettingLayer.cpp \
-  ../../Classes/Layers/NetworkSettingLayer.cpp \
-  ../../Classes/Layers/GameNavigatorLayer.cpp \
-  ../../Classes/Layers/LevelLayer.cpp \
-  ../../Classes/Layers/PauseLayer.cpp \
-  ../../Classes/Scenes/GameView.cpp \
-  ../../Classes/Scenes/MenuScene.cpp \
+ \
   ../../Classes/Scenes/TitleScene.cpp \
+  ../../Classes/Scenes/GameView.cpp \
   ../../Classes/Scenes/GameOverScene.cpp \
   ../../Classes/Scenes/LevelPresentation.cpp \
+  ../../Classes/Scenes/MenuScene.cpp \
+ \
+  ../../Classes/Actions/BasicEat.cpp \
+  ../../Classes/Actions/Bonus.cpp \
+  ../../Classes/Actions/NormalEat.cpp \
+ \
+  ../../Classes/Actors/Snake.cpp \
+  ../../Classes/Actors/Player.cpp \
+  ../../Classes/Actors/LocalPlayer.cpp \
+  ../../Classes/Actors/Bot.cpp \
+ \
+  ../../Classes/Layers/GameNavigatorLayer.cpp \
+  ../../Classes/Layers/LevelLayer.cpp \
+  ../../Classes/Layers/NetworkSettingLayer.cpp \
+  ../../Classes/Layers/PauseLayer.cpp \
+  ../../Classes/Layers/PregameSettingLayer.cpp \
+  ../../Classes/Layers/PregameSwitchTypeGameLayer.cpp \
+ \
   ../../Classes/Network/Sockets/TcpSocket.cpp \
   ../../Classes/Network/Sockets/TcpServer.cpp \
   ../../Classes/Network/Sockets/TcpClient.cpp \
-  ../../Classes/Network/GameServer.cpp \
   ../../Classes/Network/GameClient.cpp \
+  ../../Classes/Network/GameServer.cpp \
   ../../Classes/Network/PlayerData.cpp \
-  ../../Classes/Actors/Bot.cpp \
-  ../../Classes/Actors/Player.cpp \
-  ../../Classes/Actors/Snake.cpp \
-  ../../Classes/Actors/LocalPlayer.cpp \
-  ../../Classes/Actions/Bonus.cpp \
-  ../../Classes/Actions/NormalEat.cpp \
-  ../../Classes/Actions/BasicEat.cpp \
+ \
   ../../Classes/Sound/Audio.cpp \
-  ../../Classes/Data/DataSetting.cpp
+ \
+  ../../Classes/Data/DataSetting.cpp \
+ \
+  ../../Classes/Jus.cpp \
+  ../../Classes/MyBodyParser.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes
 

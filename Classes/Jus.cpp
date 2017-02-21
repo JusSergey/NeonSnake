@@ -54,23 +54,23 @@ Size Jus::scaledDisplay(float w, float h)
     return Size(Jus::scaledDisplayW(w), Jus::scaledDisplayH(h));
 }
 
-void Jus::setScale(Node *node, PhysicsBody *body)
-{
-    if(node){
-        node->setScale(Jus::scW, Jus::scH);
-    } else log("Node == nullptr");
-}
+//void Jus::setScale(Node *node, PhysicsBody *body)
+//{
+//    if(node){
+//        node->setScale(Jus::scW, Jus::scH);
+//    } else log("Node == nullptr");
+//}
 
 void Jus::setScaledInit(Size SizeFrame)
 {
-    Jus::scW =  cocos2d::Director::getInstance()->getVisibleSize().width / SizeFrame.width;
-    Jus::scH =  cocos2d::Director::getInstance()->getVisibleSize().height / SizeFrame.height;
+//    Jus::scW =  cocos2d::Director::getInstance()->getVisibleSize().width / SizeFrame.width;
+//    Jus::scH =  cocos2d::Director::getInstance()->getVisibleSize().height / SizeFrame.height;
 }
 
-void Jus::setScaledPosition(Node *node, Vec2 pos)
-{
-    node->setPosition(pos.x*Jus::scW, pos.y*Jus::scH);
-}
+//void Jus::setScaledPosition(Node *node, Vec2 pos)
+//{
+//    node->setPosition(pos.x*Jus::scW, pos.y*Jus::scH);
+//}
 
 void Jus::addAngular(PhysicsBody *body, float angular)
 {

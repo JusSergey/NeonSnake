@@ -21,20 +21,17 @@ private:
     cocos2d::MenuItemLabel *itemBack;
     cocos2d::MenuItemLabel *itemNext;
 
-    cocos2d::Label *labelPort;
-    cocos2d::Label *labelIp;
-
-    cocos2d::ui::TextField *fieldPort;
-    cocos2d::ui::TextField *fieldIp;
-    cocos2d::ui::TextField *fieldMyPort;
-
     // for client
-    cocos2d::ui::TextField *fieldClientPort;
     cocos2d::ui::TextField *fieldIpToServer;
-
-    // for server
     cocos2d::ui::TextField *fieldServerPort;
+
     cocos2d::MenuItemLabel *ItemServerStart;
+
+    // labels
+    cocos2d::Label* labelIp;
+    cocos2d::Label* labelPort;
+
+    std::string localIpAddress;
 
 public:
     void setCallbackNext(const std::function<void(Ref*)> &call);
@@ -44,6 +41,8 @@ public:
     cocos2d::Label *createLabel(const std::string &text, float fontSize);
 
 private:
+    void initLabelLocalInfo();
+    void initTitle();
     void initLabels();
     void initTextFields();
     void initDrawNode();

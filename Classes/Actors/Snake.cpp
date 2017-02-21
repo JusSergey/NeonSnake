@@ -21,17 +21,10 @@ static const Vec2 DescriptionWay[] = { Vec2(-1,  0),
 
 using namespace std;
 
-//void Snake::setRunningFunc(const std::function<void (float)> &func)
-//{
-//    runningFunc = func;
-//}
-
-
-
 Snake::Snake() : Layer(),
     directionSnakeHead(Direction::Zero),
     lenghtSnake(0),
-    speedSnake(8),
+    speedSnake(8 / _director->getContentScaleFactor()),
     isMovingHeadSnake(false),
     colorBlockSnake(Color3B::WHITE),
     maxLengthSnake(5000),

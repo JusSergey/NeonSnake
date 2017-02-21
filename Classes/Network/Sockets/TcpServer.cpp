@@ -15,7 +15,6 @@ TcpServer::TcpServer(const std::string &ipServer, u_short port) :
     unlockFD(fd);
 
     listen(fd, 5);
-    printInfo();
 
     initThread();
 }
@@ -51,8 +50,6 @@ void TcpServer::loopListener()
         clients.push_front(tmpFd);
         statistic[tmpFd] = 0;
 
-        printInfo();
-
         std::cout.flush();
     }
 
@@ -76,24 +73,16 @@ void TcpServer::loopSender()
             int &r = statistic[i];
             r++;
 
+            (std::cout << "no signal of socket").flush();
+
             if (r > 10){
-                clients.remove(i);
-                printInfo();
+//                (std::cout << "remove of clients.").flush();
+//                clients.remove(i);
                 break;
             }
         }
 
     }
 
-}
-
-void TcpServer::printInfo()
-{
-    system("clear");
-
-    std::cout << "Count users: " << clients.size() << '\n';
-
-    for (auto i : clients)
-        std::cout << "id: " << i << '\n';
 }
 

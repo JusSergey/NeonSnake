@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>NeonSnake</name>
+	<name>NewSnake</name>
 	<comment></comment>
 	<projects>
 		<project>libcocos2dx</project>

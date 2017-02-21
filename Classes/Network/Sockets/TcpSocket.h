@@ -19,13 +19,15 @@
 class TcpSocket {
 
     std::future<void> futureOfThread;
+
+protected:
     std::mutex mut;
 
 public:
     TcpSocket(const std::string &ip, u_short port);
    ~TcpSocket();
 
-    inline bool getStatus() {
+    inline bool getStatus() const {
         return statusThread;
     }
 
@@ -40,7 +42,7 @@ protected: /* user func */
     virtual void loop() = 0;
 
 protected: /* data info of thread */
-    bool statusThread;
+    volatile bool statusThread;
 
 
 protected: /* data info to init */

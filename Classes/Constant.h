@@ -37,6 +37,8 @@ static const char* Statuces[] = {
 
 };
 
+static bool StartServer = false;
+
 static float updateServer = 1.f / 60;
 
 static const cocos2d::Size resolutionDisplay(1024, 600);

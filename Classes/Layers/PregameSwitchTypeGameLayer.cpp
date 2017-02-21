@@ -98,7 +98,7 @@ void PregameSwitchTypeGameLayer::setCallbackBackToMenu(const std::function<void(
 MenuItemLabel *PregameSwitchTypeGameLayer::getItem(GameType type) const
 {
     switch (UserData::type) {
-    case LocalGame:    return labelLP;
+    case LocalGame:      return labelLP;
     case PlayerVSPlayer: return labelPP;
     case PlayerVSBot:    return labelPB;
     case PlayerAlways:   return labelP;

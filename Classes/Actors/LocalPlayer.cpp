@@ -39,26 +39,32 @@ void LocalPlayer::initGameClient()
 
     static const char *NameSch = "SendInfoToServer";
 
-    schedule([this, NameSch](float){
+    static const float sclFactor = _director->getContentScaleFactor();
+
+    schedule([=, this, NameSch](float){
 
         if (gameClient && !gameClient->getStatus()) {
             unschedule(NameSch);
             return;
         }
 
+        static auto toValigPos = [] (const Vec2 &vec) -> Vec2 {
+
+        };
+
         std::string message;
 
         if (listen) {
             message += GameClient::TypeData::Snake_t;
             message += UserData::playerName + ' ';
-            message += StringUtils::toString((int)listen->getPositionX()) + ' ';
-            message += StringUtils::toString((int)listen->getPositionY()) + '\n';
+            message += StringUtils::toString( (int) (listen->getPositionX()*sclFactor) ) + ' ';
+            message += StringUtils::toString( (int) (listen->getPositionY()*sclFactor) ) + '\n';
         }
         if (isRunningServer && eat) {
             message += GameClient::TypeData::Eat;
             message += ' ';
-            message += StringUtils::toString((int)eat->getPositionX()) + ' ';
-            message += StringUtils::toString((int)eat->getPositionY()) + '\n';
+            message += StringUtils::toString( (int) (eat->getPositionX()*sclFactor) ) + ' ';
+            message += StringUtils::toString( (int) (eat->getPositionY()*sclFactor) ) + '\n';
         }
         gameClient->setMsgToSend(message);
 
@@ -78,18 +84,27 @@ void LocalPlayer::setListen(Snake *value)
     listen = value;
 }
 
+Vec2& operator /= (Vec2 &vec, float scl) {
+    vec = vec / scl;
+    return vec;
+}
+
 std::function<void (PlayerData data)> LocalPlayer::getCallback()
 {
-    return [this](PlayerData data) {
+    float sclFactor = _director->getContentScaleFactor();
+    return [sclFactor, this](PlayerData data) {
 
         if (data.opponentPos.x > -1 && data.opponentPos.y > -1){
-            currentPos = data.opponentPos;
+            currentPos = data.opponentPos /= sclFactor;
+            log("recv:[%f, %f]", currentPos.x, currentPos.y);
             head->runAction(MoveTo::create(1.1f / UpdateRecver, currentPos));
         }
 
-        if (!isRunningServer && eat)
+        if (!isRunningServer && eat){
+            data.eatPos /= sclFactor;
             if (eat->getPosition() != data.eatPos)
                 eat->setPosition(data.eatPos);
+        }
     };
 }
 

@@ -19,18 +19,17 @@ bool NetworkSettingLayer::init()
     if(!Layer::init())
         return false;
 
+    localIpAddress = "No local address";
+
     visibleSize = Director::getInstance()->getVisibleSize();
     origin = Director::getInstance()->getVisibleOrigin();
 
-    log("init fields");
-    initTextFields();
-    log("init navig");
-    initNavigation();
-    log("init labels");
     initLabels();
-    log("init dnode");
+    initNavigation();
+    initTitle();
     initDrawNode();
-
+    initTextFields();
+    initLabelLocalInfo();
 
     return true;
 }
@@ -38,12 +37,8 @@ bool NetworkSettingLayer::init()
 void NetworkSettingLayer::setCallbackNext(const std::function<void(Ref *)> &call)
 {
     itemNext->setCallback([=](Ref *ref){
-//        UserData::NetworkIp = fieldIp->getString();
-//        UserData::NetworkPort = fieldPort->getString();
-//        UserData::tmpMyNetworkPort = fieldMyPort->getString();
         UserData::NetworkIp = fieldIpToServer->getString();
         UserData::NetworkPort = fieldServerPort->getString();
-        UserData::tmpMyNetworkPort = fieldClientPort->getString();
         DataSetting::save();
         call(ref);
     });
@@ -54,7 +49,6 @@ void NetworkSettingLayer::setCallbackBack(const std::function<void(Ref *)> &call
     itemBack->setCallback([=](Ref *ref){
         UserData::NetworkIp = fieldIpToServer->getString();
         UserData::NetworkPort = fieldServerPort->getString();
-        UserData::tmpMyNetworkPort = fieldClientPort->getString();
         DataSetting::save();
         call(ref);
     });
@@ -66,9 +60,10 @@ void NetworkSettingLayer::setCallbackStartServer(const std::function<void (Ref *
         ItemServerStart->setCallback([=](Ref* ref){
             UserData::NetworkIp = fieldIpToServer->getString();
             UserData::NetworkPort = fieldServerPort->getString();
-            UserData::tmpMyNetworkPort = fieldClientPort->getString();
             DataSetting::save();
             call(ref);
+            StartServer = !StartServer;
+            ItemServerStart->setString("Start server: " + std::string(StartServer ? "Yes" : "No"));
         });
 }
 
@@ -77,59 +72,78 @@ Label *NetworkSettingLayer::createLabel(const std::string &text, float fontSize)
     return Label::createWithSystemFont(text, "monospace", fontSize);
 }
 
-void NetworkSettingLayer::initLabels()
+void NetworkSettingLayer::initLabelLocalInfo()
 {
-    auto l = Label::createWithSystemFont("Server", "monospace", 42);
+    std::string filename = "localinfo.log";
+    std::string path = FileUtils::getInstance()->getWritablePath();
+
+    std::string commandIfconfig = "ifconfig | grep \"inet addr:192.168.\" > ";
+    system((commandIfconfig + path + filename).c_str());
+
+    Data data = FileUtils::getInstance()->getDataFromFile(path + filename);
+
+    if(!data.isNull()){
+
+        std::string info = (const char *)data.getBytes();
+        auto posBegin = info.find(':');
+        auto posEnd   = std::string(info.c_str() + posBegin).find(' ');
+
+        if (posBegin != std::string::npos && posEnd != std::string::npos) {
+            localIpAddress = info.substr(posBegin+1, posEnd);
+        }
+    }
+
+    std::string commandRm = "rm ";
+    system((commandRm + path + filename).c_str());
+
+    Label *labelLocalIpAddserr = Label::createWithSystemFont((std::string("Your local address\n") + localIpAddress).c_str(), "monospace", fsize);
+    labelLocalIpAddserr->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+    labelLocalIpAddserr->setPosition(offset + Jus::getDisplayPoint(0.5, 0.1));
+    addChild(labelLocalIpAddserr, 2);
+
+}
+
+void NetworkSettingLayer::initTitle()
+{
+    auto l = Label::createWithSystemFont("LAN", "monospace", 42);
     l->setPosition(Jus::getDisplayPoint(0.5, 0.9) + offset);
     addChild(l, 2);
-//    labelIp = createLabel("IP", fsize);
-//    labelPort = createLabel("PORT", fsize);
 
-//    labelIp->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
-//    labelPort->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
+}
 
-//    labelIp  ->setPosition(rectX1 + 16, Jus::getDisplayPoint(0, 1.55).y);
-//    labelPort->setPosition(rectX1 + 16, Jus::getDisplayPoint(0, 1.45).y);
+void NetworkSettingLayer::initLabels()
+{
+    labelIp   = Label::createWithSystemFont("IP: ", "monospace", 42);
+    labelPort = Label::createWithSystemFont("PORT: ", "monospace", 42);
 
-//    addChild(labelIp,   1);
-//    addChild(labelPort, 1);
+    labelIp->setAnchorPoint(Vec2::ANCHOR_MIDDLE_RIGHT);
+    labelPort->setAnchorPoint(Vec2::ANCHOR_MIDDLE_RIGHT);
+
+    labelIp->setPosition(Vec2(visibleSize.width/2.5, visibleSize.height/2 + labelIp->getContentSize().height) + offset);
+    labelPort->setPosition(Vec2(visibleSize.width/2.5, visibleSize.height/2 - labelPort->getContentSize().height) + offset);
+
+    log("InitLabels.");
+
+    addChild(labelIp, 2);
+    addChild(labelPort, 2);
 }
 
 void NetworkSettingLayer::initTextFields()
 {
-    fieldClientPort = ui::TextField::create("client port", "monospace", 34);
     fieldIpToServer = ui::TextField::create("ip to server","monospace", 34);
     fieldServerPort = ui::TextField::create("server port", "monospace", 34);
 
-    fieldIpToServer->setString("127.0.0.1");
-    fieldServerPort->setString("2121");
+    fieldIpToServer->setString(UserData::NetworkIp);
+    fieldServerPort->setString(UserData::NetworkPort);
 
-    fieldServerPort->setPosition(Jus::getDisplayPoint(0.5, 0.7) + offset);
-    fieldIpToServer->setPosition(Jus::getDisplayPoint(0.5, 0.4) + offset);
-    fieldClientPort->setPosition(Jus::getDisplayPoint(0.5, 0.2) + offset);
+    fieldIpToServer->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
+    fieldServerPort->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
+
+    fieldServerPort->setPosition(labelIp->getPosition());
+    fieldIpToServer->setPosition(labelPort->getPosition());
 
     addChild(fieldServerPort, 2);
     addChild(fieldIpToServer, 2);
-    addChild(fieldClientPort, 2);
-
-//    fieldIp = ui::TextField::create("ip address", "monospace", fsize);
-//    fieldPort = ui::TextField::create("port address", "monospace", fsize);
-//    fieldMyPort = ui::TextField::create("my port", "monospace", fsize);
-
-//    fieldIp->setString(UserData::NetworkIp);
-//    fieldPort->setString(UserData::NetworkPort);
-
-//    fieldIp  ->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
-//    fieldPort->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
-//    fieldMyPort->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
-
-//    fieldIp  ->setPosition({labelPort->getPositionX() + labelPort->getContentSize().width * 1.5f, labelIp->getPositionY()});
-//    fieldPort->setPosition({labelPort->getPositionX() + labelPort->getContentSize().width * 1.5f, labelPort->getPositionY()});
-//    fieldMyPort->setPosition({fieldIp->getPositionX(), fieldPort->getPositionY() - fieldMyPort->getContentSize().height*2});
-
-//    addChild(fieldIp, 2);
-//    addChild(fieldPort, 2);
-//    addChild(fieldMyPort, 2);
 
 }
 
@@ -147,16 +161,6 @@ void NetworkSettingLayer::initDrawNode()
                         Vec2(rectX2, visibleSize.height * 0.75),
                         Color4F(0, 0, 0, 0.4));
 
-//    float procentX = visibleSize.width / 100;
-//    float procentY = visibleSize.height/ 100;
-
-//    float off = labelPort->getContentSize().width;
-
-//    // draw edit line port
-//    node->drawSolidRect(Vec2(rectX1 + off, labelPort->getPositionY()),
-//                        Vec2(rectX2 - procentX*2, labelPort->getContentSize().height),
-//                        Color4F(0.2, 0, 0, 0.7));
-
 }
 
 void NetworkSettingLayer::initNavigation()
@@ -164,10 +168,10 @@ void NetworkSettingLayer::initNavigation()
     Label* lback = Label::createWithTTF("<-Back", "fonts/Bicubik.ttf", 36);
     lback->setAdditionalKerning(3);
 
-    Label* lnext = Label::createWithTTF("Next", "fonts/Bicubik.ttf", 36);
+    Label* lnext = Label::createWithTTF("Next->", "fonts/Bicubik.ttf", 36);
     lnext->setAdditionalKerning(3);
 
-    Label* lSServer = Label::createWithTTF("start serv.", "fonts/Bicubik.ttf", 36);
+    Label* lSServer = Label::createWithTTF("Start server: No", "fonts/Bicubik.ttf", 36);
 
     itemBack = MenuItemLabel::create(lback);
     itemNext = MenuItemLabel::create(lnext);
@@ -179,7 +183,7 @@ void NetworkSettingLayer::initNavigation()
 
     itemBack->setPosition(offset + Vec2( 32, 16) - Jus::getCenter());
     itemNext->setPosition(offset + Vec2(-32, 16) - Jus::getCenter() + Vec2(Jus::getWidth(), 0));
-    ItemServerStart->setPosition(offset);
+    ItemServerStart->setPosition(labelPort->getPosition() - Vec2(0, labelIp->getPositionY() - labelPort->getPositionY()) - visibleSize/2);
 
     auto menu = Menu::create(itemBack, itemNext, ItemServerStart, nullptr);
 

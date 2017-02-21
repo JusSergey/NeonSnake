@@ -48,8 +48,9 @@ void TcpSocket::unlockFD(int _fd)
 void TcpSocket::initThread()
 {
     futureOfThread = std::async(std::launch::async, [this](){
-        while (statusThread) {
+        while (true) {
             mut.lock();
+            if (!statusThread) break;
             loop();
             mut.unlock();
             std::this_thread::sleep_for(std::chrono::milliseconds(1));

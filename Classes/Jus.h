@@ -5,12 +5,12 @@
 NS_CC_BEGIN
 namespace Jus {
 
-static float scW;
-static float scH;
+//static float scW;
+//static float scH;
 void setScaledInit(cocos2d::Size SizeFrame);
 
-void setScale(cocos2d::Node *node, cocos2d::PhysicsBody *body = nullptr);
-void setScaledPosition(cocos2d::Node *node, cocos2d::Vec2 pos);
+//void setScale(cocos2d::Node *node, cocos2d::PhysicsBody *body = nullptr);
+//void setScaledPosition(cocos2d::Node *node, cocos2d::Vec2 pos);
 
 cocos2d::Vec2 getDisplayPoint(float x, float y);
 cocos2d::Vec2 getDisplayPoint(const Vec2 &vec);

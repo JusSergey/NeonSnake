@@ -13,7 +13,7 @@
 #define PLAYER2 1
 #define BOT 1
 
-#define NODE_TO_SNAKE(ptr) ((Snake*)(ptr->getParent()))
+#define NODE_TO_SNAKE(ptr) ((Snake*)((ptr)->getParent()))
 
 #define ABS(value) ((value) < 0 ? -(value) : (value))
 
@@ -94,6 +94,8 @@ bool GameView::init()
     layer       = nullptr;
     bonus       = nullptr;
     server      = nullptr;
+
+    MessageBox("Hello, user...", "Msg");
 
     snake[0] = snake[1] = nullptr;
 
@@ -283,7 +285,7 @@ void GameView::initBotActor()
         botActor->setCameraMask((unsigned int)CameraFlag::USER1);
         botActor->setName(NameBotOrOpponent);
 
-        botActor->setSpeed(6);
+        botActor->setSpeed(botActor->getSpeed()-1);
 
     }
 }
@@ -348,13 +350,21 @@ void GameView::initCamera()
         if (!playerActor && !botActor)
             return;
 
-        Snake *snake = botActor;
+        Vec2 pos;
 
-        if (playerActor)
-            snake = playerActor;
+        if (playerActor && player2Actor)
+            pos = (playerActor->getPosition() + player2Actor->getPosition()) / 2;
 
-        float x = snake->getPositionX();
-        float y = snake->getPositionY();
+        else if (playerActor)
+            pos = playerActor->getPosition();
+
+        else if (botActor)
+            pos = botActor->getPosition();
+
+        else return;
+
+        float x = pos.x;
+        float y = pos.y;
 
         if (y < miny) y = miny; else
         if (y > maxy) y = maxy;

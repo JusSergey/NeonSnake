@@ -10,8 +10,7 @@ static const std::string prename = "Sounds/Background_";
 
 using StringUtils::toString;
 
-CocosDenshion::SimpleAudioEngine*
-Audio::EngineInstance = CocosDenshion::SimpleAudioEngine::getInstance();
+CocosDenshion::SimpleAudioEngine* Audio::EngineInstance = nullptr;//CocosDenshion::SimpleAudioEngine::getInstance(); crash on android
 
 Audio* Audio::AudioInstance = new Audio;
 
@@ -20,6 +19,12 @@ Audio::Audio() : idEffect(0) { }
 
 Audio *Audio::getInstance()
 {
+    if (Audio::EngineInstance == nullptr)
+        EngineInstance = CocosDenshion::SimpleAudioEngine::getInstance();
+
+//    if (Audio::EngineInstance == nullptr)
+//        Audio::AudioInstance = new Audio;
+
     return Audio::AudioInstance;
 }
 

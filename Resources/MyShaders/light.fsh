@@ -4,7 +4,7 @@ precision lowp float;
                                                                                      
 varying vec2 v_texCoord;                                                             
 varying vec4 v_color;                                                                
-                                                                                     
+
 uniform sampler2D u_texture;                                                         
 uniform vec2 resolution;
 uniform vec2 u_center1;
@@ -14,11 +14,12 @@ uniform vec3 filter;
 
 uniform float blackwhite;
 
+
 void main(void) {
     vec4 outColor = texture2D(u_texture, v_texCoord);
 
-        float dist1 = (0.9 - distance(v_texCoord, u_center1));
-        float dist2 = (0.9 - distance(v_texCoord, u_center2));
+        float dist1 = (0.95 - distance(v_texCoord, u_center1));
+        float dist2 = (0.95 - distance(v_texCoord, u_center2));
 
         if (maskShader == 1.0) {
 
@@ -84,6 +85,7 @@ void main(void) {
 
 //        outColor.a = min;
     //}
+
 
     gl_FragColor = outColor;
 }                                                                                    

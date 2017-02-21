@@ -1,6 +1,7 @@
 #include "TitleScene.h"
 #include "MenuScene.h"
 #include "Sound/Audio.h"
+#include <thread>
 //#include <future>
 
 //std::future<void> t_fkfldsaljcsdcl;
@@ -65,7 +66,7 @@ void TitleScene::onEnterTransitionDidFinish()
 {
     scheduleOnce([this](float){
 
-        Audio::getInstance()->preload();
+//        Audio::getInstance()->preload();
         MenuScene::GoToMenuScene();
     }, 1, "onceTransition");
 }

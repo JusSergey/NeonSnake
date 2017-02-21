@@ -7,14 +7,19 @@ USING_NS_CC;
 
 #define TRUE  1
 #define FALSE 0
-
-#define isFullScreen FALSE
+//
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+# define isFullScreen TRUE
+#else
+# define isFullScreen FALSE
+#endif
 
 #if isFullScreen
 static cocos2d::Size dsz = Director::getInstance()->getVisibleSize();
 #else
 static cocos2d::Size dsz(1024, 600);
 #endif
+
 
 static cocos2d::Size designResolutionSize = cocos2d::Size(dsz);
 static cocos2d::Size smallResolutionSize  = cocos2d::Size(dsz);
@@ -105,6 +110,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // create a scene. it's an autorelease object
     auto scene = TitleScene::createScene();
+
 
     // run
     director->runWithScene(scene);
