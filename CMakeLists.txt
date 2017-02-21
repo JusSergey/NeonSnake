@@ -128,69 +128,85 @@ if ( WIN32 )
 endif( WIN32 )
 
 set(GAME_SRC
-  Classes/Jus.cpp 
-  Classes/AppDelegate.cpp
-  Classes/MyBodyParser.cpp
-  Classes/Layers/PregameSwitchTypeGameLayer.cpp
-  Classes/Layers/PregameSettingLayer.cpp
-  Classes/Layers/NetworkSettingLayer.cpp
-  Classes/Layers/GameNavigatorLayer.cpp
-  Classes/Layers/LevelLayer.cpp
-  Classes/Layers/PauseLayer.cpp
-  Classes/Scenes/GameView.cpp
-  Classes/Scenes/MenuScene.cpp
+  #Scenes
   Classes/Scenes/TitleScene.cpp
+  Classes/Scenes/GameView.cpp
   Classes/Scenes/GameOverScene.cpp
   Classes/Scenes/LevelPresentation.cpp
+  Classes/Scenes/MenuScene.cpp
+  #Actions
+  Classes/Actions/BasicEat.cpp
+  Classes/Actions/Bonus.cpp
+  Classes/Actions/NormalEat.cpp
+  #Actiors
+  Classes/Actors/Snake.cpp
+  Classes/Actors/Player.cpp
+  Classes/Actors/LocalPlayer.cpp
+  Classes/Actors/Bot.cpp
+  #Layers
+  Classes/Layers/GameNavigatorLayer.cpp
+  Classes/Layers/LevelLayer.cpp
+  Classes/Layers/NetworkSettingLayer.cpp
+  Classes/Layers/PauseLayer.cpp
+  Classes/Layers/PregameSettingLayer.cpp
+  Classes/Layers/PregameSwitchTypeGameLayer.cpp
+  #Network
   Classes/Network/Sockets/TcpSocket.cpp
   Classes/Network/Sockets/TcpServer.cpp
   Classes/Network/Sockets/TcpClient.cpp
-  Classes/Network/GameServer.cpp
   Classes/Network/GameClient.cpp
+  Classes/Network/GameServer.cpp
   Classes/Network/PlayerData.cpp
-  Classes/Actors/Bot.cpp
-  Classes/Actors/Player.cpp
-  Classes/Actors/Snake.cpp
-  Classes/Actors/LocalPlayer.cpp
-  Classes/Actions/Bonus.cpp
-  Classes/Actions/NormalEat.cpp
-  Classes/Actions/BasicEat.cpp
+  #Sound
   Classes/Sound/Audio.cpp
+  #Setting
   Classes/Data/DataSetting.cpp
+  #Else, in root
+  Classes/Jus.cpp
+  Classes/MyBodyParser.cpp
+  Classes/AppDelegate.cpp
   ${PLATFORM_SPECIFIC_SRC}
 )
 
 set(GAME_HEADERS
-  Classes/Jus.h
-  Classes/AppDelegate.h
-  Classes/Constant.h
-  Classes/MyBodyParser.h
-  Classes/Layers/PregameSwitchTypeGameLayer.h
-  Classes/Layers/PregameSettingLayer.h
-  Classes/Layers/NetworkSettingLayer.h
-  Classes/Layers/GameNavigatorLayer.h
-  Classes/Layers/LevelLayer.h
-  Classes/Layers/PauseLayer.h
-  Classes/Scenes/GameView.h
-  Classes/Scenes/MenuScene.h
+  #Scenes
   Classes/Scenes/TitleScene.h
+  Classes/Scenes/GameView.h
   Classes/Scenes/GameOverScene.h
   Classes/Scenes/LevelPresentation.h
+  Classes/Scenes/MenuScene.h
+  #Actions
+  Classes/Actions/BasicEat.h
+  Classes/Actions/Bonus.h
+  Classes/Actions/NormalEat.h
+  #Actiors
+  Classes/Actors/Snake.h
+  Classes/Actors/Player.h
+  Classes/Actors/LocalPlayer.h
+  Classes/Actors/Bot.h
+  #Layers
+  Classes/Layers/GameNavigatorLayer.h
+  Classes/Layers/LevelLayer.h
+  Classes/Layers/NetworkSettingLayer.h
+  Classes/Layers/PauseLayer.h
+  Classes/Layers/PregameSettingLayer.h
+  Classes/Layers/PregameSwitchTypeGameLayer.h
+  #Network
   Classes/Network/Sockets/TcpSocket.h
   Classes/Network/Sockets/TcpServer.h
   Classes/Network/Sockets/TcpClient.h
-  Classes/Network/GameServer.h
   Classes/Network/GameClient.h
+  Classes/Network/GameServer.h
   Classes/Network/PlayerData.h
-  Classes/Actors/Bot.h
-  Classes/Actors/Player.h
-  Classes/Actors/Snake.h
-  Classes/Actors/LocalPlayer.h
-  Classes/Actions/Bonus.h
-  Classes/Actions/NormalEat.h
-  Classes/Actions/BasicEat.h
+  #Sound
   Classes/Sound/Audio.h
+  #Setting
   Classes/Data/DataSetting.h
+  #Else, in root
+  Classes/Constant.h
+  Classes/Jus.h
+  Classes/MyBodyParser.h
+  Classes/AppDelegate.h
   ${PLATFORM_SPECIFIC_HEADERS}
 )
 
