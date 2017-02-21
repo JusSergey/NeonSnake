@@ -95,9 +95,8 @@ bool GameView::init()
     bonus       = nullptr;
     server      = nullptr;
 
-    MessageBox("Hello, user...", "Msg");
-
     snake[0] = snake[1] = nullptr;
+
 
     if (bitmaskInitsGameLayer & InitBot && bitmaskInitsGameLayer & InitSecondPlayer) {
         log("terminate. (InitBot && InitSecondPlayer) == true");
