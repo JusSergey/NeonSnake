@@ -63,7 +63,7 @@ void NetworkSettingLayer::setCallbackStartServer(const std::function<void (Ref *
             DataSetting::save();
             call(ref);
             StartServer = !StartServer;
-            ItemServerStart->setString("Start server: " + std::string(StartServer ? "Yes" : "No"));
+            ItemServerStart->setString("server: " + std::string(StartServer ? "Yes" : "No"));
         });
 }
 
@@ -139,8 +139,8 @@ void NetworkSettingLayer::initTextFields()
     fieldIpToServer->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
     fieldServerPort->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
 
-    fieldServerPort->setPosition(labelIp->getPosition());
-    fieldIpToServer->setPosition(labelPort->getPosition());
+    fieldServerPort->setPosition(labelPort->getPosition());
+    fieldIpToServer->setPosition(labelIp->getPosition());
 
     addChild(fieldServerPort, 2);
     addChild(fieldIpToServer, 2);
@@ -171,7 +171,7 @@ void NetworkSettingLayer::initNavigation()
     Label* lnext = Label::createWithTTF("Next->", "fonts/Bicubik.ttf", 36);
     lnext->setAdditionalKerning(3);
 
-    Label* lSServer = Label::createWithTTF("Start server: No", "fonts/Bicubik.ttf", 36);
+    Label* lSServer = Label::createWithTTF("server: No", "fonts/Bicubik.ttf", 36);
 
     itemBack = MenuItemLabel::create(lback);
     itemNext = MenuItemLabel::create(lnext);
