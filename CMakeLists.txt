@@ -128,6 +128,7 @@ if ( WIN32 )
 endif( WIN32 )
 
 set(GAME_SRC
+
   #Scenes
   Classes/Scenes/TitleScene.cpp
   Classes/Scenes/GameView.cpp
@@ -159,8 +160,9 @@ set(GAME_SRC
   Classes/Network/PlayerData.cpp
   #Sound
   Classes/Sound/Audio.cpp
-  #Setting
+  #Data
   Classes/Data/DataSetting.cpp
+  Classes/Data/SendData.cpp
   #Else, in root
   Classes/Jus.cpp
   Classes/MyBodyParser.cpp
@@ -169,6 +171,7 @@ set(GAME_SRC
 )
 
 set(GAME_HEADERS
+
   #Scenes
   Classes/Scenes/TitleScene.h
   Classes/Scenes/GameView.h
@@ -200,8 +203,9 @@ set(GAME_HEADERS
   Classes/Network/PlayerData.h
   #Sound
   Classes/Sound/Audio.h
-  #Setting
+  #Data
   Classes/Data/DataSetting.h
+  Classes/Data/SendData.h
   #Else, in root
   Classes/Constant.h
   Classes/Jus.h

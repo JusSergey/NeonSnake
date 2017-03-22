@@ -73,6 +73,8 @@ GameView *GameView::create(int level, int bitmaskGame, int bitmaskGN)
     }
 }
 
+#include "Data/SendData.h"
+
 // on "init" you need to initialize your instance
 bool GameView::init()
 {
@@ -157,6 +159,24 @@ bool GameView::init()
     }
 
     updateShaderPointsOfLevel();
+
+
+
+    ExperimentalSendData *p = ExperimentalSendData::getInst();
+
+    p->dat["Plr"] = "Value player";
+    p->dat["sec"] = "1945";
+    p->dat["vec"] = "23 67";
+
+    log("info dat: %s", p->toStr().c_str());
+
+    Vec2 v = p->toVec2(p->dat["vec"]);
+
+    log("VECP: [%f, %f]", v.x, v.y);
+
+    p->dat.clear();
+
+    log("info dat: %s", p->toStr().c_str());
 
     return true;
 }
