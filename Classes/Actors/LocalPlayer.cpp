@@ -1,5 +1,6 @@
 #include "LocalPlayer.h"
 #include "Data/DataSetting.h"
+#include "Data/SendData.h"
 #include <iostream>
 
 USING_NS_CC;
@@ -54,19 +55,34 @@ void LocalPlayer::initGameClient()
 
         std::string message;
 
+        ExperimentalSendData *snd = ExperimentalSendData::getInst();
+        snd->dat.clear();
+
+        typedef ExperimentalSendData::TypeData TypeData;
+
         if (listen) {
-            message += GameClient::TypeData::Snake_t;
-            message += UserData::playerName + ' ';
-            message += StringUtils::toString( (int) (listen->getPositionX()*sclFactor) ) + ' ';
-            message += StringUtils::toString( (int) (listen->getPositionY()*sclFactor) ) + '\n';
+
+//            snd->dat[ExperimentalSendData::TypeData::POS_PLAYER]
+//                    = StringUtils::toString( (int) (listen->getPositionX()*sclFactor) ) + ' ' +
+//                      StringUtils::toString( (int) (listen->getPositionY()*sclFactor) ) + '\n';
+
+            snd->dat.set(ExperimentalSendData::TypeData::POS_PLAYER, listen->getPosition() * sclFactor);
+
+//            message += GameClient::TypeData::Snake;
+//            message += UserData::playerName + ' ';
+//            message += StringUtils::toString( (int) (listen->getPositionX()*sclFactor) ) + ' ';
+//            message += StringUtils::toString( (int) (listen->getPositionY()*sclFactor) ) + '\n';
         }
         if (isRunningServer && eat) {
-            message += GameClient::TypeData::Eat;
-            message += ' ';
-            message += StringUtils::toString( (int) (eat->getPositionX()*sclFactor) ) + ' ';
-            message += StringUtils::toString( (int) (eat->getPositionY()*sclFactor) ) + '\n';
+
+            snd->dat.set(ExperimentalSendData::TypeData::POS_EAT, eat->getPosition() * sclFactor);
+
+//            message += GameClient::TypeData::Eat;
+//            message += ' ';
+//            message += StringUtils::toString( (int) (eat->getPositionX()*sclFactor) ) + ' ';
+//            message += StringUtils::toString( (int) (eat->getPositionY()*sclFactor) ) + '\n';
         }
-        gameClient->setMsgToSend(message);
+        gameClient->setMsgToSend(/*message + "\n------\n" + */snd->toStr());
 
     }, updateServer, NameSch);
 
@@ -89,22 +105,22 @@ Vec2& operator /= (Vec2 &vec, float scl) {
     return vec;
 }
 
-std::function<void (PlayerData data)> LocalPlayer::getCallback()
+std::function<void (ExperimentalSendData::Dat data)> LocalPlayer::getCallback()
 {
     float sclFactor = _director->getContentScaleFactor();
-    return [sclFactor, this](PlayerData data) {
+    return [sclFactor, this](ExperimentalSendData::Dat data) {
 
-        if (data.opponentPos.x > -1 && data.opponentPos.y > -1){
-            currentPos = data.opponentPos /= sclFactor;
-            log("recv:[%f, %f]", currentPos.x, currentPos.y);
-            head->runAction(MoveTo::create(1.1f / UpdateRecver, currentPos));
-        }
+//        if (data.opponentPos.x > -1 && data.opponentPos.y > -1){
+//            currentPos = data.opponentPos /= sclFactor;
+//            log("recv:[%f, %f]", currentPos.x, currentPos.y);
+//            head->runAction(MoveTo::create(1.1f / UpdateRecver, currentPos));
+//        }
 
-        if (!isRunningServer && eat){
-            data.eatPos /= sclFactor;
-            if (eat->getPosition() != data.eatPos)
-                eat->setPosition(data.eatPos);
-        }
+//        if (!isRunningServer && eat){
+//            data.eatPos /= sclFactor;
+//            if (eat->getPosition() != data.eatPos)
+//                eat->setPosition(data.eatPos);
+//        }
     };
 }
 

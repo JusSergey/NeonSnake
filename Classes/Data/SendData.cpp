@@ -22,12 +22,7 @@ std::string SendData::toString()
 
 ExperimentalSendData::string ExperimentalSendData::toStr() const
 {
-    ExperimentalSendData::string str;
-
-    for (const auto &i : dat)
-        str += i.first + '=' + i.second + '\n';
-
-    return str;
+    return dat.toStr();
 }
 
 
@@ -38,4 +33,19 @@ Vec2 ExperimentalSendData::toVec2(const std::string &value)
     auto p2 = value.substr(posSeparator+1, value.length());
 
     return cocos2d::Vec2( Value(p1).asFloat(), Value(p2).asFloat() );
+}
+
+std::string ExperimentalSendData::Dat::charToStr(char ch) {
+    static char str[2] = {'\0', '\0'};
+    str[0] = ch;
+    return std::string(str);
+}
+
+ExperimentalSendData::string ExperimentalSendData::Dat::toStr() const {
+    string str;
+
+    for (const auto &i : *this)
+        str += charToStr((char)i.first) + i.second + '\n';
+
+    return str;
 }

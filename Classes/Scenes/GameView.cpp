@@ -161,22 +161,14 @@ bool GameView::init()
     updateShaderPointsOfLevel();
 
 
+    ExperimentalSendData *data = ExperimentalSendData::getInst();
+    data->dat.set(ExperimentalSendData::TypeData::NAME_PLAYER, "Name Player");
+    data->dat.set(ExperimentalSendData::TypeData::NAME_OPPONENT, "Name Opponent");
+    data->dat.set(ExperimentalSendData::TypeData::POS_BONUS, "Pos bonus");
 
-    ExperimentalSendData *p = ExperimentalSendData::getInst();
+    ExperimentalSendData::Dat d(data->toStr());
 
-    p->dat["Plr"] = "Value player";
-    p->dat["sec"] = "1945";
-    p->dat["vec"] = "23 67";
-
-    log("info dat: %s", p->toStr().c_str());
-
-    Vec2 v = p->toVec2(p->dat["vec"]);
-
-    log("VECP: [%f, %f]", v.x, v.y);
-
-    p->dat.clear();
-
-    log("info dat: %s", p->toStr().c_str());
+    log("Test ecvivalent: \n [%s] \n [%s]", data->dat.toStr().c_str(), d.toStr().c_str());
 
     return true;
 }

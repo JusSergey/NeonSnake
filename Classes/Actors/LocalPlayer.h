@@ -39,7 +39,7 @@ private:
     cocos2d::Vec2 currentPos;
 
 private:
-    std::function<void(PlayerData data)> getCallback();
+    std::function<void(ExperimentalSendData::Dat data)> getCallback();
 
 private:
     void initGameClient();

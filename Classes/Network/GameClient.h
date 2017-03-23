@@ -5,21 +5,22 @@
 #include "Sockets/TcpClient.h"
 #include <functional>
 #include "PlayerData.h"
+#include "Data/SendData.h"
 
 class GameClient : public TcpClient
 {
 public:
     enum TypeData: char {
-        Snake_t = 's',
+        Snake = 's',
         Eat = 'e'
     };
     GameClient(const std::string &ip, const std::string &port);
 
-    void setCallbackRead(const std::function<void (PlayerData)> &value);
+    void setCallbackRead(const std::function<void (ExperimentalSendData::Dat)> &value);
 
 protected:
     virtual void read();
-    std::function<void(PlayerData)> callbackRead;
+    std::function<void(ExperimentalSendData::Dat)> callbackRead;
 
 };
 

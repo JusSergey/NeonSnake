@@ -54,6 +54,8 @@ std::string TcpClient::getMsgToSend() const
 
 void TcpClient::setMsgToSend(const std::string &value)
 {
+    mut.lock();
     msgToSend = value;
+    mut.unlock();
 }
 
