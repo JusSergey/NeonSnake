@@ -3,6 +3,8 @@
 
 #include "cocos2d.h"
 
+#include "Data/SendData.h"
+
 #include "Sockets/TcpServer.h"
 #include "PlayerData.h"
 #include <list>
@@ -19,6 +21,9 @@ public:
 
 protected:
     virtual void read();
+
+private:
+    ExperimentalSendData::Dat dat;
 
 };
 

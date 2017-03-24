@@ -3,6 +3,8 @@
 #include "Data/SendData.h"
 #include <iostream>
 
+typedef ExperimentalSendData::TypeData TypeData;
+
 USING_NS_CC;
 
 // on "init" you need to initialize your instance
@@ -58,30 +60,16 @@ void LocalPlayer::initGameClient()
         ExperimentalSendData *snd = ExperimentalSendData::getInst();
         snd->dat.clear();
 
-        typedef ExperimentalSendData::TypeData TypeData;
+
 
         if (listen) {
-
-//            snd->dat[ExperimentalSendData::TypeData::POS_PLAYER]
-//                    = StringUtils::toString( (int) (listen->getPositionX()*sclFactor) ) + ' ' +
-//                      StringUtils::toString( (int) (listen->getPositionY()*sclFactor) ) + '\n';
-
-            snd->dat.set(ExperimentalSendData::TypeData::POS_PLAYER, listen->getPosition() * sclFactor);
-
-//            message += GameClient::TypeData::Snake;
-//            message += UserData::playerName + ' ';
-//            message += StringUtils::toString( (int) (listen->getPositionX()*sclFactor) ) + ' ';
-//            message += StringUtils::toString( (int) (listen->getPositionY()*sclFactor) ) + '\n';
+            snd->dat.set(isRunningServer ? TypeData::POS_PLAYER : TypeData::POS_OPPONENT,
+                         listen->getPosition() * sclFactor);
         }
         if (isRunningServer && eat) {
-
-            snd->dat.set(ExperimentalSendData::TypeData::POS_EAT, eat->getPosition() * sclFactor);
-
-//            message += GameClient::TypeData::Eat;
-//            message += ' ';
-//            message += StringUtils::toString( (int) (eat->getPositionX()*sclFactor) ) + ' ';
-//            message += StringUtils::toString( (int) (eat->getPositionY()*sclFactor) ) + '\n';
+            snd->dat.set(TypeData::POS_EAT, eat->getPosition() * sclFactor);
         }
+
         gameClient->setMsgToSend(/*message + "\n------\n" + */snd->toStr());
 
     }, updateServer, NameSch);
@@ -108,13 +96,21 @@ Vec2& operator /= (Vec2 &vec, float scl) {
 std::function<void (ExperimentalSendData::Dat data)> LocalPlayer::getCallback()
 {
     float sclFactor = _director->getContentScaleFactor();
-    return [sclFactor, this](ExperimentalSendData::Dat data) {
+    return [sclFactor, this](ExperimentalSendData::Dat data) -> void {
 
-//        if (data.opponentPos.x > -1 && data.opponentPos.y > -1){
-//            currentPos = data.opponentPos /= sclFactor;
-//            log("recv:[%f, %f]", currentPos.x, currentPos.y);
-//            head->runAction(MoveTo::create(1.1f / UpdateRecver, currentPos));
-//        }
+        std::string str = data[isRunningServer ? TypeData::POS_OPPONENT : TypeData::POS_PLAYER];
+
+        if (str.empty()) {
+            log("LocalPlayer::getCallback(): empty data");
+            return;
+        }
+
+        Vec2 tmp = ExperimentalSendData::toVec2(str);
+
+        if (tmp.x > -1 && tmp.y > -1){
+            currentPos = tmp /= sclFactor;
+            head->runAction(MoveTo::create(1.1f / UpdateRecver, currentPos));
+        }
 
 //        if (!isRunningServer && eat){
 //            data.eatPos /= sclFactor;

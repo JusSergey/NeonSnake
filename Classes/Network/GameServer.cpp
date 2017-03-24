@@ -5,6 +5,8 @@
 
 USING_NS_CC;
 
+typedef ExperimentalSendData::Dat Dat;
+
 GameServer::GameServer(const std::string &ip, u_short port) :
     TcpServer(ip, port)
 {
@@ -19,19 +21,6 @@ GameServer::GameServer(const std::string &ip, const std::string &port) :
 
 void GameServer::read()
 {
-
-    for (std::string &str : DataSetting::stringToVector(buffer, '\n')){
-
-        auto pos = str.find(' ');
-
-        std::string name = str.substr(0, pos);
-
-        DataBasePlayers[name] = str.c_str() + pos + 1;
-    }
-
-    std::string result;
-    for (auto i : DataBasePlayers)
-        result += i.first + ' ' + i.second + '\n';
-
-    msgToSend = result;
+    dat = Dat(dat.toStr() + buffer);
+    msgToSend = dat.toStr();
 }

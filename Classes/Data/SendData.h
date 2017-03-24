@@ -66,7 +66,7 @@ public:
 
     string toStr() const;
 
-    cocos2d::Vec2 toVec2(const string &value);
+    static cocos2d::Vec2 toVec2(const string &value);
 
 
 };
