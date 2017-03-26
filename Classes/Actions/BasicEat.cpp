@@ -79,7 +79,7 @@ void BasicEat::initContactListener()
     
     auto callbackContact = [this] (PhysicsContact &contact) -> void {
 
-        if (isContainer(getPhysicsBody(), contact) && isVisible() && !blockedContact) {
+        if (mode == Mode::Active && isContainer(getPhysicsBody(), contact) && isVisible() && !blockedContact) {
 
             blockedContact = true;
 
@@ -95,7 +95,9 @@ void BasicEat::initContactListener()
 
 
     listener->onContactBegin = [=] (PhysicsContact &contact) -> bool {
-        callbackContact(contact);
+        if (mode == Mode::Active)
+            callbackContact(contact);
+
         return true;
     };
 

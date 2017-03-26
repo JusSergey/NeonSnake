@@ -16,7 +16,16 @@ bool Bonus::init()
     visibleSize = Director::getInstance()->getVisibleSize();
     origin = Director::getInstance()->getVisibleOrigin();
 
-    setVisible(false);
+//    setVisible(false);
+
+    setPosition(Vec2::ZERO - getContentSize());
+
+//    _director->getTextureCache()->getTextureForKey()
+    textureFantazyShader = _director->getTextureCache()->addImage("Bonus.png");
+    textureBigScore = _director->getTextureCache()->addImage("5Balls.png");;
+    textureBomba = _director->getTextureCache()->addImage("Bomba.png");;
+    textureLowSnake = _director->getTextureCache()->addImage("BonusSpeed-.png");;
+    textureFastSnake = _director->getTextureCache()->addImage("BonusSpeed+.png");;
 
     setRandomBonus();
 
@@ -24,10 +33,7 @@ bool Bonus::init()
 
     schedule([this](float){
 
-        setVisible(true);
-
         scheduleOnce([this](float){
-            setVisible(false);
             setRandomPosition();
             setRandomBonus();
         }, 7, "hideBonus");
@@ -37,6 +43,12 @@ bool Bonus::init()
     initPhysicsBody();
 
     return true;
+}
+
+bool Bonus::isVisible() const
+{
+    const Size &sz = getContentSize();
+    return (getPositionX() > sz.width/2 && getPositionY() > sz.height/2);
 }
 
 Bonus *Bonus::create(int type)
@@ -55,9 +67,24 @@ Bonus *Bonus::create(int type)
     }
 }
 
+void Bonus::setBonusType(TypeBonusMask type)
+{
+    switch (type) {
+    case TypeBonusMask::FantazyShader: setTexture(("Bonus.png"));  break;
+    case TypeBonusMask::BigScore:      setTexture(("5Balls.png")); break;
+    case TypeBonusMask::Bomba:         setTexture(("Bomba.png"));  break;
+    case TypeBonusMask::LowSnake:      setTexture(("BonusSpeed-.png")); break;
+    case TypeBonusMask::FastSnake:     setTexture(("BonusSpeed+.png")); break;
+    default: log("Bonus::setBonusType: <undefined bonus type>"); return;
+    }
+
+    this->type = type;
+}
+
 void Bonus::eate(Node *node)
 {
-    setVisible(false);
+//    setVisible(false);
+    setPosition(Vec2::ZERO - getContentSize());
 }
 
 void Bonus::initPhysicsBody()
@@ -94,12 +121,5 @@ void Bonus::setRandomBonus()
         while (oldType == (type = variable[random(0, int(sizeof(variable) / sizeof(variable[0]))-1)]));
     }
 
-    switch (type) {
-    case TypeBonusMask::FantazyShader: setTexture("Bonus.png");  break;
-    case TypeBonusMask::BigScore:      setTexture("5Balls.png"); break;
-    case TypeBonusMask::Bomba:         setTexture("Bomba.png");  break;
-    case TypeBonusMask::LowSnake:      setTexture("BonusSpeed-.png"); break;
-    case TypeBonusMask::FastSnake:     setTexture("BonusSpeed+.png"); break;
-    default: log("fail setrbonus");
-    }
+    setBonusType(type);
 }

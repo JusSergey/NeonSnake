@@ -154,7 +154,7 @@ void LevelLayer::setAttribShaderSensitive(float sensitive)
     glProgramState->setUniformFloat("blackwhite", sensitive);
 }
 
-float LevelLayer::getAttribMaskColor()
+float LevelLayer::getAttribMaskColor() const
 {
     return colorShader;
 }

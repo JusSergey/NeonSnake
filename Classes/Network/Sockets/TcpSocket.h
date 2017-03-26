@@ -12,8 +12,8 @@
 #include <mutex>
 
 #define UpdateListener 5
-#define UpdateSender 18
-#define UpdateRecver 18
+#define UpdateSender 15
+#define UpdateRecver 15
 #define toMsec(count) (1.f / (count) * 1000)
 
 class TcpSocket {

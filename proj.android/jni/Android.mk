@@ -46,6 +46,7 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
   ../../Classes/Sound/Audio.cpp \
  \
   ../../Classes/Data/DataSetting.cpp \
+  ../../Classes/Data/SendData.cpp \
  \
   ../../Classes/Jus.cpp \
   ../../Classes/MyBodyParser.cpp

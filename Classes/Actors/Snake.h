@@ -13,6 +13,9 @@ using std::vector;
 #define MAX_SNAKE_SPEED 20
 #define MIN_SNAKE_SPEED 5
 
+static const int DefaultLenght = 10;
+static const int stepAddLength = 2;
+
 class Snake : public Layer {
 
 public:
@@ -49,7 +52,7 @@ public:
     /* Getter functions */
 public:
     inline Direction getDirection () const { return directionSnakeHead;           }
-    inline size_t    getLength    () const { return snakeBlocks.size()-1;         }
+    inline size_t    getLength    () const { return snakeBlocks.size() - 1;       }
     inline float     getHeadWidth () const { return head->getContentSize().width; }
     inline float     getSpeed     () const { return speedSnake;                   }
 
@@ -65,11 +68,14 @@ public:
     void start();
     void stop();
 
+    void setRealLength (const size_t len);
     void addSnakeBlock (size_t add = 1);
     bool isContainer   (const Point &point, float maxDistance) const;
     void subSnake      (int sublen = 1);
 
-    /* close methods */
+    Snake *getOpponent() const;
+    void setOpponent(Snake *value);
+
 protected:
     Snake();
     virtual bool init();
@@ -80,6 +86,9 @@ protected:
     void initLight();
     void initPhysicsBodyHead();
     Sprite *createBlockSnake();
+
+private:
+    void addOneBlock();
 
 };
 

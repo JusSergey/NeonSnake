@@ -160,16 +160,6 @@ bool GameView::init()
 
     updateShaderPointsOfLevel();
 
-
-    ExperimentalSendData *data = ExperimentalSendData::getInst();
-    data->dat.set(ExperimentalSendData::TypeData::NAME_PLAYER, "Name Player");
-    data->dat.set(ExperimentalSendData::TypeData::NAME_OPPONENT, "Name Opponent");
-    data->dat.set(ExperimentalSendData::TypeData::POS_BONUS, "Pos bonus");
-
-    ExperimentalSendData::Dat d(data->toStr());
-
-    log("Test ecvivalent: \n [%s] \n [%s]", data->dat.toStr().c_str(), d.toStr().c_str());
-
     return true;
 }
 
@@ -250,13 +240,20 @@ void GameView::initBonus()
 
     bonus->setCallbackVerifyPosition(getVerifyPositionFunc());
 
-    bonus->setRandomPosition();
+    log ("hide position");
+
+    bonus->hidePosition();
 
 }
 
 void GameView::initEat()
 {
     if (eat = NormalEat::create()) {
+
+        if ((bitmaskInitsGameLayer & InitServer) || (!(bitmaskInitsGameLayer & InitServer) && !(bitmaskInitsGameLayer & InitLocalPlayer)))
+            eat->setMode(Bonus::Mode::Active);
+
+        else eat->setMode(Bonus::Mode::Passive);
 
         addChild(eat, Levels::LEat);
         eat->setCameraMask((unsigned int)CameraFlag::USER1);
@@ -304,6 +301,9 @@ void GameView::initBotActor()
 void GameView::initLocalPlayer()
 {
     localPlayer = LocalPlayer::create();
+//    localPlayer->setView(this);
+
+    localPlayer->setCallbackShotBomba([this](const Vec2 &in, const Vec2 &to) { shotTo(in, to); });
 
     localPlayer->setColor(UserData::opponentColor);
     localPlayer->setPosition({200, 200});
@@ -315,6 +315,9 @@ void GameView::initLocalPlayer()
     localPlayer->setName(NameBotOrOpponent);
 
     localPlayer->setEat(eat);
+    localPlayer->setBonus(bonus);
+    localPlayer->setLevelLayer(layer);
+    localPlayer->setGNLayer(gameNavigatorLayer);
     localPlayer->setIsRunningServer(bitmaskInitsGameLayer & InitServer);
 }
 
@@ -644,8 +647,15 @@ void GameView::eatBonusFantazyShader(Node *node)
     layer->shaderToSensitive(1, 1);
 
     scheduleOnce([this](float){
-        layer->setAttribMaskColor(cocos2d::random(1, 3));
+
+        int oldcolor = layer->getAttribMaskColor();
+        int newcolor;
+
+        do newcolor = cocos2d::random(1, 3); while(oldcolor == newcolor);
+
+        layer->setAttribMaskColor(newcolor);
         layer->shaderToSensitive(1, 0);
+
     }, 1.1, "onc");
 }
 
@@ -655,6 +665,9 @@ void GameView::eatBonusBomba(Node *node)
         return;
 
     static const char *nameSch = "ShotBomba";
+
+    if (server && localPlayer)
+        localPlayer->setStatusShot({true, node->getName()});
 
     schedule([=](float){
 
@@ -767,9 +780,10 @@ void GameView::exploinsBomba(const Vec2 &posExplos)
 void GameView::shotTo(const Vec2 &in, const Vec2 &to)
 {
 
-    updateParticleShaderColors();
-
+//    updateParticleShaderColors();
+    log("PrevCreateFile");
     auto fire = ParticleFire::createWithTotalParticles(1024);
+    log("___");
     fire->setCameraMask((unsigned short)CameraFlag::USER1);
     fire->setEmitterMode(ParticleSystem::Mode::RADIUS);
 
@@ -782,11 +796,15 @@ void GameView::shotTo(const Vec2 &in, const Vec2 &to)
 
     addChild(fire, LParticle);
 
+    log("PrevCallback");
+
     auto callback = CallFunc::create([=](){
+
+        log("scheduller");
 
         auto exp = ParticleSystemQuad::create("SunExplosion.plist");
 
-        updateParticleShaderColors();
+//        updateParticleShaderColors();
 
         exp->setTotalParticles(512);
         exp->setEmitterMode(ParticleSystem::Mode::GRAVITY);
@@ -809,6 +827,7 @@ void GameView::shotTo(const Vec2 &in, const Vec2 &to)
         fire->removeFromParent();
 
     });
+
     auto moveto = MoveTo::create(0.5, to);
     auto fade = FadeOut::create(0.1);
     auto seq = Sequence::create(moveto, fade, callback, nullptr);

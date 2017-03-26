@@ -305,29 +305,28 @@ void GameNavigatorLayer::clickButtonMusic()
 
 Action *GameNavigatorLayer::createAction()
 {
-    log("Create Action");
     return Sequence::create(ScaleTo::create(0.2, 2), ScaleTo::create(0.2, 1), nullptr);
 }
 
 void GameNavigatorLayer::addScores(int value, const std::string &nameSnake)
 {
-    log("Add Scores");
+
     if (nameSnake == NameBotOrOpponent)
-        setScore(countScoreBot += value, nameSnake);
+        setScore(countScoreBot + value, nameSnake);
 
     else if (nameSnake == NamePlayer)
-        setScore(countScorePlayer += value, nameSnake);
+        setScore(countScorePlayer + value, nameSnake);
 
 }
 
 void GameNavigatorLayer::setScore(int value, const std::string &nameSnake)
 {
-    log("SetScore");
     if (nameSnake == NameBotOrOpponent) {
         if (labelScoreBot) {
             labelScoreBot->setString(UserData::opponentName + ": " + toString(value));
             labelScoreBot->stopAllActions();
             labelScoreBot->runAction(createAction());
+            countScoreBot = value;
         }
     }
     else if (nameSnake == NamePlayer) {
@@ -335,6 +334,7 @@ void GameNavigatorLayer::setScore(int value, const std::string &nameSnake)
             labelScorePlayer->setString(UserData::playerName + ": " + toString(value));
             labelScorePlayer->stopAllActions();
             labelScorePlayer->runAction(createAction());
+            countScorePlayer = value;
         }
     }
 }
@@ -371,7 +371,6 @@ void GameNavigatorLayer::setTimeLevel(int secons)
 
 int GameNavigatorLayer::getScore(const std::string &nameSnake) const
 {
-    log("GetScore");
     if (nameSnake == NameBotOrOpponent) return countScoreBot;
     if (nameSnake == NamePlayer) return countScorePlayer;
 

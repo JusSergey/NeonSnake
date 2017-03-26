@@ -42,7 +42,7 @@ public:
     void setAttribMaskColor(float mask);
     void setAttribShaderSensitive(float sensitive);
 
-    float getAttribMaskColor();
+    float getAttribMaskColor() const;
 
 public:
     void shaderToSensitive(float time, float sensitive);

@@ -13,6 +13,10 @@ public:
     enum class TypeData : char {
         NAME_PLAYER = ' ',
         NAME_OPPONENT,
+        SPEED_PLAYER,
+        SPEED_OPPONENT,
+        LENGTH_PLAYER,
+        LENGTH_OPPONENT,
         POS_PLAYER,
         POS_OPPONENT,
         POS_EAT,
@@ -22,7 +26,9 @@ public:
         SCORE_OPPONENT,
         CURRENT_TIME,
         DIRECT_TIME,
-        TYPE_SHADER
+        TYPE_SHADER,
+        TYPE_BONUS,
+        SHOT_BOMBA
     };
 
 public:
@@ -38,10 +44,8 @@ public:
     public:
         Dat(){}
         Dat(const std::string &source) {
-            auto container = std::move(DataSetting::stringToVector(source, '\n'));
-            for (const std::string &i : container) {
+            for (const std::string &i : DataSetting::stringToVector(source, '\n'))
                 this->operator []((TypeData)((char)i[0])) = i.substr(1);
-            }
         }
 
     public:

@@ -100,6 +100,7 @@ private:
     void nextlevel();
     void exploinsBomba(const cocos2d::Vec2 &posExplos);
 
+public:
     void shotTo(const cocos2d::Vec2 &in, const cocos2d::Vec2 &to);
 
 public:

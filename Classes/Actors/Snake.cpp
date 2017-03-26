@@ -10,6 +10,8 @@ static const char *pathSnakeBlock = "circle.png";
 
 static const int stepAddLength = 2;
 
+
+
 USING_NS_CC;
 static bool isFirstInit = true;
 
@@ -46,7 +48,7 @@ bool Snake::init()
 
     log("initialize Snake");
 
-    addSnakeBlock(10);
+    addSnakeBlock(DefaultLenght);
     head = snakeBlocks[0];
 
     indexBackBlock = snakeBlocks.size()-1;
@@ -108,6 +110,18 @@ void Snake::stop()
     unschedule(schedule_selector(Snake::movingHead));
 }
 
+void Snake::setRealLength(const size_t len)
+{
+    if (getLength() == len)
+        return;
+
+    int direct = getLength() > len ? -1 : 1;
+
+    for (int i = getLength(); i != len; i += direct) {
+        addOneBlock();
+    }
+}
+
 void Snake::setSpeed(float speed)
 {
     if (speed >= MAX_SNAKE_SPEED)
@@ -132,6 +146,16 @@ void Snake::setColor(const Color3B &color)
         i->setColor(colorBlockSnake);
 }
 
+Snake *Snake::getOpponent() const
+{
+    return opponent;
+}
+
+void Snake::setOpponent(Snake *value)
+{
+    opponent = value;
+}
+
 void Snake::setPosition(const Vec2 &newPosition)
 {
     head->setPosition(newPosition);
@@ -144,7 +168,7 @@ const Vec2 &Snake::getPosition() const
 
 void Snake::addSnakeBlock(size_t add)
 {
-    if ((lenghtSnake + add) > maxLengthSnake) {
+    if ((lenghtSnake + add*stepAddLength) > maxLengthSnake) {
         add = maxLengthSnake - lenghtSnake;
         if (add <= 0)
             return;
@@ -153,24 +177,7 @@ void Snake::addSnakeBlock(size_t add)
     lenghtSnake += add;
 
     for (int i = 0; i < add*stepAddLength; i++) {
-
-        auto block = createBlockSnake();
-        block->setColor(colorBlockSnake);
-
-        block->setOpacity(0xff * .10f);
-
-        block->setCameraMask((unsigned int)CameraFlag::USER1);
-
-        this->addChild(block);
-
-        if (snakeBlocks.empty()) {
-            block->setPosition(100, 100);
-        }
-
-        else block->setPosition(snakeBlocks[snakeBlocks.size()-1]->getPosition());
-
-        snakeBlocks.push_back(block);
-
+        addOneBlock();
     }
 
 }
@@ -234,4 +241,24 @@ void Snake::initPhysicsBodyHead()
 Sprite *Snake::createBlockSnake()
 {
     return Sprite::createWithTexture(TextureCache::getInstance()->getTextureForKey(pathSnakeBlock));
+}
+
+void Snake::addOneBlock()
+{
+    auto block = createBlockSnake();
+    block->setColor(colorBlockSnake);
+
+    block->setOpacity(0xff * .10f);
+
+    block->setCameraMask((unsigned int)CameraFlag::USER1);
+
+    this->addChild(block);
+
+    if (snakeBlocks.empty()) {
+        block->setPosition(100, 100);
+    }
+
+    else block->setPosition(snakeBlocks[snakeBlocks.size()-1]->getPosition());
+
+    snakeBlocks.push_back(block);
 }

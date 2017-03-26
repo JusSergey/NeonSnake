@@ -63,7 +63,7 @@ void Bot::analizeSituation(float)
         if (eat)   pathToEat   = this->createway(getPosition(), eat->getPosition());
 
         // якщо до бонуса кортше, і він є видимим
-        if (bonus && pathToBonus.size() < pathToEat.size() && bonus->isVisible()) {
+        if (bonus && pathToBonus.size() && pathToBonus.size() < pathToEat.size() && bonus->isVisible()) {
             // і зараз не йде до нього
             if (analizeData.tagObject != BasicEat::TagBasicBonus || !indexPoint || bonus->getPosition() != analizeData.prevPosBonus) {
                 analizeData.tagObject  = BasicEat::TagBasicBonus;
