@@ -136,7 +136,7 @@ std::function<void (const Color3B &color, int tag)> PregameSettingLayer::getCall
 
 void PregameSettingLayer::initItemNext()
 {
-    itemStart = MenuItemLabel::create(Label::createWithTTF("Next ->", "fonts/Bicubik.ttf", 32));
+    itemStart = MenuItemLabel::create(Jus::createLabelTTF("Next ->", "fonts/Bicubik.ttf", 32));
 
     itemStart->setAnchorPoint(Vec2::ANCHOR_BOTTOM_RIGHT);
 
@@ -145,7 +145,7 @@ void PregameSettingLayer::initItemNext()
 
 void PregameSettingLayer::initItemBackToMenu()
 {
-    itemBackToMenu = MenuItemLabel::create(Label::createWithTTF("<- Back", "fonts/Bicubik.ttf", 32));
+    itemBackToMenu = MenuItemLabel::create(Jus::createLabelTTF("<- Back", "fonts/Bicubik.ttf", 32));
 
     itemBackToMenu->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
 
@@ -196,7 +196,7 @@ void PregameSettingLayer::initDrawNode()
 
 void PregameSettingLayer::initLabelSetting(const std::string &title, float procentY, const std::function<float (float)> &positioning)
 {
-    Label *labelTitle = Label::createWithTTF(title, "fonts/Bicubik.ttf", 32);
+    Label *labelTitle = Jus::createLabelTTF(title, "fonts/Bicubik.ttf", 32);
     labelTitle->setAdditionalKerning(3);
 
     labelTitle->setPosition(visibleSize.width / 4, positioning(procentY));
@@ -242,7 +242,7 @@ void PregameSettingLayer::initColors(SwitchColorContainer_t &sw, const std::func
 
 void PregameSettingLayer::initTextFields(const std::function<float (float)> &positioning, ui::TextField *&field, const std::string &name)
 {
-    field = ui::TextField::create("Enter name", "fonts/Bicubic.ttf", 24);
+    field = ui::TextField::create("Enter name", "fonts/Bicubic.ttf", (float)24 / _director->getContentScaleFactor());
     field->setPlaceHolderColor(Color3B::GRAY);
     field->setMaxLength(20);
     field->setMaxLengthEnabled(true);

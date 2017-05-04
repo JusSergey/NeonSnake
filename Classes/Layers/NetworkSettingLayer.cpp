@@ -69,7 +69,7 @@ void NetworkSettingLayer::setCallbackStartServer(const std::function<void (Ref *
 
 Label *NetworkSettingLayer::createLabel(const std::string &text, float fontSize)
 {
-    return Label::createWithSystemFont(text, "monospace", fontSize);
+    return Jus::createLabelSystem(text, "monospace", fontSize);
 }
 
 void NetworkSettingLayer::initLabelLocalInfo()
@@ -105,7 +105,7 @@ void NetworkSettingLayer::initLabelLocalInfo()
 
 void NetworkSettingLayer::initTitle()
 {
-    auto l = Label::createWithSystemFont("LAN", "monospace", 42);
+    auto l = Jus::createLabelSystem("LAN", "monospace", 42);
     l->setPosition(Jus::getDisplayPoint(0.5, 0.9) + offset);
     addChild(l, 2);
 
@@ -113,8 +113,8 @@ void NetworkSettingLayer::initTitle()
 
 void NetworkSettingLayer::initLabels()
 {
-    labelIp   = Label::createWithSystemFont("IP: ", "monospace", 42);
-    labelPort = Label::createWithSystemFont("PORT: ", "monospace", 42);
+    labelIp   = Jus::createLabelSystem("IP: ", "monospace", 42);
+    labelPort = Jus::createLabelSystem("PORT: ", "monospace", 42);
 
     labelIp->setAnchorPoint(Vec2::ANCHOR_MIDDLE_RIGHT);
     labelPort->setAnchorPoint(Vec2::ANCHOR_MIDDLE_RIGHT);
@@ -130,8 +130,8 @@ void NetworkSettingLayer::initLabels()
 
 void NetworkSettingLayer::initTextFields()
 {
-    fieldIpToServer = ui::TextField::create("ip to server","monospace", 34);
-    fieldServerPort = ui::TextField::create("server port", "monospace", 34);
+    fieldIpToServer = ui::TextField::create("ip to server","monospace", 34 / _director->getContentScaleFactor());
+    fieldServerPort = ui::TextField::create("server port", "monospace", 34 / _director->getContentScaleFactor());
 
     fieldIpToServer->setString(UserData::NetworkIp);
     fieldServerPort->setString(UserData::NetworkPort);
@@ -165,13 +165,13 @@ void NetworkSettingLayer::initDrawNode()
 
 void NetworkSettingLayer::initNavigation()
 {
-    Label* lback = Label::createWithTTF("<-Back", "fonts/Bicubik.ttf", 36);
+    Label* lback = Jus::createLabelTTF("<-Back", "fonts/Bicubik.ttf", 36);
     lback->setAdditionalKerning(3);
 
-    Label* lnext = Label::createWithTTF("Start", "fonts/Bicubik.ttf", 36);
+    Label* lnext = Jus::createLabelTTF("Start", "fonts/Bicubik.ttf", 36);
     lnext->setAdditionalKerning(3);
 
-    Label* lSServer = Label::createWithTTF("server: No", "fonts/Bicubik.ttf", 36);
+    Label* lSServer = Jus::createLabelTTF("server: No", "fonts/Bicubik.ttf", 36);
 
     itemBack = MenuItemLabel::create(lback);
     itemStart = MenuItemLabel::create(lnext);
