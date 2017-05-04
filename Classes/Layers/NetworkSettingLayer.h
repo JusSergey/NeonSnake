@@ -19,7 +19,7 @@ private:
     cocos2d::Vec2 origin;
 
     cocos2d::MenuItemLabel *itemBack;
-    cocos2d::MenuItemLabel *itemNext;
+    cocos2d::MenuItemLabel *itemStart;
 
     // for client
     cocos2d::ui::TextField *fieldIpToServer;
@@ -34,7 +34,7 @@ private:
     std::string localIpAddress;
 
 public:
-    void setCallbackNext(const std::function<void(Ref*)> &call);
+    void setCallbackStart(const std::function<void(Ref*)> &call);
     void setCallbackBack(const std::function<void(Ref*)> &call);
     void setCallbackStartServer(const std::function<void(Ref*)> &call);
 

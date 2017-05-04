@@ -3,6 +3,7 @@
 #include "Sound/Audio.h"
 #include "Data/DataSetting.h"
 #include "Network/GameServer.h"
+#include "Jus.h"
 
 USING_NS_CC;
 
@@ -144,7 +145,7 @@ void MenuScene::clickSurvival()
 void MenuScene::clickLocal()
 {
     GameData::mode = GameMode::Local;
-    camera->runAction(MoveBy::create(0.3, Vec2(0, visibleSize.height)));
+    camera->runAction(MoveBy::create(0.3, Vec2(visibleSize.width*3, 0)));
 }
 
 void MenuScene::clickExit()
@@ -221,6 +222,11 @@ void MenuScene::initPregameSwitchTypeGame()
         DataSetting::save();
     });
 
+    pregameSwitchTypeGameLayer->setCallbackNext([=](Ref*){
+        camera->runAction(MoveBy::create(0.3, Vec2(visibleSize.width, 0)));
+        DataSetting::save();
+    });
+
 }
 
 void MenuScene::initNetworkSettingLayer()
@@ -231,13 +237,16 @@ void MenuScene::initNetworkSettingLayer()
     networkSettingLayer->setCallbackStartServer(getCallbackStartServer());
 
     networkSettingLayer->setCallbackBack([this](Ref*){
-        Vec2 point(0, -visibleSize.height);
+        Vec2 point(-visibleSize.width, 0);
         camera->runAction(MoveBy::create(0.2, point));
     });
 
-    networkSettingLayer->setCallbackNext([this](Ref*){
-        Vec2 point(visibleSize.width, -visibleSize.height);
-        camera->runAction(MoveBy::create(0.2, point));
+    networkSettingLayer->setCallbackStart([this](Ref*){
+        if (pregameSwitchTypeGameLayer)
+            pregameSwitchTypeGameLayer->startLocalGame();
+
+        //Vec2 point(visibleSize.width, 0);
+        //camera->runAction(MoveBy::create(0.2, point));
     });
 
     addChild(networkSettingLayer, LLayer);
@@ -245,7 +254,7 @@ void MenuScene::initNetworkSettingLayer()
 
 Label *MenuScene::createLabel(const std::string &text) const
 {
-    Label *label = Label::createWithTTF(text, "fonts/Bicubik.ttf", 32);
+    Label *label = Jus::createLabelTTF(text, "fonts/Bicubik.ttf", 32);//Label::createWithTTF(text, "fonts/Bicubik.ttf", 32);
     label->setAdditionalKerning(3);
     label->setCameraMask((unsigned short)CameraFlag::USER2);
     return label;

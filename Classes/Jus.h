@@ -19,6 +19,10 @@ cocos2d::Vec2 getCenter();
 cocos2d::Size getSize();
 cocos2d::Size getSize(cocos2d::Node *node);
 
+//cocos2d::Label *createLabel(const std::string &text, const std::string &font, int size);
+Label *createLabelTTF(const std::string &text, const std::string &font, int size);
+cocos2d::Label *createLabelSystem(const std::string &text, const std::string &font, int size);
+
 inline float scaledDisplayW(float w);
 inline float scaledDisplayH(float h);
 

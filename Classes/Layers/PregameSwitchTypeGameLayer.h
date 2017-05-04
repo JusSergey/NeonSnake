@@ -36,7 +36,9 @@ private:
 
 public:
     void setCallbackBackToMenu(const std::function<void(Ref *)> &value);
+    void setCallbackNext(const std::function<void(Ref *)> &value);
     void setFlagStartServer(bool value);
+    void startLocalGame();
 
 private:
     inline cocos2d::MenuItemLabel *getItem(GameType type) const;
@@ -46,6 +48,7 @@ private:
     void initNavigationMenu();
 
 private:
+    std::function<void(Ref*)> callbackNext;
     cocos2d::Size visibleSize;
     cocos2d::Vec2 origin;
 

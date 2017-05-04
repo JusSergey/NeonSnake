@@ -13,6 +13,8 @@ TcpSocket::TcpSocket(const std::string &ip, u_short port) :
     timeListener(0),
     timeReceiver(0),
     timeSender(0),
+    delayMsecRecv(0),
+    delayMsecSend(0),
     statusThread(true)
 {
     bzero(&sock, sizeof(sock));
@@ -57,6 +59,8 @@ void TcpSocket::initThread()
             timeListener++;
             timeReceiver++;
             timeSender++;
+            delayMsecRecv++;
+            delayMsecSend++;
         }
     });
 }

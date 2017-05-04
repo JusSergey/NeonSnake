@@ -38,8 +38,14 @@ void TcpClient::loop()
 
 void TcpClient::loopReceiver()
 {
-    if (recv(fd, buffer, 1024, MSG_WAITALL) > 0)
+    int code = 1;
+    if (code = recv(fd, buffer, 1024, MSG_NOSIGNAL) > 0)
         read();
+
+    else if (code < 0) {
+        printf("code error: %d", code);
+        exit(EXIT_FAILURE);
+    }
 }
 
 void TcpClient::loopSender()

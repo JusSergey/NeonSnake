@@ -4,7 +4,7 @@
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
 #include <functional>
-
+#include <map>
 
 // class set colors players
 class SwitchColorSnake : public cocos2d::Sprite {
@@ -13,7 +13,7 @@ class SwitchColorSnake : public cocos2d::Sprite {
 
 private:
     virtual bool init();
-    CREATE_FUNC(SwitchColorSnake);
+    CREATE_FUNC(SwitchColorSnake)
     void setCallbackSelectColor(const std::function<void(const cocos2d::Color3B &color, int tag)> &callback);
 
 private:
@@ -29,8 +29,14 @@ class SwitchLevelGame : public cocos2d::ui::Button {
 private:
 
     virtual bool init();
-    CREATE_FUNC(SwitchLevelGame);
+    CREATE_FUNC(SwitchLevelGame)
     virtual void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *unusedEvent);
+    typedef int _Tag;
+    _Tag myTag;
+    static std::map<_Tag, SwitchLevelGame *> globalObjects;
+
+public:
+    static void setSelectLevel(int selectLevel);
 
 }; // END CLASS SwitchLevelGame
 
@@ -90,6 +96,7 @@ private:
     void initColors(SwitchColorContainer_t &sw, const std::function<float(float)> &positioning, int tag);
     void initTextFields(const std::function<float(float)> &positioning, cocos2d::ui::TextField* &field, const std::string &name);
 
+    std::vector<SwitchLevelGame *> levels;
     void initScrollViewLevels();
 
 }; // END CLASS PregameSettingLayer

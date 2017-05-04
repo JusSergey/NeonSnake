@@ -88,3 +88,14 @@ Vec2 Jus::getPointNode(Node *node, const Vec2 &vec)
     Vec2 origin  = Director::getInstance()->getVisibleOrigin();
     return Vec2(visible.width*vec.x + origin.x, visible.height*vec.y + origin.y);
 }
+
+Label *Jus::createLabelTTF(const std::string &text, const std::string &font, int size)
+{
+    return Label::createWithTTF(text, font, (float)size / Director::getInstance()->getContentScaleFactor());
+}
+
+Label *Jus::createLabelSystem(const std::string &text, const std::string &font, int size)
+{
+    return Label::createWithSystemFont(text, font, (float)size / Director::getInstance()->getContentScaleFactor());
+}
+

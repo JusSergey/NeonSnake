@@ -21,6 +21,7 @@ GameServer::GameServer(const std::string &ip, const std::string &port) :
 
 void GameServer::read()
 {
+//    printf("recv buffer[%s]", buffer);
     dat = Dat(dat.toStr() + buffer);
     msgToSend = dat.toStr();
 }

@@ -3,6 +3,7 @@
 #include "Data/DataSetting.h"
 #include "Sound/Audio.h"
 #include "Scenes/MenuScene.h"
+#include "Jus.h"
 
 #define TIME_VISIBLE_CONTEXT_SOUND_MENU 1.5f
 
@@ -160,7 +161,7 @@ void GameNavigatorLayer::initLabels()
 void GameNavigatorLayer::initLabel(LabelTTF *&rPtr, const Vec2 &pos, const Vec2 &anchor, const std::string &text)
 {
     log("Init Label");
-    rPtr = LabelTTF::create(text, "", SizeFont);
+    rPtr = /*(LabelTTF*) Jus::createLabel(text, "fonts/arial.ttf", SizeFont);//*/LabelTTF::create(text, "", SizeFont);
     rPtr->setAnchorPoint(anchor);
     rPtr->setPosition(pos);
     addChild(rPtr);

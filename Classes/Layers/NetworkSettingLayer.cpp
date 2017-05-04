@@ -5,7 +5,7 @@
 
 USING_NS_CC;
 
-#define offset (Vec2(0, Jus::getHeight()))
+#define offset (Vec2(Jus::getWidth()*3, 0))
 #define rectX1 (visibleSize.width * 0.25)
 #define rectX2 (visibleSize.width * 0.75)
 
@@ -34,9 +34,9 @@ bool NetworkSettingLayer::init()
     return true;
 }
 
-void NetworkSettingLayer::setCallbackNext(const std::function<void(Ref *)> &call)
+void NetworkSettingLayer::setCallbackStart(const std::function<void(Ref *)> &call)
 {
-    itemNext->setCallback([=](Ref *ref){
+    itemStart->setCallback([=](Ref *ref){
         UserData::NetworkIp = fieldIpToServer->getString();
         UserData::NetworkPort = fieldServerPort->getString();
         DataSetting::save();
@@ -168,24 +168,24 @@ void NetworkSettingLayer::initNavigation()
     Label* lback = Label::createWithTTF("<-Back", "fonts/Bicubik.ttf", 36);
     lback->setAdditionalKerning(3);
 
-    Label* lnext = Label::createWithTTF("Next->", "fonts/Bicubik.ttf", 36);
+    Label* lnext = Label::createWithTTF("Start", "fonts/Bicubik.ttf", 36);
     lnext->setAdditionalKerning(3);
 
     Label* lSServer = Label::createWithTTF("server: No", "fonts/Bicubik.ttf", 36);
 
     itemBack = MenuItemLabel::create(lback);
-    itemNext = MenuItemLabel::create(lnext);
+    itemStart = MenuItemLabel::create(lnext);
     ItemServerStart = MenuItemLabel::create(lSServer);
 
     itemBack->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
-    itemNext->setAnchorPoint(Vec2::ANCHOR_BOTTOM_RIGHT);
+    itemStart->setAnchorPoint(Vec2::ANCHOR_BOTTOM_RIGHT);
     ItemServerStart->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
 
     itemBack->setPosition(offset + Vec2( 32, 16) - Jus::getCenter());
-    itemNext->setPosition(offset + Vec2(-32, 16) - Jus::getCenter() + Vec2(Jus::getWidth(), 0));
+    itemStart->setPosition(offset + Vec2(-32, 16) - Jus::getCenter() + Vec2(Jus::getWidth(), 0));
     ItemServerStart->setPosition(labelPort->getPosition() - Vec2(0, labelIp->getPositionY() - labelPort->getPositionY()) - visibleSize/2);
 
-    auto menu = Menu::create(itemBack, itemNext, ItemServerStart, nullptr);
+    auto menu = Menu::create(itemBack, itemStart, ItemServerStart, nullptr);
 
     addChild(menu, LLayer);
 }

@@ -19,6 +19,8 @@
 class TcpSocket {
 
     std::future<void> futureOfThread;
+    int delayMsecSend,
+        delayMsecRecv;
 
 protected:
     std::mutex mut;

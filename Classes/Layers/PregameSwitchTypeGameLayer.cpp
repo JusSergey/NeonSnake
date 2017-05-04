@@ -60,6 +60,8 @@ bool PregameSwitchTypeGameLayer::init()
     if(!Layer::init())
         return false;
 
+    callbackNext = [](Ref*){};
+
     flagStartServer = InitServer;
 
     log("initialize PregameSwitchTypeGameLayer...");
@@ -67,7 +69,7 @@ bool PregameSwitchTypeGameLayer::init()
     visibleSize = Director::getInstance()->getVisibleSize();
     origin = Director::getInstance()->getVisibleOrigin();
 
-    Label* label = Label::createWithSystemFont("Select Type Game", "fonts/Bicubik.ttd", 36);
+    Label* label = Jus::createLabelTTF("Select Type Game", "fonts/Bicubik.ttf", 24);
 
     label->setAdditionalKerning(3);
 
@@ -90,9 +92,19 @@ void PregameSwitchTypeGameLayer::setFlagStartServer(bool value)
     flagStartServer = (value ? 0 : InitServer);
 }
 
+void PregameSwitchTypeGameLayer::startLocalGame()
+{
+    GameView::GoToGameView(GameData::currentLevel, InitAll ^ InitBot ^ InitSecondPlayer ^ flagStartServer);
+}
+
 void PregameSwitchTypeGameLayer::setCallbackBackToMenu(const std::function<void(Ref*)> &value)
 {
     itemBack->setCallback(value);
+}
+
+void PregameSwitchTypeGameLayer::setCallbackNext(const std::function<void (Ref *)> &value)
+{
+    callbackNext = value;
 }
 
 MenuItemLabel *PregameSwitchTypeGameLayer::getItem(GameType type) const
@@ -166,7 +178,9 @@ void PregameSwitchTypeGameLayer::initDrawNode()
 
 void PregameSwitchTypeGameLayer::initLabel(MenuItemLabel *&rvPtr, const std::string &text)
 {
-    rvPtr = cocos2d::MenuItemLabel::create(Label::createWithSystemFont(text, "monospace", 48));
+    Label *label = Jus::createLabelTTF(text, "fonts/Bicubik.ttf", 36);
+    label->setAdditionalKerning(3);
+    rvPtr = cocos2d::MenuItemLabel::create(label);
 }
 
 void PregameSwitchTypeGameLayer::initNavigationMenu()
@@ -192,7 +206,8 @@ void PregameSwitchTypeGameLayer::initNavigationMenu()
             GameView::GoToGameView(GameData::currentLevel, InitAll ^ InitLocalPlayer ^ InitBot ^ InitServer);
 
         else if (text == LOCAL_PLAYER){
-            GameView::GoToGameView(GameData::currentLevel, InitAll ^ InitBot ^ InitSecondPlayer ^ flagStartServer);
+            callbackNext(nullptr);
+            //GameView::GoToGameView(GameData::currentLevel, InitAll ^ InitBot ^ InitSecondPlayer ^ flagStartServer);
         }
 
         else if (text == PLAYER_BOT)
@@ -209,6 +224,8 @@ void PregameSwitchTypeGameLayer::initNavigationMenu()
     itemBack ->setPosition(Vec2(offset, 0) - visibleSize + itemBack->getContentSize()*0.65);
     itemStart->setPosition(Vec2(offset, -visibleSize.height) + Vec2(-itemStart->getContentSize().width*0.65, itemStart->getContentSize().height*0.65));
 
+    itemStart->setString(UserData::type == LocalGame ? "Next->" : "Start");
+
     addChild(Menu::create(itemBack, itemStart, nullptr), LLayer);
 }
 
@@ -223,6 +240,9 @@ std::function<void (Ref *)> PregameSwitchTypeGameLayer::getCallbackClickLabel()
                 l->setOpacity(0xff);
                 UserData::type = getGameType(l->getString());
                 DataSetting::save();
+
+                if (itemStart)
+                    itemStart->setString(UserData::type == LocalGame ? "Next->" : "Start");
 
             } else {
                 l->setOpacity(0xff * 0.25);

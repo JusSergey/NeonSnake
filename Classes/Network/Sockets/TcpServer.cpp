@@ -34,10 +34,12 @@ void TcpServer::loop()
     if (timeReceiver > toMsec(UpdateRecver)) {
         loopReceiver();
         timeReceiver = 0;
+//        delayMsecSend= 0;
     }
     if (timeSender > toMsec(UpdateSender)) {
         loopSender();
         timeSender = 0;
+//        delayMsecRecv = 0;
     }
 }
 
@@ -58,7 +60,7 @@ void TcpServer::loopListener()
 void TcpServer::loopReceiver()
 {
     for (int i : clients)
-        if (recv(i, buffer, sizeof(buffer), MSG_WAITALL) > 0)
+        if (recv(i, buffer, sizeof(buffer), MSG_NOSIGNAL) > 0)
             read();
 }
 
@@ -68,7 +70,7 @@ void TcpServer::loopSender()
 
         ssize_t bytes = send(i, msgToSend.c_str(), msgToSend.size()+1, MSG_NOSIGNAL);
 
-        if (bytes == -1) {
+        if (bytes <= 0) {
 
             int &r = statistic[i];
             r++;
@@ -77,7 +79,7 @@ void TcpServer::loopSender()
 
             if (r > 10){
 //                (std::cout << "remove of clients.").flush();
-//                clients.remove(i);
+                clients.remove(i);
                 break;
             }
         }

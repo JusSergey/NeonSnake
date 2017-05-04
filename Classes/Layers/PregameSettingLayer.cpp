@@ -5,6 +5,9 @@
 static const float border_1 = 15;
 static const float border_2 = border_1 + 15;
 static const float border_3 = border_2 + 15;
+static const float scl = 0.35;
+
+std::map<SwitchLevelGame::_Tag, SwitchLevelGame *> SwitchLevelGame::globalObjects;
 
 #define offsetX (Jus::getWidth())
 
@@ -60,6 +63,12 @@ bool PregameSettingLayer::init()
     initScrollViewLevels();
 
     initDrawNode();
+
+    schedule([this](float){
+        for (SwitchLevelGame *lvl : levels) {
+           // log("lvl[%d] : [%f, %f]", lvl->getTag(), lvl->getPositionX(), lvl->getPositionY());
+        }
+    }, 1, "prntLVLS");
 
     return true;
 }
@@ -262,6 +271,8 @@ void PregameSettingLayer::initScrollViewLevels()
 
         auto level = SwitchLevelGame::create();
 
+        levels.push_back(level);
+
         level->setTag(i);
 
         level->setScale(scl);
@@ -305,7 +316,6 @@ bool SwitchColorSnake::init()
 
 void SwitchColorSnake::setCallbackSelectColor(const std::function<void (const Color3B &, int)> &callback)
 {
-
     callbackSelectColor = callback;
 }
 
@@ -316,10 +326,16 @@ bool SwitchLevelGame::init()
     if (level > countLevels)
         level = 1;
 
+    myTag = level;
+    SwitchLevelGame::globalObjects.erase(myTag);
+    SwitchLevelGame::globalObjects.insert(std::make_pair(myTag, this));
+
     std::string source = std::string("Levels/level_") + StringUtils::toString(level++) + ".png";
 
     if (!ui::Button::init(source))
         return false;
+
+    setSelectLevel(GameData::currentLevel);
 
     return true;
 }
@@ -332,4 +348,21 @@ void SwitchLevelGame::onTouchEnded(Touch *touch, Event *unusedEvent)
     if (touch->getStartLocation().distance(touch->getLocation()) < Jus::getWidth() * 0.01 /* < 1% of width */)
         GameData::currentLevel = getTag();
 
+    SwitchLevelGame::setSelectLevel(GameData::currentLevel);
+
+//    for (auto &objPair : SwitchLevelGame::globalObjects) {
+//        auto lvl = objPair.second;
+//        lvl->setOpacity(lvl == this ? 0xff : 0xff*0.35);
+//        lvl->setScale(lvl == this ? scl + 0.05 : scl);
+//    }
+
+}
+
+void SwitchLevelGame::setSelectLevel(int selectLevel)
+{
+    for (auto &objPair : SwitchLevelGame::globalObjects) {
+        int lvl = objPair.first;
+        objPair.second->setOpacity(lvl == selectLevel ? 0xff : 0xff*0.35);
+        objPair.second->setScale(lvl == selectLevel ? scl + 0.05 : scl);
+    }
 }
