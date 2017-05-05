@@ -19,7 +19,7 @@ std::string DataSetting::UserData_t::tmpMyNetworkPort = "2327";
 Color3B DataSetting::UserData_t::playerColor = Color3B::BLUE;
 Color3B DataSetting::UserData_t::opponentColor = Color3B::RED;
 
-GameMode DataSetting::GameData_t::mode = GameMode::Default;
+GameMode DataSetting::GameData_t::mode = GameMode::Classic;
 
 GameType DataSetting::UserData_t::type = GameType::PlayerVSBot;
 
@@ -108,7 +108,7 @@ void DataSetting::reset() {
     UserData_t::playingEffectSound =
     false;
 
-    GameData_t::mode = GameMode::Default;
+    GameData_t::mode = GameMode::Classic;
     UserData_t::type = GameType::PlayerVSBot;
 
     GameData_t::currentLevel = 1;

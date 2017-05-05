@@ -433,7 +433,7 @@ void GameView::initGameNavigator()
 
     switch (gameMode) {
 
-        case GameMode::Default: {
+        case GameMode::Classic: {
             gameNavigatorLayer->setTimeLevel(LevelTimeGame[levelIndex-1]);
             gameNavigatorLayer->setStepSeconds(-1);
         } break;

@@ -16,10 +16,10 @@ bool NetworkSettingLayer::init()
 {
     //////////////////////////////
     // 1. super init first
-    if(!Layer::init())
+    if (!Layer::init())
         return false;
 
-    localIpAddress = "No local address";
+    localIpAddress = "Is not find local address";
 
     visibleSize = Director::getInstance()->getVisibleSize();
     origin = Director::getInstance()->getVisibleOrigin();
@@ -96,7 +96,7 @@ void NetworkSettingLayer::initLabelLocalInfo()
     std::string commandRm = "rm ";
     system((commandRm + path + filename).c_str());
 
-    Label *labelLocalIpAddserr = Label::createWithSystemFont((std::string("Your local address\n") + localIpAddress).c_str(), "monospace", fsize);
+    Label *labelLocalIpAddserr = Jus::createLabelSystem((std::string("Your local address\n") + localIpAddress).c_str(), "monospace", fsize);
     labelLocalIpAddserr->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     labelLocalIpAddserr->setPosition(offset + Jus::getDisplayPoint(0.5, 0.1));
     addChild(labelLocalIpAddserr, 2);

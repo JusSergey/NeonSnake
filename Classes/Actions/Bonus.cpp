@@ -16,11 +16,8 @@ bool Bonus::init()
     visibleSize = Director::getInstance()->getVisibleSize();
     origin = Director::getInstance()->getVisibleOrigin();
 
-//    setVisible(false);
-
     setPosition(Vec2::ZERO - getContentSize());
 
-//    _director->getTextureCache()->getTextureForKey()
     textureFantazyShader = _director->getTextureCache()->addImage("Bonus.png");
     textureBigScore = _director->getTextureCache()->addImage("5Balls.png");;
     textureBomba = _director->getTextureCache()->addImage("Bomba.png");;

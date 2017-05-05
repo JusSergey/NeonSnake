@@ -353,7 +353,7 @@ void GameNavigatorLayer::setTimeLevel(int secons)
 
     schedule([=](float){
 
-        if (mode == GameMode::Default && timeInSeconds <= 0) {
+        if (mode == GameMode::Classic && timeInSeconds <= 0) {
             unschedule(nameSchedule);
             callbackTimeout();
         }

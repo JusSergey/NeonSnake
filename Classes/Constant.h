@@ -72,7 +72,7 @@ enum Levels {
 
 enum GameMode {
     Survival,
-    Default,
+    Classic,
     Local
 };
 

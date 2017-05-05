@@ -112,7 +112,7 @@ void MenuScene::initTouches()
 void MenuScene::initMenu()
 {
     /* init click Start */
-    itemStart = MenuItemLabel::create(createLabel("Start"), [this](Ref*){ clickStart(); });
+    itemStart = MenuItemLabel::create(createLabel("Classic"), [this](Ref*){ clickStart(); });
 
     /* init click Survival */
     itemSurvival = MenuItemLabel::create(createLabel("Survival"), [this](Ref*){ clickSurvival(); });
@@ -132,7 +132,7 @@ void MenuScene::initMenu()
 
 void MenuScene::clickStart()
 {
-    GameData::mode = GameMode::Default;
+    GameData::mode = GameMode::Classic;
     camera->runAction(MoveBy::create(0.3, Vec2(visibleSize.width, 0)));
 }
 
