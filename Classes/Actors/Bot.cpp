@@ -103,7 +103,8 @@ void Bot::analizeSituation(float)
 
     if ((bonus && bonus->getPosition() != analizeData.prevPosBonus) ||
         (eat   && eat->getPosition()   != analizeData.prevPosEat) ||
-        (bonus && bonus->isVisible()   != analizeData.visibleBonus))
+        (bonus && bonus->isVisible()   != analizeData.visibleBonus) ||
+        (pointsPath.empty()))
     {
 
         log("analize update calculate paths.");
