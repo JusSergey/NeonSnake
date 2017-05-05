@@ -15,9 +15,11 @@ public:
     virtual bool init();
 
 private:
+    cocos2d::DrawNode *debugDraw;
     cocos2d::Size visibleSize;
     cocos2d::Vec2 origin;
     int indexPoint;
+    bool enableDebugDraw;
     Vec2 GoTo;
 
 public:
@@ -28,6 +30,11 @@ public:
 
 protected:
     virtual void movingHead(float delta);
+    void initDebugDraw();
+    void repaintDebug();
+
+public:
+    virtual void start();
 
 ////////////////////// AI CREATE PATH
 public:
@@ -142,6 +149,9 @@ public:
 
     inline void setWallsMap(const CreateWay::WallsMap &WMap) { walls = WMap; }
 
+    void setPointsPath(const std::vector<CreateWay::Int16Point> &value);
+    bool getEnableDebugDraw() const;
+    void setEnableDebugDraw(bool value);
 };
 
 NS_CC_END

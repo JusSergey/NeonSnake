@@ -219,13 +219,14 @@ void GameView::onEnterTransitionDidFinish()
 
     layer->setCameraMask((unsigned short)CameraFlag::USER1);
 
-
+    // test max speed for bot
+//    scheduleOnce([this](float){ botActor->setSpeed(20); botActor->setEnableDebugDraw(true);}, 3, "stspd");
 
 }
 
 void GameView::initBonus()
 {
-    bonus = Bonus::create(Bonus::TypeBonusMask::BigScore);
+    bonus = Bonus::create();
 
     if ((bitmaskInitsGameLayer & InitServer) || (!(bitmaskInitsGameLayer & InitServer) && !(bitmaskInitsGameLayer & InitLocalPlayer)))
         bonus->setMode(Bonus::Mode::Active);
@@ -242,7 +243,7 @@ void GameView::initBonus()
 
     log ("hide position");
 
-    bonus->hidePosition();
+    bonus->hide();
 
 }
 

@@ -19,23 +19,16 @@ bool Bonus::init()
     setPosition(Vec2::ZERO - getContentSize());
 
     textureFantazyShader = _director->getTextureCache()->addImage("Bonus.png");
-    textureBigScore = _director->getTextureCache()->addImage("5Balls.png");;
-    textureBomba = _director->getTextureCache()->addImage("Bomba.png");;
-    textureLowSnake = _director->getTextureCache()->addImage("BonusSpeed-.png");;
-    textureFastSnake = _director->getTextureCache()->addImage("BonusSpeed+.png");;
+    textureBigScore = _director->getTextureCache()->addImage("5Balls.png");
+    textureBomba = _director->getTextureCache()->addImage("Bomba.png");
+    textureLowSnake = _director->getTextureCache()->addImage("BonusSpeed-.png");
+    textureFastSnake = _director->getTextureCache()->addImage("BonusSpeed+.png");
 
     setRandomBonus();
 
     initActionBonus();
 
-    schedule([this](float){
-
-        scheduleOnce([this](float){
-            setRandomPosition();
-            setRandomBonus();
-        }, 7, "hideBonus");
-
-    }, cocos2d::random(15, 30), "eateSch");
+    initRandoming();
 
     initPhysicsBody();
 
@@ -48,7 +41,7 @@ bool Bonus::isVisible() const
     return (getPositionX() > sz.width/2 && getPositionY() > sz.height/2);
 }
 
-Bonus *Bonus::create(int type)
+Bonus *Bonus::create()
 {
     Bonus *pRet = new(std::nothrow) Bonus();
     if (pRet && pRet->init())
@@ -80,15 +73,15 @@ void Bonus::setBonusType(TypeBonusMask type)
 
 void Bonus::eate(Node *node)
 {
-//    setVisible(false);
-    setPosition(Vec2::ZERO - getContentSize());
+    secondsOfUpdate = 0;
+    hide();
 }
 
 void Bonus::initPhysicsBody()
 {
     if (!getPhysicsBody()) {
         auto *body = PhysicsBody::createCircle(getContentSize().width / 2, PhysicsMaterial(0, 0, 0));
-        body->setDynamic(true);
+        body->setDynamic(false);
         body->setMass(0.00001);
         body->setContactTestBitmask(TestBitmask::EatBitMask);
         body->setCollisionBitmask(0);
@@ -99,7 +92,7 @@ void Bonus::initPhysicsBody()
 
 void Bonus::initActionBonus()
 {
-    float timeAction = 0.3;
+    const float timeAction = 0.3;
 
     auto A1 = ScaleTo::create(timeAction, 1.3);
     auto A2 = ScaleTo::create(timeAction, 1);
@@ -108,13 +101,28 @@ void Bonus::initActionBonus()
     runAction(RepeatForever::create(A3));
 }
 
+void Bonus::initRandoming()
+{
+    secondsOfUpdate = 0;
+
+    schedule([this](float){
+
+        if (++secondsOfUpdate > 40 && !isVisible()) {
+            setRandomPosition();
+            setRandomBonus();
+            secondsOfUpdate = 0;
+        }
+
+    }, 1, "eateSch");
+}
+
 void Bonus::setRandomBonus()
 {
-    TypeBonusMask variable[] {FantazyShader, BigScore, Bomba, LowSnake, FastSnake};
+    const TypeBonusMask variable[] {FantazyShader, BigScore, Bomba, LowSnake, FastSnake};
 
     // set random type
     {
-        auto oldType = type;
+        const auto oldType = type;
         while (oldType == (type = variable[random(0, int(sizeof(variable) / sizeof(variable[0]))-1)]));
     }
 

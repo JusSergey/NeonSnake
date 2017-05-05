@@ -65,7 +65,7 @@ public:
 
     /* else user functions */
 public:
-    void start();
+    virtual void start();
     void stop();
 
     void setRealLength (const size_t len);

@@ -20,16 +20,15 @@ public:
     };
 
 public:
-
     void setRandomBonus();
 
     virtual bool init();
 
-    inline void hidePosition() { setPosition(Vec2::ZERO - getContentSize()); }
+    inline void hide() { setPosition(Vec2::ZERO - getContentSize()); }
 
     virtual bool isVisible() const;
 
-    static Bonus* create(int type);
+    static Bonus* create();
 
 private:
     cocos2d::Size visibleSize;
@@ -40,6 +39,7 @@ private:
     cocos2d::Texture2D* textureBomba;
     cocos2d::Texture2D* textureLowSnake;
     cocos2d::Texture2D* textureFastSnake;
+    int32_t secondsOfUpdate;
 
 public:
     inline const TypeBonusMask& getBonusType() { return type; }
@@ -53,6 +53,7 @@ private:
     virtual void setVisible(bool isVisible){ Node::setVisible(isVisible); }
     void initPhysicsBody();
     void initActionBonus();
+    void initRandoming();
 //    bool isContact(const Vec2 &point, float maxRadius);
 
 };

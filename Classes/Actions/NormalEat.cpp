@@ -67,8 +67,8 @@ void NormalEat::setPosition(const Vec2 &position)
 
         swapImageEat->setScale(1);
         swapImageEat->runAction(Sequence::create(ScaleTo::create(timeAnimationEat, 0.1),
-                                                  CallFunc::create([this](){ swapImageEat->setPosition(getPosition());}),
-                                                  nullptr));
+                                                 CallFunc::create([this](){ swapImageEat->setPosition(getPosition());}),
+                                                 nullptr));
     }
 }
 

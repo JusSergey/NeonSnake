@@ -16,8 +16,9 @@ bool Bot::init()
     if(!Snake::init())
         return false;
 
-    bonus == nullptr;
-    eat == nullptr;
+    debugDraw = nullptr;
+    bonus = nullptr;
+    eat = nullptr;
 
     indexPoint = 0;
 
@@ -33,15 +34,66 @@ bool Bot::init()
     return true;
 }
 
+void Bot::initDebugDraw()
+{
+    static const char *schName = "initdnode";
+
+    if (isScheduled(schName))
+        return;
+
+    schedule([&](float){
+        if (getParent()) {
+            debugDraw = DrawNode::create(3);
+            getParent()->addChild(debugDraw, Levels::LTop);
+            unschedule(schName);
+            log("init debug draw");
+        }
+    }, 1, schName);
+}
+
+void Bot::repaintDebug()
+{
+    if (debugDraw && debugDraw->getParent() && enableDebugDraw) {
+        debugDraw->clear();
+        for (const Bot::CreateWay::Int16Point &vec : pointsPath)
+            debugDraw->drawPoint(vec.toVec2() * discret, 3, Color4F::RED);
+    }
+}
+
+bool Bot::getEnableDebugDraw() const
+{
+    return enableDebugDraw;
+}
+
+void Bot::setEnableDebugDraw(bool value)
+{
+    enableDebugDraw = value;
+    if (enableDebugDraw && !debugDraw)
+        initDebugDraw();
+
+}
+
 void Bot::movingHead(float delta)
 {
     if (indexPoint < pointsPath.size()) {
-            auto action = MoveTo::create(delta, pointsPath[indexPoint].toVec2() * discret);
-            head->runAction(action);
-            indexPoint++;
+        auto action = MoveTo::create(delta, pointsPath[indexPoint].toVec2() * discret);
+        head->runAction(action);
+        int step = speedSnake / 5;
+
+        if (indexPoint + step >= pointsPath.size())
+            step = pointsPath.size() - indexPoint - 1;
+
+        indexPoint += (step > 0 ? step : 1);
 
     }
 
+}
+
+void Bot::start()
+{
+    isMovingHeadSnake = true;
+    int step = speedSnake / 5;
+    schedule(schedule_selector(Bot::movingHead), 1.f / speedSnake * (step > 0 ? step : 1));
 }
 
 
@@ -68,7 +120,8 @@ void Bot::analizeSituation(float)
             if (analizeData.tagObject != BasicEat::TagBasicBonus || !indexPoint || bonus->getPosition() != analizeData.prevPosBonus) {
                 analizeData.tagObject  = BasicEat::TagBasicBonus;
                 GoTo = bonus->getPosition();
-                pointsPath = pathToBonus;
+                setPointsPath(pathToBonus);
+//                pointsPath = pathToBonus;
                 indexPoint = 0;
             }
         }
@@ -76,7 +129,8 @@ void Bot::analizeSituation(float)
             if (analizeData.tagObject != BasicEat::TagBasicEat || !indexPoint || eat->getPosition() != analizeData.prevPosEat) {
                 analizeData.tagObject  = BasicEat::TagBasicEat;
                 GoTo = eat->getPosition();
-                pointsPath = pathToEat;
+                setPointsPath(pathToEat);
+//                pointsPath = pathToEat;
                 indexPoint = 0;
             }
         }
@@ -102,6 +156,12 @@ std::vector<Bot::CreateWay::Int16Point> Bot::createway(const Vec2 &in, const Vec
 std::vector<Bot::CreateWay::Int16Point> Bot::createway(const Vec2 &to)
 {
     return CreateWay::getInstance()->createPointsPath(walls, getPosition() / discret, to / discret);
+}
+
+void Bot::setPointsPath(const std::vector<CreateWay::Int16Point> &value)
+{
+    pointsPath = value;
+    repaintDebug();
 }
 
 
