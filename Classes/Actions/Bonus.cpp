@@ -3,6 +3,9 @@
 
 USING_NS_CC;
 
+static const char *schDelayBetweenBonusses = "schUB";
+static const char *schIntervalShowingBonus = "schDM";
+
 // on "init" you need to initialize your instance
 bool Bonus::init()
 {
@@ -73,6 +76,7 @@ void Bonus::setBonusType(TypeBonusMask type)
 
 void Bonus::eate(Node *node)
 {
+    unschedule(schIntervalShowingBonus);
     secondsOfUpdate = 0;
     hide();
 }
@@ -107,13 +111,18 @@ void Bonus::initRandoming()
 
     schedule([this](float){
 
-        if (++secondsOfUpdate > 40 && !isVisible()) {
+        if (++secondsOfUpdate > delayBetweenBonusses && !isVisible()) {
             setRandomPosition();
             setRandomBonus();
             secondsOfUpdate = 0;
+
+            scheduleOnce([this](float){
+                secondsOfUpdate = 0;
+                hide();
+            }, intervalShowingBonus, schIntervalShowingBonus);
         }
 
-    }, 1, "eateSch");
+    }, 1, schDelayBetweenBonusses);
 }
 
 void Bonus::setRandomBonus()
