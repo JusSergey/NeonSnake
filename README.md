@@ -1,8 +1,8 @@
-# NeonSnake
-Use engine cocos2d-x-3.11 - linux [OK], android[OK]
+# NewSnake
+testing on:
+    cocos2d-x-3.11
+    cocos2d-x-3.14
+    
+All support, on platforms: linux, android.
 
-On cocos2d-x-3.14.1 - linux [OK], android[CRASH]
-
-All support platforms: linux, android.
-
-Else platforms: not support network.
+Else platforms: not support local game.
