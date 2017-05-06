@@ -99,11 +99,12 @@ void LevelLayer::initShader(const Vec2 &p1, const Vec2 &p2)
     glProgramState = image->getGLProgramState();
 
     glProgramState->setUniformFloat("blackwhite", shaderSensitive = .0f);
-    glProgramState->setUniformVec3("filter", Vec3(1, 0, 1));
+//    glProgramState->setUniformVec3("filter", Vec3(1, 0, 1));
     glProgramState->setUniformTexture("u_texture", image->getTexture());
     glProgramState->setUniformVec2("u_center1", p1);
     glProgramState->setUniformVec2("u_center2", p2);
     glProgramState->setUniformFloat("maskShader", colorShader = cocos2d::random(0, 3));
+    glProgramState->setUniformFloat("scaleWidth", visibleSize.width / visibleSize.height);
     glProgramLevel->use();
 
 
@@ -183,3 +184,4 @@ void LevelLayer::shaderToSensitive(float time, float sensitive)
     }, updateTimeMSec, nameScheduler);
 
 }
+
