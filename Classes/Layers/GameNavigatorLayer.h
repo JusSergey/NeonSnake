@@ -10,8 +10,6 @@
 2.) bot: [w*0.5, h*0+f]  [w*0.5, h*1-f]
 */
 
-
-
 class GameNavigatorLayer : public cocos2d::Layer
 {
 public:

@@ -814,7 +814,7 @@ void GameView::shotTo(const Vec2 &in, const Vec2 &to)
         exp->setStartColor(Color4F::YELLOW);
         exp->setEndColor(Color4F::RED);
 
-        exp->setScale(0.6);
+        exp->setScale(0.6 / _director->getContentScaleFactor());
 
         exp->setLife(.1);
         exp->setDuration(0.3);
