@@ -49,7 +49,8 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
   ../../Classes/Data/SendData.cpp \
  \
   ../../Classes/Jus.cpp \
-  ../../Classes/MyBodyParser.cpp
+  ../../Classes/MyBodyParser.cpp \
+  ../../Classes/Language.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes
 

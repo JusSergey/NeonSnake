@@ -5,7 +5,24 @@
 #include "Layers/PregameSettingLayer.h"
 #include "Layers/PregameSwitchTypeGameLayer.h"
 #include "Layers/NetworkSettingLayer.h"
+#include "Language.h"
 #include "GameView.h"
+#include <array>
+
+class SelectLanguage : public cocos2d::Sprite {
+public:
+    CREATE_FUNC(SelectLanguage)
+    virtual bool init();
+    void setCallbackClick(const std::function<void (Locale)> &value);
+    void setLocale(Locale locale);
+
+private:
+    void initListener();
+    std::function<void(Locale)> callbackClick;
+    int counterClicked;
+};
+
+
 
 class MenuScene : public GameView
 {
@@ -29,11 +46,12 @@ private:
     PregameSettingLayer        *pregameSettingLayer;
     PregameSwitchTypeGameLayer *pregameSwitchTypeGameLayer;
     NetworkSettingLayer        *networkSettingLayer;
+    SelectLanguage             *selectLanguage;
 
 //    mutable bool isClickStartServer;
 
 private:
-    void clickStart();
+    void clickClassic();
     void clickSurvival();
     void clickLocal();
     void clickExit();
@@ -41,8 +59,11 @@ private:
 private:
     virtual std::function<void()> getCallbackMusicButton() const;
             std::function<void(Ref*)> getCallbackStartServer() const;
+            std::function<void(Locale)> getCallbackClickChangeLanguage() const;
 
 private:
+    void setLanguageLabels(Locale locale);
+    void initSelectedLanguage();
     void initCamera();
     void initDrawNode();
     void initTouches();

@@ -9,7 +9,7 @@
 
 USING_NS_CC;
 
-const std::string LOCAL_PLAYER  = "Local Player";
+const std::string LOCAL_PLAYER  = "Local Game";
 const std::string PLAYER_PLAYER = "Player vs. Player";
 const std::string PLAYER_BOT    = "Player vs. Bot";
 const std::string ONLY_PLAYER   = "Only Player";
@@ -18,19 +18,19 @@ const std::string ONLY_BOT      = "Only Bot";
 
 GameType getGameType (const std::string &strType) {
 
-    if (strType == LOCAL_PLAYER)
+    if (strType == Language::get(UserData::locale, LOCAL_PLAYER) || strType == LOCAL_PLAYER)
         return LocalGame;
 
-    if (strType == PLAYER_PLAYER)
+    if (strType == Language::get(UserData::locale, PLAYER_PLAYER))
         return PlayerVSPlayer;
 
-    if (strType == PLAYER_BOT)
+    if (strType == Language::get(UserData::locale, PLAYER_BOT))
         return PlayerVSBot;
 
-    if (strType == ONLY_PLAYER)
+    if (strType == Language::get(UserData::locale, ONLY_PLAYER))
         return PlayerAlways;
 
-    if (strType == ONLY_BOT)
+    if (strType == Language::get(UserData::locale, ONLY_BOT))
         return BotAlways;
 
     return (GameType)-1;
@@ -69,26 +69,23 @@ bool PregameSwitchTypeGameLayer::init()
     visibleSize = Director::getInstance()->getVisibleSize();
     origin = Director::getInstance()->getVisibleOrigin();
 
-    Label* label = Jus::createLabelTTF("Select Type Game", "fonts/Bicubik.ttf", 24);
+    labelTitle = Jus::createLabelTTF("Select Type Game", "fonts/Bicubik.ttf", 24);
 
-    label->setAdditionalKerning(3);
+    labelTitle->setAdditionalKerning(3);
 
-    label->setPosition(offset, visibleSize.height/2 - label->getContentSize().height);
+    labelTitle->setPosition(offset, visibleSize.height/2 - labelTitle->getContentSize().height);
 
-    addChild(label, LLayer);
+    addChild(labelTitle, LLayer);
 
     initSwitchLabels();
     initDrawNode();
     initNavigationMenu();
-
-    log("good");
 
     return true;
 }
 
 void PregameSwitchTypeGameLayer::setFlagStartServer(bool value)
 {
-    log("sserv: %s", value ? "true" : "false");
     flagStartServer = (value ? 0 : InitServer);
 }
 
@@ -119,12 +116,6 @@ MenuItemLabel *PregameSwitchTypeGameLayer::getItem(GameType type) const
     }
 }
 
-//void PregameSwitchTypeGameLayer::addChild(Node *child, int localZOrder)
-//{
-//    child->setPositionX(child->getPositionX() + offset);
-//    Layer::addChild(child, localZOrder);
-//}
-
 void PregameSwitchTypeGameLayer::initSwitchLabels()
 {
     initLabel(labelLP, LOCAL_PLAYER);
@@ -146,7 +137,6 @@ void PregameSwitchTypeGameLayer::initSwitchLabels()
             widthSolidRect = i->getContentSize().width;
 
     widthSolidRect += (visibleSize.width - widthSolidRect) / 2;
-    log("width %f ", widthSolidRect);
 
     Menu *menu = Menu::create(LABEL_ITEMS, nullptr);
 
@@ -155,7 +145,6 @@ void PregameSwitchTypeGameLayer::initSwitchLabels()
     menu->setPosition(offset, 0);
 
     Layer::addChild(menu, LLayer);
-    log("INITS");
 }
 
 void PregameSwitchTypeGameLayer::initDrawNode()
@@ -202,21 +191,21 @@ void PregameSwitchTypeGameLayer::initNavigationMenu()
             if (l->getOpacity() == 0xff)
                 text = l->getString();
 
-        if (text == PLAYER_PLAYER)
+        if (text == Language::get(DataSetting::UserData_t::locale, PLAYER_PLAYER))
             GameView::GoToGameView(GameData::currentLevel, InitAll ^ InitLocalPlayer ^ InitBot ^ InitServer);
 
-        else if (text == LOCAL_PLAYER){
+        else if (text == Language::get(DataSetting::UserData_t::locale, LOCAL_PLAYER)){
             callbackNext(nullptr);
             //GameView::GoToGameView(GameData::currentLevel, InitAll ^ InitBot ^ InitSecondPlayer ^ flagStartServer);
         }
 
-        else if (text == PLAYER_BOT)
+        else if (text == Language::get(DataSetting::UserData_t::locale, PLAYER_BOT))
             GameView::GoToGameView(GameData::currentLevel, InitAll ^ InitLocalPlayer ^ InitSecondPlayer ^ InitServer);
 
-        else if (text == ONLY_PLAYER)
+        else if (text == Language::get(DataSetting::UserData_t::locale, ONLY_PLAYER))
             GameView::GoToGameView(GameData::currentLevel, InitAll ^ InitLocalPlayer ^ InitBot ^ InitSecondPlayer ^ InitServer);
 
-        else if (text == ONLY_BOT)
+        else if (text == Language::get(DataSetting::UserData_t::locale, ONLY_BOT))
             GameView::GoToGameView(GameData::currentLevel, InitAll ^ InitLocalPlayer ^ InitFirstPlayer ^ InitSecondPlayer ^ InitServer);
 
     });
@@ -227,6 +216,29 @@ void PregameSwitchTypeGameLayer::initNavigationMenu()
     itemStart->setString(UserData::type == LocalGame ? "Next->" : "Start");
 
     addChild(Menu::create(itemBack, itemStart, nullptr), LLayer);
+}
+
+void PregameSwitchTypeGameLayer::setLanguageLabels(Locale locale)
+{
+    labelB->setString(Language::get(locale, "Only Bot"));
+    labelLP->setString(Language::get(locale, "Local Game"));
+    labelP->setString(Language::get(locale, "Only Player"));
+    labelPB->setString(Language::get(locale, "Player vs. Bot"));
+    labelPP->setString(Language::get(locale, "Player vs. Player"));
+    labelTitle->setString(Language::get(locale, "Select Type Game"));
+
+    if(getItem(UserData::type))
+        (getCallbackClickLabel())(getItem(UserData::type));
+
+    itemBack->setString(std::string("<- ") + Language::get(locale, "Back"));
+
+    if (UserData::type == LocalGame)
+        itemStart->setString(Language::get(locale, "Next") + " ->");
+
+    else itemStart->setString(Language::get(locale, "Start"));
+
+    itemBack ->setPosition(Vec2(offset, 0) - visibleSize + itemBack->getContentSize()*0.65);
+    itemStart->setPosition(Vec2(offset, -visibleSize.height) + Vec2(-itemStart->getContentSize().width*0.65, itemStart->getContentSize().height*0.65));
 }
 
 std::function<void (Ref *)> PregameSwitchTypeGameLayer::getCallbackClickLabel()
@@ -241,8 +253,11 @@ std::function<void (Ref *)> PregameSwitchTypeGameLayer::getCallbackClickLabel()
                 UserData::type = getGameType(l->getString());
                 DataSetting::save();
 
+                log("UDT[%d][%d][%s]", UserData::type, UserData::locale, l->getString().c_str());
+
                 if (itemStart)
-                    itemStart->setString(UserData::type == LocalGame ? "Next->" : "Start");
+                    itemStart->setString(UserData::type == LocalGame ? Language::get(DataSetting::UserData_t::locale, "Next") + " ->" :
+                                                                       Language::get(DataSetting::UserData_t::locale, "Start"));
 
             } else {
                 l->setOpacity(0xff * 0.25);

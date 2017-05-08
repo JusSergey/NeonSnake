@@ -6,6 +6,8 @@
 
 // created by qt. Sergey Juice
 
+//std::mutex TcpSocket::mut;
+
 TcpSocket::TcpSocket(const std::string &ip, u_short port) :
     fd(-1),
     ip(ip),

@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 #include <functional>
 #include "ui/CocosGUI.h"
+#include "Language.h"
 
 class NetworkSettingLayer : public cocos2d::Layer
 {

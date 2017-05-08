@@ -11,7 +11,7 @@ USING_NS_CC;
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 # define isFullScreen TRUE
 #else
-# define isFullScreen TRUE
+# define isFullScreen FALSE
 #endif
 
 #if isFullScreen
@@ -102,6 +102,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
         log("Scale Factor xy[%f, %f]", ScaleFactorX, ScaleFactorY);
         Director::getInstance()->setContentScaleFactor(1.f / std::max(ScaleFactorX, ScaleFactorY));
     }
+
+    FileUtils::getInstance()->removeFile(ServerLogFilePath);
+    FileUtils::getInstance()->removeFile(ClientLogFilePath);
 
     register_all_packages();
 

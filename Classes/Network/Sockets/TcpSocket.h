@@ -11,9 +11,9 @@
 #include <future>
 #include <mutex>
 
-#define UpdateListener 5
-#define UpdateSender 15
-#define UpdateRecver 15
+#define UpdateListener 20
+#define UpdateSender 20
+#define UpdateRecver (UpdateSender*1.5)
 #define toMsec(count) (1.f / (count) * 1000)
 
 class TcpSocket {
@@ -29,9 +29,7 @@ public:
     TcpSocket(const std::string &ip, u_short port);
    ~TcpSocket();
 
-    inline bool getStatus() const {
-        return statusThread;
-    }
+    inline bool getStatus() const { return statusThread; }
 
 protected:
     int timeListener,
@@ -54,7 +52,7 @@ protected: /* data info to init */
 
 protected: /* data read/write buffers */
     std::string msgToSend;
-    char buffer[1024];
+    char buffer[4096];
 
 
 protected: /* data to init socket */

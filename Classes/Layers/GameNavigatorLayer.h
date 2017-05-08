@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 #include "Constant.h"
 #include "PauseLayer.h"
+#include "Language.h"
 
 /*
 1.) you: [w*0+f, h*0.95] [w*1-f, h*0.95]
@@ -78,6 +79,8 @@ public:
 
     void setCallbackRestart(const std::function<void ()> &value);
     void setCallbackHome   (const std::function<void ()> &value);
+
+    void setLanguageLabels(Locale locale);
 
 public:
     void hideContextMenu(float lastTime);

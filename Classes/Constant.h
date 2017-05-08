@@ -3,6 +3,14 @@
 
 #include "cocos2d.h"
 
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+static const std::string ServerLogFilePath = "/storage/emulated/0/server.log";
+static const std::string ClientLogFilePath = "/storage/emulated/0/client.log";
+#else
+static const std::string ServerLogFilePath = "/home/heart/Desktop/server.log";
+static const std::string ClientLogFilePath = "/home/heart/Desktop/client.log";
+#endif
+
 static const int LevelTimeGame[] = {
     4*60,
     5*60,

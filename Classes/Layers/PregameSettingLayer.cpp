@@ -48,11 +48,11 @@ bool PregameSettingLayer::init()
     auto positioningY1 = [](float p) -> float { return getP1(p); };
     auto positioningY2 = [](float p) -> float { return getP2(p); };
 
-    initLabelSetting("Player", 0.85, positioningY1);
-    initLabelSetting("Bot",    0.85, positioningY2);
+    initLabelSetting(labelPlayerTitle, "Player", 0.85, positioningY1);
+    initLabelSetting(labelOpponentTitle, "Bot",    0.85, positioningY2);
 
-    initLabelSetting("Color Player", 0.40, positioningY1);
-    initLabelSetting("Color Bot",    0.40, positioningY2);
+    initLabelSetting(labelPlayerColor,  "Color Player", 0.40, positioningY1);
+    initLabelSetting(labelOpponentColor, "Color Bot",   0.40, positioningY2);
 
     initTextFields(positioningY1, fieldPlayer, UserData::playerName);
     initTextFields(positioningY2, fieldOpponent, UserData::opponentName);
@@ -63,12 +63,6 @@ bool PregameSettingLayer::init()
     initScrollViewLevels();
 
     initDrawNode();
-
-    schedule([this](float){
-        for (SwitchLevelGame *lvl : levels) {
-           // log("lvl[%d] : [%f, %f]", lvl->getTag(), lvl->getPositionX(), lvl->getPositionY());
-        }
-    }, 1, "prntLVLS");
 
     return true;
 }
@@ -81,7 +75,7 @@ void PregameSettingLayer::addChild(Node *child, int level)
 
 void PregameSettingLayer::setCallbackNext(const std::function<void(Ref *)> &value)
 {
-    itemStart->setCallback([=](Ref* ref){
+    itemNext->setCallback([=](Ref* ref){
         UserData::playerName = fieldPlayer->getString();
         UserData::opponentName = fieldOpponent->getString();
         DataSetting::save();
@@ -136,11 +130,11 @@ std::function<void (const Color3B &color, int tag)> PregameSettingLayer::getCall
 
 void PregameSettingLayer::initItemNext()
 {
-    itemStart = MenuItemLabel::create(Jus::createLabelTTF("Next ->", "fonts/Bicubik.ttf", 32));
+    itemNext = MenuItemLabel::create(Jus::createLabelTTF("Next ->", "fonts/Bicubik.ttf", 32));
 
-    itemStart->setAnchorPoint(Vec2::ANCHOR_BOTTOM_RIGHT);
+    itemNext->setAnchorPoint(Vec2::ANCHOR_BOTTOM_RIGHT);
 
-    itemStart->setPosition(visibleSize.width - border_3, border_3);
+    itemNext->setPosition(visibleSize.width - border_3, border_3);
 }
 
 void PregameSettingLayer::initItemBackToMenu()
@@ -154,7 +148,7 @@ void PregameSettingLayer::initItemBackToMenu()
 
 void PregameSettingLayer::initMenu()
 {
-    auto menu = Menu::create(itemStart, itemBackToMenu, nullptr);
+    auto menu = Menu::create(itemNext, itemBackToMenu, nullptr);
 
     menu->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
     menu->setPosition(Vec2::ZERO);
@@ -194,14 +188,14 @@ void PregameSettingLayer::initDrawNode()
 
 }
 
-void PregameSettingLayer::initLabelSetting(const std::string &title, float procentY, const std::function<float (float)> &positioning)
+void PregameSettingLayer::initLabelSetting(Label *&rvLabel, const std::string &title, float procentY, const std::function<float (float)> &positioning)
 {
-    Label *labelTitle = Jus::createLabelTTF(title, "fonts/Bicubik.ttf", 32);
-    labelTitle->setAdditionalKerning(3);
+    rvLabel = Jus::createLabelTTF(title, "fonts/Bicubik.ttf", 32);
+    rvLabel->setAdditionalKerning(3);
 
-    labelTitle->setPosition(visibleSize.width / 4, positioning(procentY));
+    rvLabel->setPosition(visibleSize.width / 4, positioning(procentY));
 
-    addChild(labelTitle, LOther);
+    addChild(rvLabel, LOther);
 }
 
 void PregameSettingLayer::initColors(SwitchColorContainer_t &sw, const std::function<float (float)> &positioning, int tag)
@@ -287,6 +281,17 @@ void PregameSettingLayer::initScrollViewLevels()
 
     scroll->setInnerContainerSize(Size(visibleSize.width / 2.5, h*countLevels + border_3*2));
 
+}
+
+void PregameSettingLayer::setLanguageLabels(Locale locale)
+{
+    itemBackToMenu->setString(std::string("<- ") + Language::get(locale, "Back"));
+    itemNext->setString(Language::get(locale, "Next") + " ->");
+
+    labelPlayerTitle->setString(Language::get(locale, "Player"));
+    labelOpponentTitle->setString(Language::get(locale, "Opponent"));
+    labelPlayerColor->setString(Language::get(locale, "Color Player"));
+    labelOpponentColor->setString(Language::get(locale, "Color Opponent"));
 }
 
 bool SwitchColorSnake::init()

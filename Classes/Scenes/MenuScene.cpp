@@ -66,14 +66,17 @@ bool MenuScene::init()
 
     initDrawNode();
     initTouches();
-//    initSnow();
+    initSnow();
     initCamera();
     initMenu();
     initPregameSettingLayer();
     initPregameSwitchTypeGame();
     initNetworkSettingLayer();
+    initSelectedLanguage();
 
     layer->setAttribShaderSensitive(1.f);
+
+    setLanguageLabels(DataSetting::UserData_t::locale);
 
     if (UserData::playingBackgroundMusic)
         Audio::getInstance()->playBackgroundMusicMenu();
@@ -102,7 +105,6 @@ void MenuScene::initTouches()
 
     listener->onTouchBegan = [this](Touch *touch, Event*) -> bool {
         setPositionEat(touch->getLocation());
-//        updateBot();
         return true;
     };
 
@@ -112,7 +114,7 @@ void MenuScene::initTouches()
 void MenuScene::initMenu()
 {
     /* init click Start */
-    itemStart = MenuItemLabel::create(createLabel("Classic"), [this](Ref*){ clickStart(); });
+    itemStart = MenuItemLabel::create(createLabel("Classic"), [this](Ref*){ clickClassic(); });
 
     /* init click Survival */
     itemSurvival = MenuItemLabel::create(createLabel("Survival"), [this](Ref*){ clickSurvival(); });
@@ -130,7 +132,7 @@ void MenuScene::initMenu()
     addChild(menu, LMenu);
 }
 
-void MenuScene::clickStart()
+void MenuScene::clickClassic()
 {
     GameData::mode = GameMode::Classic;
     camera->runAction(MoveBy::create(0.3, Vec2(visibleSize.width, 0)));
@@ -150,6 +152,7 @@ void MenuScene::clickLocal()
 
 void MenuScene::clickExit()
 {
+    DataSetting::save();
     Director::getInstance()->end();
 }
 
@@ -169,6 +172,50 @@ std::function<void (Ref *)> MenuScene::getCallbackStartServer() const
         StartServer = !StartServer;
         pregameSwitchTypeGameLayer->setFlagStartServer(StartServer);
     };
+}
+
+std::function<void (Locale)> MenuScene::getCallbackClickChangeLanguage() const
+{
+    return [this] (Locale locale) -> void {
+        if (camera->getPositionX() < visibleSize.width) {
+            DataSetting::UserData_t::locale = locale;
+            setLanguageLabels(DataSetting::UserData_t::locale);
+            selectLanguage->setLocale(locale);
+        }
+    };
+}
+
+void MenuScene::setLanguageLabels(Locale locale)
+{
+    itemStart->setString(Language::get(locale, "Classic"));
+    itemSurvival->setString(Language::get(locale, "Survival"));
+    itemLocal->setString(Language::get(locale, "Local"));
+    itemExit->setString(Language::get(locale, "Exit"));
+
+    if (pregameSettingLayer)
+        pregameSettingLayer->setLanguageLabels(locale);
+
+    if (pregameSwitchTypeGameLayer)
+        pregameSwitchTypeGameLayer->setLanguageLabels(locale);
+
+    if (gameNavigatorLayer)
+        gameNavigatorLayer->setLanguageLabels(locale);
+}
+
+void MenuScene::initSelectedLanguage()
+{
+    selectLanguage = SelectLanguage::create();
+    selectLanguage->setLocale(DataSetting::UserData_t::locale);
+    selectLanguage->setCallbackClick(getCallbackClickChangeLanguage());
+
+    Size sz = selectLanguage->getContentSize();
+
+    selectLanguage->setPosition(Vec2(visibleSize.width, 0) - Vec2(sz.width * 0.5 + 32, -sz.height * 0.5 - 32));
+    selectLanguage->setOpacity(0xff * 0.35);
+
+    addChild(selectLanguage, Levels::LTop);
+
+    selectLanguage->setCameraMask((unsigned short)CameraFlag::USER2);
 }
 
 void MenuScene::initCamera()
@@ -260,4 +307,60 @@ Label *MenuScene::createLabel(const std::string &text) const
     return label;
 }
 
+//------------------------------------------------------------------------------------------------------
 
+bool SelectLanguage::init() {
+
+    if (!cocos2d::Sprite::initWithFile("en.png"))
+        return false;
+
+    callbackClick = [] (Locale) -> void {};
+
+    counterClicked = DataSetting::UserData_t::locale;
+
+    initListener();
+
+    return true;
+}
+
+void SelectLanguage::initListener()
+{
+    auto listener = EventListenerTouchOneByOne::create();
+    listener->onTouchBegan = [this] (Touch *touch, Event *) -> bool {
+
+        static const std::array<Locale, 3> Locales{Locale::ua, Locale::en, Locale::ru};
+
+        Rect rect = getTextureRect();
+        Size size = getContentSize();
+
+        rect.setRect(getPositionX() - size.width / 2, getPositionY() - size.height / 2, size.width, size.height);
+
+        if (rect.containsPoint(touch->getLocation())) {
+            Locale locale = Locales[++counterClicked % Locales.size()];
+            callbackClick(locale);
+        }
+
+        return true;
+    };
+
+    listener->onTouchMoved = [this] (Touch *, Event *) -> void {};
+    listener->onTouchEnded = [this] (Touch *, Event *) -> void {};
+
+
+    _director->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
+}
+
+void SelectLanguage::setCallbackClick(const std::function<void (Locale)> &value)
+{
+    callbackClick = value;
+}
+
+void SelectLanguage::setLocale(Locale locale)
+{
+    switch (locale) {
+    case Locale::ua: setTexture("ua.png"); break;
+    case Locale::en: setTexture("en.png"); break;
+    case Locale::ru: setTexture("ru.png"); break;
+    }
+    counterClicked = locale;
+}

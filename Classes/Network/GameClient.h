@@ -6,15 +6,18 @@
 #include <functional>
 #include "PlayerData.h"
 #include "Data/SendData.h"
+#include <fstream>
 
 class GameClient : public TcpClient
 {
+    std::ofstream logClient;
 public:
     enum TypeData: char {
         Snake = 's',
         Eat = 'e'
     };
     GameClient(const std::string &ip, const std::string &port);
+   ~GameClient();
 
     void setCallbackRead(const std::function<void (ExperimentalSendData::Dat)> &value);
 

@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 #include "Constant.h"
+#include "Language.h"
 
 class DataSetting {
 
@@ -31,6 +32,7 @@ public:
             static cocos2d::Color3B playerColor;
             static cocos2d::Color3B opponentColor;
             static GameType type;
+            static Locale locale;
 
             /* tmp var's. not save. */
             static std::string tmpMyNetworkIp;

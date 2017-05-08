@@ -11,6 +11,7 @@ std::string DataSetting::UserData_t::playerName = "Player";
 std::string DataSetting::UserData_t::opponentName = "Bot";
 std::string DataSetting::UserData_t::NetworkIp = "127.0.0.1";
 std::string DataSetting::UserData_t::NetworkPort = "2324";
+Locale DataSetting::UserData_t::locale = Locale::en;
 
 /* tmp */
 std::string DataSetting::UserData_t::tmpMyNetworkIp = "127.0.0.1";
@@ -112,14 +113,15 @@ void DataSetting::reset() {
     UserData_t::type = GameType::PlayerVSBot;
 
     GameData_t::currentLevel = 1;
+    UserData_t::locale = Locale::en;
 
     save();
 }
 
 void DataSetting::set(const std::vector<std::string> &source) {
 
-    if (source.size() < 11/*must be size vector*/) {
-        log("SOUNCE SIZE: %d", source.size());
+    if (source.size() < 12/*must be size vector*/) {
+        log("SOURCE SIZE: %d", source.size());
         reset();
         return;
     }
@@ -138,6 +140,7 @@ void DataSetting::set(const std::vector<std::string> &source) {
     UserData_t::type = (GameType)Value(source[9]).asInt();
 
     GameData_t::currentLevel = Value(source[10]).asInt();
+    UserData_t::locale = (Locale)Value(source[11]).asInt();
 }
 
 std::string DataSetting::toString() {
@@ -166,6 +169,8 @@ std::string DataSetting::toString() {
     result += StringUtils::toString((int)UserData_t::type) + '\n';
 
     result += StringUtils::toString(GameData_t::currentLevel) + '\n';
+
+    result += StringUtils::toString((int)UserData_t::locale) + '\n';
 
     return result + '\0';
 

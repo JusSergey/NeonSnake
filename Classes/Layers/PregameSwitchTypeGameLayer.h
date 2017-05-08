@@ -3,6 +3,7 @@
 
 #include <functional>
 #include "Data/DataSetting.h"
+#include "Language.h"
 #include "cocos2d.h"
 
 class PregameSwitchTypeGameLayer : public cocos2d::Layer
@@ -28,6 +29,8 @@ private:
     cocos2d::MenuItemLabel *itemBack;
     cocos2d::MenuItemLabel *itemStart;
 
+    cocos2d::Label* labelTitle;
+
     float widthSolidRect;
 
     int flagStartServer;
@@ -51,6 +54,9 @@ private:
     std::function<void(Ref*)> callbackNext;
     cocos2d::Size visibleSize;
     cocos2d::Vec2 origin;
+
+public:
+    void setLanguageLabels(Locale locale);
 
 };
 

@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
+#include "Language.h"
 #include <functional>
 #include <map>
 
@@ -67,11 +68,15 @@ private:
     cocos2d::Vec2 origin;
 
 private:
-    cocos2d::MenuItemLabel *itemStart;
+    cocos2d::MenuItemLabel *itemNext;
     cocos2d::MenuItemLabel *itemBackToMenu;
     cocos2d::DrawNode *dnode;
     cocos2d::ui::TextField *fieldPlayer;
     cocos2d::ui::TextField *fieldOpponent;
+    cocos2d::Label *labelPlayerTitle;
+    cocos2d::Label *labelOpponentTitle;
+    cocos2d::Label *labelPlayerColor;
+    cocos2d::Label *labelOpponentColor;
 
 private:
     typedef std::pair<cocos2d::Sprite*, bool> SwitchColorObj_t;
@@ -92,12 +97,15 @@ private:
     void initMenu();
     void initDrawNode();
 
-    void initLabelSetting(const std::string &title, float procentY, const std::function<float(float)> &positioning);
+    void initLabelSetting(cocos2d::Label* &rvLabel, const std::string &title, float procentY, const std::function<float(float)> &positioning);
     void initColors(SwitchColorContainer_t &sw, const std::function<float(float)> &positioning, int tag);
     void initTextFields(const std::function<float(float)> &positioning, cocos2d::ui::TextField* &field, const std::string &name);
 
     std::vector<SwitchLevelGame *> levels;
     void initScrollViewLevels();
+
+public:
+    void setLanguageLabels(Locale locale);
 
 }; // END CLASS PregameSettingLayer
 

@@ -90,6 +90,12 @@ void GameNavigatorLayer::setCallbackHome(const std::function<void ()> &value)
         pauseLayer->setCallbackHome(value);
 }
 
+void GameNavigatorLayer::setLanguageLabels(Locale locale)
+{
+    labelEffectItemMenu->setString(Language::get(locale, "Effect"));
+    labelMusicItemMenu->setString(Language::get(locale, "Music"));
+}
+
 void GameNavigatorLayer::hideContextMenu(float lastTime)
 {
     static const char *nameSch = "AutoHide";
