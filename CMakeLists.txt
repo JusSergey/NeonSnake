@@ -128,6 +128,7 @@ if ( WIN32 )
 endif( WIN32 )
 
 set(GAME_SRC
+  Classes/Language.cpp
 
   #Scenes
   Classes/Scenes/TitleScene.cpp
@@ -171,6 +172,7 @@ set(GAME_SRC
 )
 
 set(GAME_HEADERS
+  Classes/Language.h
 
   #Scenes
   Classes/Scenes/TitleScene.h
