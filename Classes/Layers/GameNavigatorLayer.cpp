@@ -47,7 +47,6 @@ bool GameNavigatorLayer::init()
     initLabels();
 
     if (INIT_ALL || bitmaskInits & InitGNPauseButton) {
-        log("initGNPAUSE");
         initPauseButton();
         initPausedLayer();
     }
@@ -55,6 +54,7 @@ bool GameNavigatorLayer::init()
     if (INIT_ALL || bitmaskInits & InitGNSoundMenu)
         initSoundButton();
 
+    setLanguageLabels(UserData::locale);
 
     return true;
 }
