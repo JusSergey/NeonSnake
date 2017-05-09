@@ -262,7 +262,6 @@ std::function<void (Ref *)> PregameSwitchTypeGameLayer::getCallbackClickLabel()
                 if (itemStart)
                     itemStart->setString(UserData::type == LocalGame ? Language::get(DataSetting::UserData_t::locale, "Next") + " ->" :
                                                                        Language::get(DataSetting::UserData_t::locale, "Start"));
-
             } else label->setOpacity(0xff * 0.25);
 
         }

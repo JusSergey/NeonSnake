@@ -40,6 +40,7 @@ Scene* GameView::createScene(int level, int bitmaskGame, int bitmaskGN)
     auto scene = Scene::createWithPhysics();
     scene->getPhysicsWorld()->setGravity(Vec2::ZERO);
     scene->getPhysicsWorld()->setSubsteps(10);
+//    scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 
     // 'Layer' is an autorelease object
     auto layer = GameView::create(level, bitmaskGame, bitmaskGN);
@@ -190,6 +191,10 @@ void GameView::onEnterTransitionDidFinish()
 
                 botActor->setWallsMap(getBlockMapLevel());
                 botActor->start();
+
+                schedule([this](float){
+                    botActor->setWallsMap(getBlockMapLevel());
+                }, 1, "updmap");
 
                 botActor->setGoTo(botActor->getPosition());
 
@@ -853,8 +858,9 @@ void GameView::setPositionEat(const Vec2 &pos)
 
 cocos2d::Bot::CreateWay::WallsMap GameView::getBlockMapLevel()
 {
-    int sizex = resolutionDisplay.width / discret;
-    int sizey = resolutionDisplay.height/ discret;
+    const float scaleFactor = _director->getContentScaleFactor();
+    int sizex = resolutionDisplay.width / scaleFactor / discret;
+    int sizey = visibleSize.height / scaleFactor / discret;
 
     char **walls = new char*[sizex];
     for (int i = 0; i < sizex; i++)
