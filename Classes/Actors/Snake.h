@@ -10,7 +10,7 @@ NS_CC_BEGIN
 
 using std::vector;
 
-#define MAX_SNAKE_SPEED 20
+#define MAX_SNAKE_SPEED 30
 #define MIN_SNAKE_SPEED 5
 
 static const int DefaultLenght = 10;

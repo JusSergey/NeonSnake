@@ -164,10 +164,10 @@ void GameNavigatorLayer::initLabels()
 
 }
 
-void GameNavigatorLayer::initLabel(LabelTTF *&rPtr, const Vec2 &pos, const Vec2 &anchor, const std::string &text)
+void GameNavigatorLayer::initLabel(Label *&rPtr, const Vec2 &pos, const Vec2 &anchor, const std::string &text)
 {
     log("Init Label");
-    rPtr = /*(LabelTTF*) Jus::createLabel(text, "fonts/arial.ttf", SizeFont);//*/LabelTTF::create(text, "", SizeFont);
+    rPtr = Jus::createLabelSystem(text, "monospace", SizeFont);
     rPtr->setAnchorPoint(anchor);
     rPtr->setPosition(pos);
     addChild(rPtr);

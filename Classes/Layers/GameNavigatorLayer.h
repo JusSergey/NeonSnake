@@ -32,9 +32,9 @@ private:
     PauseLayer *pauseLayer;
     cocos2d::MenuItemLabel *labelEffectItemMenu;
     cocos2d::MenuItemLabel *labelMusicItemMenu;
-    cocos2d::LabelTTF *labelScorePlayer;
-    cocos2d::LabelTTF *labelScoreBot;
-    cocos2d::LabelTTF *labelTimer;
+    cocos2d::Label *labelScorePlayer;
+    cocos2d::Label *labelScoreBot;
+    cocos2d::Label *labelTimer;
     std::function<void()> callbackPause;
     std::function<void()> callbackTimeout;
     std::function<void()> callbackButtonEffect;
@@ -54,7 +54,7 @@ public:
 private:
     void initAcceleration();
     void initLabels();
-    void initLabel(cocos2d::LabelTTF* &rPtr, const cocos2d::Vec2 &pos, const cocos2d::Vec2 &anchor, const std::string &text);
+    void initLabel(cocos2d::Label *&rPtr, const cocos2d::Vec2 &pos, const cocos2d::Vec2 &anchor, const std::string &text);
     void initTimer();
     void initPauseButton();
     void initPausedLayer();

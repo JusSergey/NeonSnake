@@ -39,6 +39,7 @@ Scene* GameView::createScene(int level, int bitmaskGame, int bitmaskGN)
     // 'scene' is an autorelease object
     auto scene = Scene::createWithPhysics();
     scene->getPhysicsWorld()->setGravity(Vec2::ZERO);
+    scene->getPhysicsWorld()->setSubsteps(10);
 
     // 'Layer' is an autorelease object
     auto layer = GameView::create(level, bitmaskGame, bitmaskGN);
@@ -852,8 +853,8 @@ void GameView::setPositionEat(const Vec2 &pos)
 
 cocos2d::Bot::CreateWay::WallsMap GameView::getBlockMapLevel()
 {
-    int sizex = resolutionDisplay.width;
-    int sizey = resolutionDisplay.height;
+    int sizex = resolutionDisplay.width / discret;
+    int sizey = resolutionDisplay.height/ discret;
 
     char **walls = new char*[sizex];
     for (int i = 0; i < sizex; i++)

@@ -66,7 +66,7 @@ bool MenuScene::init()
 
     initDrawNode();
     initTouches();
-    initSnow();
+//    initSnow();
     initCamera();
     initMenu();
     initPregameSettingLayer();
