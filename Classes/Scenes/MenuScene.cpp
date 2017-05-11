@@ -87,16 +87,27 @@ bool MenuScene::init()
 
 void MenuScene::initDrawNode()
 {
+
+    Sprite *back = Sprite::create("menu.png");
+
+    back->setPosition(visibleSize / 2);
+
+    back->setOpacity(0xff * 0.10);
+
+    back->setCameraMask((unsigned short)CameraFlag::USER2);
+
+    addChild(back);
+
     draw = DrawNode::create();
     draw->setPosition(Vec2::ZERO);
-    Vec2 p1(visibleSize.width * 0.3, 0);
-    Vec2 p2(visibleSize.width * 0.7, visibleSize.height);
+//    Vec2 p1(visibleSize.width * 0.3, 0);
+//    Vec2 p2(visibleSize.width * 0.7, visibleSize.height);
 
     addChild(draw, LMenu);
 
-    draw->setCameraMask((unsigned short)CameraFlag::USER2);
+//    draw->setCameraMask((unsigned short)CameraFlag::USER2);
 
-    draw->drawSolidRect(p1, p2, Color4F(0, 0, 0, 0.50));
+//    draw->drawSolidRect(p1, p2, Color4F(0, 0, 0, 0.50));
 }
 
 void MenuScene::initTouches()
@@ -136,18 +147,21 @@ void MenuScene::clickClassic()
 {
     GameData::mode = GameMode::Classic;
     camera->runAction(MoveBy::create(0.3, Vec2(visibleSize.width, 0)));
+    pregameSettingLayer->runToThisMenu();
 }
 
 void MenuScene::clickSurvival()
 {
     GameData::mode = GameMode::Survival;
     camera->runAction(MoveBy::create(0.3, Vec2(visibleSize.width, 0)));
+    pregameSettingLayer->runToThisMenu();
 }
 
 void MenuScene::clickLocal()
 {
     GameData::mode = GameMode::Local;
     camera->runAction(MoveBy::create(0.3, Vec2(visibleSize.width*3, 0)));
+    pregameSettingLayer->runToThisMenu();
 }
 
 void MenuScene::clickExit()

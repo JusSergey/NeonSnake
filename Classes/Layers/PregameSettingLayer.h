@@ -56,6 +56,7 @@ public:
 public:
     void setCallbackNext(const std::function<void (Ref*)> &value);
     void setCallbackBackToMenu(const std::function<void (Ref*)> &value);
+    void runToThisMenu();
 
 private:
     enum {
@@ -77,6 +78,7 @@ private:
     cocos2d::Label *labelOpponentTitle;
     cocos2d::Label *labelPlayerColor;
     cocos2d::Label *labelOpponentColor;
+    cocos2d::Sprite *blackBackground;
 
 private:
     typedef std::pair<cocos2d::Sprite*, bool> SwitchColorObj_t;
@@ -96,6 +98,7 @@ private:
     void initItemBackToMenu();
     void initMenu();
     void initDrawNode();
+    void initBlackBackground();
 
     void initLabelSetting(cocos2d::Label* &rvLabel, const std::string &title, float procentY, const std::function<float(float)> &positioning);
     void initColors(SwitchColorContainer_t &sw, const std::function<float(float)> &positioning, int tag);
