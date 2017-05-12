@@ -92,7 +92,7 @@ void MenuScene::initDrawNode()
 
     back->setPosition(visibleSize / 2);
 
-    back->setOpacity(0xff * 0.10);
+    back->setOpacity(0xff * 0.15);
 
     back->setCameraMask((unsigned short)CameraFlag::USER2);
 

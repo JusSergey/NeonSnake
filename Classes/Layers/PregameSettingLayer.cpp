@@ -98,7 +98,7 @@ void PregameSettingLayer::setCallbackBackToMenu(const std::function<void(Ref *)>
 void PregameSettingLayer::runToThisMenu()
 {
     log("runToThisMenu");
-    blackBackground->runAction(FadeTo::create(0.3, 0xff * 0.8));
+    blackBackground->runAction(FadeTo::create(0.3, 0xff * 0.9));
 }
 
 void PregameSettingLayer::setSwitchColor(PregameSettingLayer::SwitchColorContainer_t &sw, const Color3B &color)
@@ -167,17 +167,18 @@ void PregameSettingLayer::initMenu()
 void PregameSettingLayer::initDrawNode()
 {
 
-    for (const Vec2 &pos : {Jus::getDisplayPoint(0.26, 0.74),
-                            Jus::getDisplayPoint(0.26, 0.27),
-                            Jus::getDisplayPoint(0.75, 0.50)})
-    {
-        Sprite *back = Sprite::create("PregameMenu.png");
-        back->setPosition(pos);
-        back->setOpacity(0xff * 0.10);
+    const float scaleX = 1.0 - ((resolutionDisplay.width / resolutionDisplay.height) -
+                                (visibleSize.width / visibleSize.height)) / 2;
 
-        // якщо фон для вибору рівня, то розтянути
-        if (pos.x > visibleSize.width / 2)
-            back->setScaleY(2);
+    for (const auto &info : {std::make_pair(Jus::getDisplayPoint(0.26, 0.740), "PregameMenu.png"),
+                             std::make_pair(Jus::getDisplayPoint(0.26, 0.270), "PregameMenu.png"),
+                             std::make_pair(Jus::getDisplayPoint(0.75, 0.501), "SelectLevelMenu.png")})
+    {
+        Sprite *back = Sprite::create(info.second);
+        back->setPosition(info.first);
+        back->setOpacity(0xff * 0.15);
+
+        back->setScaleX(scaleX);
 
         addChild(back, LDNode);
     }
@@ -190,33 +191,13 @@ void PregameSettingLayer::initDrawNode()
 
     addChild(dnode, LDNode);
 
-//    // draw main rect
-//    dnode->drawSolidRect(Vec2(border_1, border_1),
-//                         Jus::getDisplayPoint(1, 1) - Vec2(border_1, border_1),
-//                         Color4F(0, 0.05, 0.05, 0.6));
-
-//    // draw player layer
-//    dnode->drawSolidRect(Vec2(border_2, visibleSize.height / 2 + border_1),
-//                         Vec2(visibleSize.width / 2 - border_1 / 2, visibleSize.height - border_2),
-//                         Color4F(0, 0, 0, 0.7));
-
-//    // draw bot layer
-//    dnode->drawSolidRect(Vec2(border_2, border_2),
-//                         Vec2(visibleSize.width / 2 - border_1 / 2, visibleSize.height / 2 - border_1 / 2),
-//                         Color4F(0, 0, 0, 0.8));
-
-//    // levels seletced layer
-//    dnode->drawSolidRect(Vec2(visibleSize.width / 2 + border_2 / 2, border_2),
-//                         Vec2(visibleSize.width - border_2, visibleSize.height - border_2),
-//                         Color4F(0, 0, 0, 0.8));
-
 }
 
 void PregameSettingLayer::initBlackBackground()
 {
     blackBackground = Sprite::create("BlackBackground.png");
     blackBackground->setPosition(Jus::getCenter());
-//    blackBackground->setOpacity(0);
+    blackBackground->setOpacity(0);
 
     addChild(blackBackground, LDNode);
 }
