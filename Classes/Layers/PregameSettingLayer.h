@@ -79,6 +79,9 @@ private:
     cocos2d::Label *labelPlayerColor;
     cocos2d::Label *labelOpponentColor;
     cocos2d::Sprite *blackBackground;
+    cocos2d::Sprite *playerBackground;
+    cocos2d::Sprite *opponentBackground;
+    cocos2d::Sprite *scrollBackground;
 
 private:
     typedef std::pair<cocos2d::Sprite*, bool> SwitchColorObj_t;

@@ -2,10 +2,10 @@
 #include "Data/DataSetting.h"
 #include "Jus.h"
 
-static const float border_1 = 15;
-static const float border_2 = border_1 + 15;
-static const float border_3 = border_2 + 15;
-static const float scl = 0.35;
+static const float BORDER_1 = 15;
+static const float BORDER_2 = BORDER_1 + 15;
+static const float BORDER_3 = BORDER_2 + 15;
+static const float scl = 0.90;
 
 std::map<SwitchLevelGame::_Tag, SwitchLevelGame *> SwitchLevelGame::globalObjects;
 
@@ -19,12 +19,12 @@ enum {
 USING_NS_CC;
 
 float getP2(float p) {
-    float r = border_2 + (Jus::getHeight() / 2 - border_1 / 2 - border_2) * p;
+    float r = BORDER_2 + (Jus::getHeight() / 2 - BORDER_1 / 2 - BORDER_2) * p;
     return r;
 }
 
 float getP1(float p) {
-    float r = Jus::getHeight() / 2 + border_1 / 2 + (Jus::getHeight() / 2 - border_1 / 2 - border_2) * p;
+    float r = Jus::getHeight() / 2 + BORDER_1 / 2 + (Jus::getHeight() / 2 - BORDER_1 / 2 - BORDER_2) * p;
     return r;
 }
 
@@ -60,10 +60,10 @@ bool PregameSettingLayer::init()
     initColors(swColorsPlayer1, positioningY1, PlayerTag);
     initColors(swColorsPlayer2, positioningY2, OpponentTag);
 
+    initDrawNode();
     initScrollViewLevels();
 
     initBlackBackground();
-    initDrawNode();
 
     return true;
 }
@@ -142,7 +142,7 @@ void PregameSettingLayer::initItemNext()
 
     itemNext->setAnchorPoint(Vec2::ANCHOR_BOTTOM_RIGHT);
 
-    itemNext->setPosition(visibleSize.width - border_3, border_3);
+    itemNext->setPosition(visibleSize.width - BORDER_3, BORDER_3);
 }
 
 void PregameSettingLayer::initItemBackToMenu()
@@ -151,7 +151,7 @@ void PregameSettingLayer::initItemBackToMenu()
 
     itemBackToMenu->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
 
-    itemBackToMenu->setPosition(visibleSize.width / 2 + border_3, border_3);
+    itemBackToMenu->setPosition(visibleSize.width / 2 + BORDER_3, BORDER_3);
 }
 
 void PregameSettingLayer::initMenu()
@@ -167,21 +167,23 @@ void PregameSettingLayer::initMenu()
 void PregameSettingLayer::initDrawNode()
 {
 
-    const float scaleX = 1.0 - ((resolutionDisplay.width / resolutionDisplay.height) -
-                                (visibleSize.width / visibleSize.height)) / 2;
+    auto callInitBack = [this] (const Vec2 &pos, const std::string &path, Sprite* &rvPtrSprite) {
 
-    for (const auto &info : {std::make_pair(Jus::getDisplayPoint(0.26, 0.740), "PregameMenu.png"),
-                             std::make_pair(Jus::getDisplayPoint(0.26, 0.270), "PregameMenu.png"),
-                             std::make_pair(Jus::getDisplayPoint(0.75, 0.501), "SelectLevelMenu.png")})
-    {
-        Sprite *back = Sprite::create(info.second);
-        back->setPosition(info.first);
-        back->setOpacity(0xff * 0.15);
+        const float scaleX = 1.0 - ((resolutionDisplay.width / resolutionDisplay.height) -
+                                    (visibleSize.width / visibleSize.height)) / 2;
 
-        back->setScaleX(scaleX);
+        rvPtrSprite = Sprite::create(path);
+        rvPtrSprite->setPosition(pos);
+        rvPtrSprite->setOpacity(0xff * 0.15);
 
-        addChild(back, LDNode);
-    }
+        rvPtrSprite->setScaleX(scaleX);
+
+        addChild(rvPtrSprite, LDNode);
+    };
+
+    callInitBack(Jus::getDisplayPoint(0.26, 0.740), "PregameMenu.png", playerBackground);
+    callInitBack(Jus::getDisplayPoint(0.26, 0.270), "PregameMenu.png", opponentBackground);
+    callInitBack(Jus::getDisplayPoint(0.75, 0.501), "SelectLevelMenu.png", scrollBackground);
 
     log("init draw");
     dnode = DrawNode::create();
@@ -199,12 +201,12 @@ void PregameSettingLayer::initBlackBackground()
     blackBackground->setPosition(Jus::getCenter());
     blackBackground->setOpacity(0);
 
-    addChild(blackBackground, LDNode);
+    addChild(blackBackground, LDNode-1);
 }
 
 void PregameSettingLayer::initLabelSetting(Label *&rvLabel, const std::string &title, float procentY, const std::function<float (float)> &positioning)
 {
-    rvLabel = Jus::createLabelTTF(title, "fonts/Bicubik.ttf", 32);
+    rvLabel = Jus::createLabelTTF(title, "fonts/Bicubik.ttf", 26);
     rvLabel->setAdditionalKerning(3);
 
     rvLabel->setPosition(visibleSize.width / 4, positioning(procentY));
@@ -216,7 +218,7 @@ void PregameSettingLayer::initColors(SwitchColorContainer_t &sw, const std::func
 {
     auto colors = {Color3B::MAGENTA, Color3B::BLUE, Color3B::GREEN, Color3B::YELLOW, Color3B::ORANGE, Color3B::RED};
 
-    float width = (visibleSize.width / 2 - border_2 - border_1 / 2) / (colors.size()+1);
+    float width = (visibleSize.width / 2 - BORDER_2 - BORDER_1 / 2) / (colors.size()+1);
 
     int index = 0;
 
@@ -230,7 +232,7 @@ void PregameSettingLayer::initColors(SwitchColorContainer_t &sw, const std::func
 
         switchColor->setColor(i);
 
-        switchColor->setPosition(border_2 + width * ++index, positioning(0.20));
+        switchColor->setPosition(BORDER_2 + width * ++index, positioning(0.20));
 
         addChild(switchColor, LOther);
 
@@ -265,15 +267,15 @@ void PregameSettingLayer::initScrollViewLevels()
 
     scroll->setCameraMask((unsigned short)CameraFlag::USER2);
 
-    scroll->setPosition({visibleSize.width * 0.50f, border_3*2});
+    scroll->setPosition(Vec2::ZERO + Vec2(0, BORDER_3 + 5));
 
     scroll->setDirection(ui::ScrollView::Direction::VERTICAL);
 
     scroll->setBounceEnabled(true);
 
-    addChild(scroll, LOther);
+    scroll->setContentSize(Size(visibleSize.width/2 - BORDER_2, visibleSize.height - BORDER_3*3));
 
-    float scl = 0.35;
+    scrollBackground->addChild(scroll, LOther);
 
     for (int i = 1; i <= countLevels; i++) {
 
@@ -283,17 +285,15 @@ void PregameSettingLayer::initScrollViewLevels()
 
         level->setTag(i);
 
-        level->setScale(scl);
-        level->setPosition({visibleSize.width * 0.25f, border_1*4 + (level->getBoundingBox().size.height + border_3) * (countLevels - i + 1) - level->getBoundingBox().size.height / 2});
+        level->setPosition({ scrollBackground->getContentSize().width / 2,
+                             BORDER_1*11.5 + level->getContentSize().height * (countLevels - i) });
 
         scroll->addChild(level, 1);
     }
 
-    scroll->setContentSize(Size(visibleSize.width/2 - border_1 - border_2, visibleSize.height - border_3*3));
+    float h = levels[0]->getContentSize().height + BORDER_3;
 
-    float h = visibleSize.height * scl + border_3;
-
-    scroll->setInnerContainerSize(Size(visibleSize.width / 2.5, h*countLevels + border_3*2));
+    scroll->setInnerContainerSize(Size(visibleSize.width / 2.5, h*countLevels + BORDER_3*4 - visibleSize.height * _director->getContentScaleFactor()));
 
 }
 
@@ -302,8 +302,8 @@ void PregameSettingLayer::setLanguageLabels(Locale locale)
     itemBackToMenu->setString(std::string("<- ") + Language::get(locale, "Back"));
     itemNext->setString(Language::get(locale, "Next") + " ->");
 
-    labelPlayerTitle->setString(Language::get(locale, "Player"));
-    labelOpponentTitle->setString(Language::get(locale, "Opponent"));
+    labelPlayerTitle->setString(Language::get(locale, "Player name"));
+    labelOpponentTitle->setString(Language::get(locale, "Opponent name"));
     labelPlayerColor->setString(Language::get(locale, "Color Player"));
     labelOpponentColor->setString(Language::get(locale, "Color Opponent"));
 }
@@ -349,7 +349,7 @@ bool SwitchLevelGame::init()
     SwitchLevelGame::globalObjects.erase(myTag);
     SwitchLevelGame::globalObjects.insert(std::make_pair(myTag, this));
 
-    std::string source = std::string("Levels/level_") + StringUtils::toString(level++) + ".png";
+    std::string source = std::string("MiniLevels/level_") + StringUtils::toString(level++) + ".png";
 
     if (!ui::Button::init(source))
         return false;
@@ -369,19 +369,13 @@ void SwitchLevelGame::onTouchEnded(Touch *touch, Event *unusedEvent)
 
     SwitchLevelGame::setSelectLevel(GameData::currentLevel);
 
-//    for (auto &objPair : SwitchLevelGame::globalObjects) {
-//        auto lvl = objPair.second;
-//        lvl->setOpacity(lvl == this ? 0xff : 0xff*0.35);
-//        lvl->setScale(lvl == this ? scl + 0.05 : scl);
-//    }
-
 }
 
 void SwitchLevelGame::setSelectLevel(int selectLevel)
 {
     for (auto &objPair : SwitchLevelGame::globalObjects) {
         int lvl = objPair.first;
-        objPair.second->setOpacity(lvl == selectLevel ? 0xff : 0xff*0.35);
+        objPair.second->setOpacity(lvl == selectLevel ? 0xff : 0xff*0.75);
         objPair.second->setScale(lvl == selectLevel ? scl + 0.05 : scl);
     }
 }
