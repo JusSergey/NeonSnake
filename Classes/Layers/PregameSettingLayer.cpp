@@ -5,7 +5,7 @@
 static const float border_1 = 15;
 static const float border_2 = border_1 + 15;
 static const float border_3 = border_2 + 15;
-static const float scl = 0.35;
+static const float scl = 0.95f;
 
 std::map<SwitchLevelGame::_Tag, SwitchLevelGame *> SwitchLevelGame::globalObjects;
 
@@ -259,8 +259,6 @@ void PregameSettingLayer::initScrollViewLevels()
 
     addChild(scroll, LOther);
 
-    float scl = 0.35;
-
     for (int i = 1; i <= countLevels; i++) {
 
         auto level = SwitchLevelGame::create();
@@ -269,15 +267,14 @@ void PregameSettingLayer::initScrollViewLevels()
 
         level->setTag(i);
 
-        level->setScale(scl);
-        level->setPosition({visibleSize.width * 0.25f, border_1*4 + (level->getBoundingBox().size.height + border_3) * (countLevels - i + 1) - level->getBoundingBox().size.height / 2});
+        level->setPosition({visibleSize.width * 0.25f, border_1*4 + (level->getContentSize().height + border_3) * (countLevels - i + 1) - level->getBoundingBox().size.height / 2});
 
         scroll->addChild(level, 1);
     }
 
     scroll->setContentSize(Size(visibleSize.width/2 - border_1 - border_2, visibleSize.height - border_3*3));
 
-    float h = visibleSize.height * scl + border_3;
+    float h = levels[0]->getContentSize().height + border_3;
 
     scroll->setInnerContainerSize(Size(visibleSize.width / 2.5, h*countLevels + border_3*2));
 
@@ -335,7 +332,7 @@ bool SwitchLevelGame::init()
     SwitchLevelGame::globalObjects.erase(myTag);
     SwitchLevelGame::globalObjects.insert(std::make_pair(myTag, this));
 
-    std::string source = std::string("Levels/level_") + StringUtils::toString(level++) + ".png";
+    std::string source = std::string("MiniLevels/level_") + StringUtils::toString(level++) + ".png";
 
     if (!ui::Button::init(source))
         return false;
