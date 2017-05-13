@@ -227,11 +227,8 @@ void PregameSettingLayer::initColors(SwitchColorContainer_t &sw, const std::func
         auto switchColor = SwitchColorSnake::create();
 
         switchColor->setCallbackSelectColor(getCallbackSelectColor());
-
         switchColor->setTag(tag);
-
         switchColor->setColor(i);
-
         switchColor->setPosition(BORDER_2 + width * ++index, positioning(0.20));
 
         addChild(switchColor, LOther);
@@ -258,6 +255,7 @@ void PregameSettingLayer::initTextFields(const std::function<float (float)> &pos
     field->setMaxLengthEnabled(true);
     field->setString(name);
     field->setPosition({visibleSize.width / 4, positioning(0.70)});
+
     addChild(field, LOther);
 }
 
@@ -265,35 +263,34 @@ void PregameSettingLayer::initScrollViewLevels()
 {
     auto scroll = ui::ScrollView::create();
 
+    const float HVScale = visibleSize.height / resolutionDisplay.height;
+
     scroll->setCameraMask((unsigned short)CameraFlag::USER2);
-
-    scroll->setPosition(Vec2::ZERO + Vec2(0, BORDER_3 + 5));
-
+    scroll->setPosition(Vec2::ZERO + Vec2(0, (itemNext->getPositionY() +
+                                              itemNext->getContentSize().height * itemNext->getAnchorPoint().y) * HVScale + BORDER_1));
     scroll->setDirection(ui::ScrollView::Direction::VERTICAL);
-
     scroll->setBounceEnabled(true);
-
-    scroll->setContentSize(Size(visibleSize.width/2 - BORDER_2, visibleSize.height - BORDER_3*3));
+    scroll->setContentSize(Size(visibleSize.width/2 - BORDER_2, scrollBackground->getContentSize().height - scroll->getPositionY() - BORDER_1));
 
     scrollBackground->addChild(scroll, LOther);
+
+
 
     for (int i = 1; i <= countLevels; i++) {
 
         auto level = SwitchLevelGame::create();
 
         levels.push_back(level);
-
         level->setTag(i);
-
         level->setPosition({ scrollBackground->getContentSize().width / 2,
-                             BORDER_1*11.5 + level->getContentSize().height * (countLevels - i) });
+                             level->getContentSize().height * (countLevels - i) + (scroll->getContentSize().height - level->getContentSize().height) / HVScale});
+                            // BORDER_1*11 + level->getContentSize().height * (countLevels - i) + scroll->getPositionY() });
 
         scroll->addChild(level, 1);
     }
 
-    float h = levels[0]->getContentSize().height + BORDER_3;
-
-    scroll->setInnerContainerSize(Size(visibleSize.width / 2.5, h*countLevels + BORDER_3*4 - visibleSize.height * _director->getContentScaleFactor()));
+    const float h = levels[0]->getContentSize().height + BORDER_3;
+    scroll->setInnerContainerSize(Size(visibleSize.width / 2.5, h*countLevels + BORDER_3*5 - visibleSize.height * _director->getContentScaleFactor()));
 
 }
 

@@ -24,8 +24,8 @@ public:
     cocos2d::Node *getANode(const cocos2d::PhysicsContact &contact) const;
     cocos2d::Node *getBNode(const cocos2d::PhysicsContact &contact) const;
 
-    void setCallbackContact(std::function<void(Node *node)> func);
-    void setCallbackVerifyPosition(std::function<bool(const cocos2d::Vec2 &pos)> func);
+    void setCallbackContact(const std::function<void(Node *node)> &func);
+    void setCallbackVerifyPosition(const std::function<bool(const cocos2d::Vec2 &pos)> &func);
     void setRandomPosition();
 
     Mode getMode() const;
@@ -34,7 +34,6 @@ public:
 protected:
     cocos2d::Size visibleSize;
     cocos2d::Vec2 origin;
-    bool blockedContact;
     Mode mode;
 
 protected:

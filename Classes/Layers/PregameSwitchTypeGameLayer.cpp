@@ -184,10 +184,10 @@ void PregameSwitchTypeGameLayer::initLabel(MenuItemLabel *&rvPtr, const std::str
 
 void PregameSwitchTypeGameLayer::initNavigationMenu()
 {
-    Label* lback = Label::createWithTTF("<-Back", "fonts/Bicubik.ttf", 36);
+    Label* lback = Jus::createLabelTTF("<-Back", "fonts/Bicubik.ttf", 36);
     lback->setAdditionalKerning(3);
 
-    Label* lstart = Label::createWithTTF("Start", "fonts/Bicubik.ttf", 36);
+    Label* lstart = Jus::createLabelTTF("Start", "fonts/Bicubik.ttf", 36);
     lstart->setAdditionalKerning(3);
 
     itemBack  = MenuItemLabel::create(lback);

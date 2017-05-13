@@ -25,7 +25,7 @@ inline Vec2 scaledVec2(const Vec2 &vec, const Vec2 &scl) {
 
 GameView::~GameView()
 {
-    if (server){
+    if (server) {
         delete server;
         server = nullptr;
     }
@@ -40,7 +40,7 @@ Scene* GameView::createScene(int level, int bitmaskGame, int bitmaskGN)
     auto scene = Scene::createWithPhysics();
     scene->getPhysicsWorld()->setGravity(Vec2::ZERO);
     scene->getPhysicsWorld()->setSubsteps(10);
-//    scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+    // scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 
     // 'Layer' is an autorelease object
     auto layer = GameView::create(level, bitmaskGame, bitmaskGN);
@@ -474,6 +474,8 @@ std::function<void (Node *node)> GameView::getCallbackContactFunctionEat() const
 std::function<void (Node *node)> GameView::getCallbackContactFunctionBonus() const
 {
     return [this](Node *node) {
+
+        log("EAT_BONUS");
 
         if(!(snake[0] && node == snake[0]->head) && !(snake[1] && node == snake[1]->head))
             return;

@@ -12,8 +12,6 @@ bool BasicEat::init()
 
     log("initialize BasicEat...");
 
-    blockedContact = false;
-
     visibleSize = Director::getInstance()->getVisibleSize();
     origin = Director::getInstance()->getVisibleOrigin();
 
@@ -25,33 +23,28 @@ bool BasicEat::init()
     return true;
 }
 
-bool BasicEat::isContainer(const PhysicsBody *body, const PhysicsContact &in) const
-{
+bool BasicEat::isContainer(const PhysicsBody *body, const PhysicsContact &in) const {
     return (in.getShapeA()->getBody() == body || in.getShapeB()->getBody() == body);
 }
 
-Node *BasicEat::getANode(const PhysicsContact &contact) const
-{
+Node *BasicEat::getANode(const PhysicsContact &contact) const {
     return contact.getShapeA()->getBody()->getNode();
 }
 
-Node *BasicEat::getBNode(const PhysicsContact &contact) const
-{
+Node *BasicEat::getBNode(const PhysicsContact &contact) const {
     return contact.getShapeB()->getBody()->getNode();
 }
 
-void BasicEat::setCallbackContact(std::function<void (Node *node)> func)
-{
+void BasicEat::setCallbackContact(const std::function<void (Node *node)> &func) {
     callfunc = func;
 }
 
-void BasicEat::setCallbackVerifyPosition(std::function<bool(const Vec2 &pos)> func)
-{
+void BasicEat::setCallbackVerifyPosition(const std::function<bool(const Vec2 &pos)> &func) {
     isVerifyCorrectlyPosition = func;
 }
 
-void BasicEat::setRandomPosition()
-{
+void BasicEat::setRandomPosition() {
+
     Vec2 pos;
 
     int countLoops = 0;
@@ -62,13 +55,11 @@ void BasicEat::setRandomPosition()
     setPosition(pos);
 }
 
-BasicEat::Mode BasicEat::getMode() const
-{
+BasicEat::Mode BasicEat::getMode() const {
     return mode;
 }
 
-void BasicEat::setMode(const Mode &value)
-{
+void BasicEat::setMode(const Mode &value) {
     mode = value;
 }
 
@@ -76,20 +67,11 @@ void BasicEat::initContactListener()
 {
     auto listener = EventListenerPhysicsContact::create();
     
-    
     auto callbackContact = [this] (PhysicsContact &contact) -> void {
-
-        if (mode == Mode::Active && isContainer(getPhysicsBody(), contact) && isVisible() && !blockedContact) {
-
-            blockedContact = true;
-
-            runAction(Sequence::create(DelayTime::create(0.1), CallFunc::create( [this](){ blockedContact = false; } ), nullptr));
-
+        if (mode == Mode::Active && isContainer(getPhysicsBody(), contact) && isVisible()) {
             auto node = getANode(contact) == this ? getBNode(contact) : getANode(contact);
-
-            callfunc(node); // call custom user function
             eate(node);     // call virtual function
-
+            callfunc(node); // call custom user function
         }
     };
 
