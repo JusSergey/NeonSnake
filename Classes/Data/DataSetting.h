@@ -25,6 +25,7 @@ public:
         public:
             static bool playingBackgroundMusic;
             static bool playingEffectSound;
+            static bool isFirstPlaying;
             static std::string playerName;
             static std::string opponentName;
             static std::string NetworkPort;

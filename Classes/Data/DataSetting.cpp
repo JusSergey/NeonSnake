@@ -4,6 +4,7 @@ USING_NS_CC;
 
 bool DataSetting::UserData_t::playingBackgroundMusic = false;
 bool DataSetting::UserData_t::playingEffectSound = false;
+bool DataSetting::UserData_t::isFirstPlaying = true;
 
 int DataSetting::GameData_t::currentLevel = 1;
 
@@ -114,13 +115,14 @@ void DataSetting::reset() {
 
     GameData_t::currentLevel = 1;
     UserData_t::locale = Locale::en;
+    UserData_t::isFirstPlaying = true;
 
     save();
 }
 
 void DataSetting::set(const std::vector<std::string> &source) {
 
-    if (source.size() < 12/*must be size vector*/) {
+    if (source.size() < 13/*must be size vector*/) {
         log("SOURCE SIZE: %d", source.size());
         reset();
         return;
@@ -141,6 +143,7 @@ void DataSetting::set(const std::vector<std::string> &source) {
 
     GameData_t::currentLevel = Value(source[10]).asInt();
     UserData_t::locale = (Locale)Value(source[11]).asInt();
+    UserData_t::isFirstPlaying = Value(source[12]).asBool();
 }
 
 std::string DataSetting::toString() {
@@ -171,6 +174,8 @@ std::string DataSetting::toString() {
     result += StringUtils::toString(GameData_t::currentLevel) + '\n';
 
     result += StringUtils::toString((int)UserData_t::locale) + '\n';
+
+    result += (UserData_t::isFirstPlaying ? "1\n" : "0\n");
 
     return result + '\0';
 

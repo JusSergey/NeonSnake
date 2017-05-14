@@ -18,15 +18,16 @@ class GameView : public cocos2d::Layer
 public:
     virtual ~GameView();
 
-    static cocos2d::Scene* createScene(int level, int bitmaskGame, int bitmaskGN);
+    static cocos2d::Scene* createScene(int level, int bitmaskGame, int bitmaskGN, bool _showLearn = false);
 
     virtual bool init();
 
-    static void GoToGameView(int level, int bitmaskGame = InitAll, int bitmaskGN = InitGameNavigatorAll);
+    static void GoToGameView(int level, int bitmaskGame = InitAll, int bitmaskGN = InitGameNavigatorAll, bool showLearn = false);
 
-    static GameView *create(int level, int bitmaskGame, int bitmaskGN);
+    static GameView *create(int level, int bitmaskGame, int bitmaskGN, bool showLearn);
 
 protected:
+    bool showLearn;
     cocos2d::Size visibleSize;
     cocos2d::Vec2 origin;
     cocos2d::PhysicsWorld *world;
@@ -67,6 +68,7 @@ private:
     void initCamera     ();
     void initGameServer ();
     void initGameNavigator();
+    void initLearnControl();
 
     void initPlayers    (cocos2d::Player*       &player,
                          const std::string      &name,

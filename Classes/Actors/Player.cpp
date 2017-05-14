@@ -72,12 +72,8 @@ void Player::initTouches()
 
     lTouch->onTouchEnded = [=](Touch *touch, Event *) -> void {
 
-        log("ended");
-
         if (!touchRect.containsPoint(touch->getStartLocation()))
             return;
-
-        log("post ended");
 
         Vec2 start  = touch->getStartLocation();
         Vec2 finish = touch->getLocation();

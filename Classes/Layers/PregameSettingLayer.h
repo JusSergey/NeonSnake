@@ -103,7 +103,7 @@ private:
     void initDrawNode();
     void initBlackBackground();
 
-    void initLabelSetting(cocos2d::Label* &rvLabel, const std::string &title, float procentY, const std::function<float(float)> &positioning);
+    void initLabelSetting(cocos2d::Label* &rvLabel, const std::string &title, float posy);
     void initColors(SwitchColorContainer_t &sw, const std::function<float(float)> &positioning, int tag);
     void initTextFields(const std::function<float(float)> &positioning, cocos2d::ui::TextField* &field, const std::string &name);
 

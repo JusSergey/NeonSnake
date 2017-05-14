@@ -209,16 +209,16 @@ void PregameSwitchTypeGameLayer::initNavigationMenu()
                 text = l->getString();
 
         if (text == Language::get(DataSetting::UserData_t::locale, PLAYER_PLAYER))
-            GameView::GoToGameView(GameData::currentLevel, InitAll ^ InitLocalPlayer ^ InitBot ^ InitServer);
+            GameView::GoToGameView(GameData::currentLevel, InitAll ^ InitLocalPlayer ^ InitBot ^ InitServer, InitGameNavigatorAll, UserData::isFirstPlaying);
 
         else if (text == Language::get(DataSetting::UserData_t::locale, LOCAL_PLAYER))
             callbackNext(nullptr);
 
         else if (text == Language::get(DataSetting::UserData_t::locale, PLAYER_BOT))
-            GameView::GoToGameView(GameData::currentLevel, InitAll ^ InitLocalPlayer ^ InitSecondPlayer ^ InitServer);
+            GameView::GoToGameView(GameData::currentLevel, InitAll ^ InitLocalPlayer ^ InitSecondPlayer ^ InitServer, InitGameNavigatorAll, UserData::isFirstPlaying);
 
         else if (text == Language::get(DataSetting::UserData_t::locale, ONLY_PLAYER))
-            GameView::GoToGameView(GameData::currentLevel, InitAll ^ InitLocalPlayer ^ InitBot ^ InitSecondPlayer ^ InitServer);
+            GameView::GoToGameView(GameData::currentLevel, InitAll ^ InitLocalPlayer ^ InitBot ^ InitSecondPlayer ^ InitServer, UserData::isFirstPlaying);
 
         else if (text == Language::get(DataSetting::UserData_t::locale, ONLY_BOT))
             GameView::GoToGameView(GameData::currentLevel, InitAll ^ InitLocalPlayer ^ InitFirstPlayer ^ InitSecondPlayer ^ InitServer);

@@ -34,7 +34,7 @@ GameView::~GameView()
 
 }
 
-Scene* GameView::createScene(int level, int bitmaskGame, int bitmaskGN)
+Scene* GameView::createScene(int level, int bitmaskGame, int bitmaskGN, bool _showLearn)
 {
     // 'scene' is an autorelease object
     auto scene = Scene::createWithPhysics();
@@ -42,7 +42,7 @@ Scene* GameView::createScene(int level, int bitmaskGame, int bitmaskGN)
     scene->getPhysicsWorld()->setSubsteps(10);
 
     // 'Layer' is an autorelease object
-    auto layer = GameView::create(level, bitmaskGame, bitmaskGN);
+    auto layer = GameView::create(level, bitmaskGame, bitmaskGN, _showLearn);
     layer->world = scene->getPhysicsWorld();
 
     // add layer as a child to scene
@@ -52,7 +52,7 @@ Scene* GameView::createScene(int level, int bitmaskGame, int bitmaskGN)
     return scene;
 }
 
-GameView *GameView::create(int level, int bitmaskGame, int bitmaskGN)
+GameView *GameView::create(int level, int bitmaskGame, int bitmaskGN, bool showLearn)
 {
     GameView *pRet = new(std::nothrow) GameView();
     if (pRet) {
@@ -60,6 +60,7 @@ GameView *GameView::create(int level, int bitmaskGame, int bitmaskGN)
         pRet->bitmaskInitsGameLayer = bitmaskGame;
         pRet->bitmaskInitsGameNavigator = bitmaskGN;
         pRet->gameMode = GameData::mode;
+        pRet->showLearn = showLearn;
     }
     if (pRet && pRet->init())
     {
@@ -158,6 +159,9 @@ bool GameView::init()
         snake[PLAYER2] = localPlayer;
     }
 
+    if (showLearn)
+        initLearnControl();
+
     playingMusic();
 
     updateShaderPointsOfLevel();
@@ -165,10 +169,9 @@ bool GameView::init()
     return true;
 }
 
-void GameView::GoToGameView(int level, int bitmaskGame, int bitmaskGN)
+void GameView::GoToGameView(int level, int bitmaskGame, int bitmaskGN, bool showLearn)
 {
-    Director::getInstance()->replaceScene(TransitionFade::create(1, GameView::createScene(level, bitmaskGame, bitmaskGN)));
-//    Director::getInstance()->replaceScene(TransitionShrinkGrow::create(1, GameView::createScene(bitmaskGame)));
+    Director::getInstance()->replaceScene(TransitionFade::create(1, GameView::createScene(level, bitmaskGame, bitmaskGN, showLearn)));
 }
 
 void GameView::initLayer()
@@ -447,6 +450,66 @@ void GameView::initGameNavigator()
             gameNavigatorLayer->setStepSeconds(1);
         } break;
     }
+}
+
+void GameView::initLearnControl()
+{
+    Sprite *hand = Sprite::create("hand.png");
+    float tenPercent = visibleSize.width * 0.10;
+
+    hand->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+
+    hand->setPosition(visibleSize.width/2 - tenPercent, visibleSize.height / 2);
+
+    hand->setOpacity(0);
+
+    addChild(hand, LTop + 1);
+
+    scheduleOnce([=](float){
+
+        auto *fadein = FadeIn::create(0.5);
+          auto *inside  = MoveBy::create(0.3, Vec2(-tenPercent / 3, tenPercent / 3));
+          auto *sclin   = ScaleTo::create(0.3, 0.9);
+          auto *spawnin = Spawn::create(inside, sclin, nullptr);
+        auto *move = MoveBy::create(2, Vec2(tenPercent * 2, 0));
+          auto outside  = MoveBy::create(0.3, Vec2(tenPercent / 3, -tenPercent / 3));
+          auto sclout   = ScaleTo::create(0.3, 1.0);
+          auto spawnout = Spawn::create(outside, sclout, nullptr);
+        auto *fadeout = FadeOut::create(0.5);
+
+        const char *schname = "drawpoints";
+
+        CallFunc *callfuncStart = CallFunc::create([=]{
+            schedule([=](float){
+                Sprite *ball = Sprite::create("circle.png");
+                ball->setScale(0.10);
+                ball->setPosition(hand->getPosition());
+                addChild(ball, LTop);
+                auto fade = FadeOut::create(1);
+                auto remove = CallFunc::create([ball]{ ball->removeFromParent(); });
+                auto seq = Sequence::create(fade, remove, nullptr);
+                ball->runAction(seq);
+            }, 0.1, schname);
+        });
+
+        CallFunc *callfuncStop = CallFunc::create([=]{
+            unschedule(schname);
+        });
+
+        CallFunc *endCallback = CallFunc::create([hand]{
+            hand->removeFromParent();
+            UserData::isFirstPlaying = false;
+            DataSetting::save();
+        });
+
+        Spawn *spawn = Spawn::create(move, callfuncStart, nullptr);
+
+        Sequence *seq = Sequence::create(fadein, spawnin, spawn, callfuncStop, spawnout, fadeout, endCallback, nullptr);
+
+        hand->runAction(seq);
+
+    }, 2, "learn");
+
 }
 
 std::function<void (Node *node)> GameView::getCallbackContactFunctionEat() const

@@ -48,11 +48,11 @@ bool PregameSettingLayer::init()
     auto positioningY1 = [](float p) -> float { return getP1(p); };
     auto positioningY2 = [](float p) -> float { return getP2(p); };
 
-    initLabelSetting(labelPlayerTitle, "Player", 0.85, positioningY1);
-    initLabelSetting(labelOpponentTitle, "Bot",    0.85, positioningY2);
+    initLabelSetting(labelPlayerTitle, "Player", getP1(0.85));
+    initLabelSetting(labelOpponentTitle, "Bot",  getP2(0.85));
 
-    initLabelSetting(labelPlayerColor,  "Color Player", 0.40, positioningY1);
-    initLabelSetting(labelOpponentColor, "Color Bot",   0.40, positioningY2);
+    initLabelSetting(labelPlayerColor,  "Color Player", getP1(0.40));
+    initLabelSetting(labelOpponentColor, "Color Bot",   getP2(0.40));
 
     initTextFields(positioningY1, fieldPlayer, UserData::playerName);
     initTextFields(positioningY2, fieldOpponent, UserData::opponentName);
@@ -204,12 +204,12 @@ void PregameSettingLayer::initBlackBackground()
     addChild(blackBackground, LDNode-1);
 }
 
-void PregameSettingLayer::initLabelSetting(Label *&rvLabel, const std::string &title, float procentY, const std::function<float (float)> &positioning)
+void PregameSettingLayer::initLabelSetting(Label *&rvLabel, const std::string &title, float posy)
 {
     rvLabel = Jus::createLabelTTF(title, "fonts/Bicubik.ttf", 26);
     rvLabel->setAdditionalKerning(3);
 
-    rvLabel->setPosition(visibleSize.width / 4, positioning(procentY));
+    rvLabel->setPosition(visibleSize.width / 4, posy);
 
     addChild(rvLabel, LOther);
 }
