@@ -7,6 +7,7 @@ USING_NS_CC;
 
 static const int countMusics = 2;
 static const std::string prename = "Sounds/Background_";
+static const std::string prepath = "Sounds/Parts/Part_";
 
 using StringUtils::toString;
 
@@ -34,6 +35,9 @@ void Audio::preload()
 
     for (int i = 0; i < countMusics; i++)
         Audio::EngineInstance->preloadBackgroundMusic((prename + toString(i) + ".mp3").c_str());
+
+    for (Part part : {_1, _2, _3})
+        Audio::EngineInstance->preloadBackgroundMusic((prepath + toString((int)part) + ".mp3").c_str());
 }
 
 void Audio::playSoundEffectExplosion()
@@ -78,11 +82,28 @@ void Audio::stopEffectExplosion()
 
 void Audio::pauseEffectExplosion()
 {
-
     Audio::EngineInstance->pauseEffect(idEffect);
 }
 
 void Audio::resumeEffectExplosion()
 {
     Audio::EngineInstance->resumeEffect(idEffect);
+}
+
+void Audio::playPart(Part part, bool loop)
+{
+    char *filepath = nullptr;
+    switch (part) {
+    case _1: filepath = "Sounds/Parts/Part_1.mp3"; break;
+    case _2: filepath = "Sounds/Parts/Part_2.mp3"; break;
+    case _3: filepath = "Sounds/Parts/Part_3.mp3"; break;
+    default: cocos2d::log("Audio::playerPart() : undefined part."); std::terminate();
+    }
+
+    Audio::EngineInstance->playBackgroundMusic(filepath, loop);
+}
+
+void Audio::stopPart()
+{
+    stopBackgroundMusic();
 }

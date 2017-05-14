@@ -4,6 +4,10 @@
 #include "cocos2d.h"
 #include "SimpleAudioEngine.h"
 
+enum Part {
+    _1 = 1, _2, _3
+};
+
 static const std::string SoundEffectExplosion = "Sounds/Explosion.mp3";
 
 class Audio : public cocos2d::Layer
@@ -31,6 +35,8 @@ public:
     void stopEffectExplosion();
     void pauseEffectExplosion();
     void resumeEffectExplosion();
+    void playPart(Part part, bool loop = false);
+    void stopPart();
 
 //    void playAllSounds();
 

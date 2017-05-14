@@ -48,7 +48,7 @@ class PregameSettingLayer : public cocos2d::Layer
 public:
     virtual bool init();
 
-    CREATE_FUNC(PregameSettingLayer);
+    CREATE_FUNC(PregameSettingLayer)
 
     // getPosition is not valid
     virtual void addChild(cocos2d::Node *child, int level);

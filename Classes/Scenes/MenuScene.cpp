@@ -79,7 +79,7 @@ bool MenuScene::init()
     setLanguageLabels(DataSetting::UserData_t::locale);
 
     if (UserData::playingBackgroundMusic)
-        Audio::getInstance()->playBackgroundMusicMenu();
+        Audio::getInstance()->playPart(_1, true);
 
     return true;
 }

@@ -133,8 +133,10 @@ void PregameSwitchTypeGameLayer::initSwitchLabels()
     initLabel(labelP,  ONLY_PLAYER);
     initLabel(labelB,  ONLY_BOT);
 
-    for (auto &i : {LABEL_ITEMS})
+    for (MenuItemLabel *i : {LABEL_ITEMS}) {
+//        ((Label*)i->getLabel())->enableOutline(Color4B::BLACK, 2);
         i->setCallback(getCallbackClickLabel());
+    }
 
     log("PregameSwitchTypeGameLayer::initSwitchLabels() : getItem() [%d]", UserData::type);
 
@@ -159,20 +161,25 @@ void PregameSwitchTypeGameLayer::initSwitchLabels()
 
 void PregameSwitchTypeGameLayer::initDrawNode()
 {
-    DrawNode *node = DrawNode::create();
 
-    float sclFrame = 0.4;
+    Sprite *backgroundMenu = Sprite::create("BackgroundSwitchTypeGame.png");
+    backgroundMenu->setPosition(Vec2(offset, 0));
+    backgroundMenu->setOpacity(0xff * 0.15);
+    addChild(backgroundMenu);
+//    DrawNode *node = DrawNode::create();
 
-    Vec2 p1(visibleSize.width/2 - widthSolidRect*sclFrame, 0);
-    Vec2 p2(visibleSize.width/2 - widthSolidRect*(1.f-sclFrame) + widthSolidRect, visibleSize.height);
+//    float sclFrame = 0.4;
 
-    node->setAnchorPoint(Vec2::ZERO);
+//    Vec2 p1(visibleSize.width/2 - widthSolidRect*sclFrame, 0);
+//    Vec2 p2(visibleSize.width/2 - widthSolidRect*(1.f-sclFrame) + widthSolidRect, visibleSize.height);
 
-    node->setPosition(offset-visibleSize.width/2, -visibleSize.height/2);
+//    node->setAnchorPoint(Vec2::ZERO);
 
-    addChild(node);
+//    node->setPosition(offset-visibleSize.width/2, -visibleSize.height/2);
 
-    node->drawSolidRect(p1, p2, Color4F(0, 0, 0, 0.70));
+//    addChild(node);
+
+//    node->drawSolidRect(p1, p2, Color4F(0, 0, 0, 0.70));
 }
 
 void PregameSwitchTypeGameLayer::initLabel(MenuItemLabel *&rvPtr, const std::string &text)

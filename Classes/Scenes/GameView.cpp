@@ -145,8 +145,10 @@ bool GameView::init()
         log("init navigator");
         initGameNavigator();
 
-        if (UserData::playingBackgroundMusic)
-            Audio::getInstance()->playBackgroundMusic();
+//        if (UserData::playingBackgroundMusic){
+//            Audio::getInstance()->stopBackgroundMusic();
+//            Audio::getInstance()->playPart(Part::_3, true);
+//        }
     }
 
     if (bitmaskInitsGameLayer & InitBonus)

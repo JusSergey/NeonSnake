@@ -91,11 +91,15 @@ Vec2 Jus::getPointNode(Node *node, const Vec2 &vec)
 
 Label *Jus::createLabelTTF(const std::string &text, const std::string &font, int size)
 {
-    return Label::createWithTTF(text, font, (float)size / Director::getInstance()->getContentScaleFactor());
+    Label *label = Label::createWithTTF(text, font, (float)size / Director::getInstance()->getContentScaleFactor());;
+    label->enableGlow(Color4B::BLACK);
+    label->enableShadow();
+    return label;
 }
 
 Label *Jus::createLabelSystem(const std::string &text, const std::string &font, int size)
 {
-    return Label::createWithSystemFont(text, font, (float)size / Director::getInstance()->getContentScaleFactor());
+    Label *label = Label::createWithSystemFont(text, font, (float)size / Director::getInstance()->getContentScaleFactor());
+    return label;
 }
 
