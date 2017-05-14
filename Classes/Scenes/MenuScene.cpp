@@ -78,8 +78,7 @@ bool MenuScene::init()
 
     setLanguageLabels(DataSetting::UserData_t::locale);
 
-    if (UserData::playingBackgroundMusic)
-        Audio::getInstance()->playPart(_1, true);
+    playingMusic();
 
     return true;
 }
@@ -170,15 +169,20 @@ void MenuScene::clickExit()
     Director::getInstance()->end();
 }
 
-std::function<void ()> MenuScene::getCallbackMusicButton() const
-{
-    return [this] () -> void {
-        if (UserData::playingBackgroundMusic)
-            Audio::getInstance()->playBackgroundMusicMenu();
+//void MenuScene::playingMusic()
+//{
+//    Audio::getInstance()->playBackgroundMusic();
+//}
 
-        else Audio::getInstance()->pauseBackgroundMusic();
-    };
-}
+//std::function<void ()> MenuScene::getCallbackMusicButton() const
+//{
+//    return [this] () -> void {
+//        if (UserData::playingBackgroundMusic)
+//            Audio::getInstance()->playBackgroundMusicMenu();
+
+//        else Audio::getInstance()->pauseBackgroundMusic();
+//    };
+//}
 
 std::function<void (Ref *)> MenuScene::getCallbackStartServer() const
 {

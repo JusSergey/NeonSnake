@@ -87,6 +87,9 @@ protected:
     virtual std::function<void()> getCallbackMusicButton()  const;
     virtual std::function<void()> getCallbackEffectButton() const;
 
+    virtual void playingMusic();
+    virtual void stopingMusic();
+
 private:
     void eatBonusBigScore       (cocos2d::Node *node);
     void eatBonusFantazyShader  (cocos2d::Node *node);

@@ -57,9 +57,10 @@ private:
     void clickExit();
 
 private:
-    virtual std::function<void()> getCallbackMusicButton() const;
-            std::function<void(Ref*)> getCallbackStartServer() const;
-            std::function<void(Locale)> getCallbackClickChangeLanguage() const;
+    //    virtual void playingMusic();
+    //    virtual std::function<void()> getCallbackMusicButton() const;
+    std::function<void(Ref*)> getCallbackStartServer() const;
+    std::function<void(Locale)> getCallbackClickChangeLanguage() const;
 
 private:
     void setLanguageLabels(Locale locale);

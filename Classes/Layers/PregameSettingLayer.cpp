@@ -283,14 +283,13 @@ void PregameSettingLayer::initScrollViewLevels()
         levels.push_back(level);
         level->setTag(i);
         level->setPosition({ scrollBackground->getContentSize().width / 2,
-                             level->getContentSize().height * (countLevels - i) + (scroll->getContentSize().height - level->getContentSize().height) / HVScale});
-                            // BORDER_1*11 + level->getContentSize().height * (countLevels - i) + scroll->getPositionY() });
+                             level->getContentSize().height * ((float)countLevels - i + 0.5) + BORDER_3});
 
         scroll->addChild(level, 1);
     }
 
-    const float h = levels[0]->getContentSize().height + BORDER_3;
-    scroll->setInnerContainerSize(Size(visibleSize.width / 2.5, h*countLevels + BORDER_3*5 - visibleSize.height * _director->getContentScaleFactor()));
+    const float h = levels[0]->getContentSize().height;
+    scroll->setInnerContainerSize(Size(visibleSize.width / 2.5, h * countLevels + BORDER_3));
 
 }
 

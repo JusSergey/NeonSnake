@@ -40,7 +40,6 @@ Scene* GameView::createScene(int level, int bitmaskGame, int bitmaskGN)
     auto scene = Scene::createWithPhysics();
     scene->getPhysicsWorld()->setGravity(Vec2::ZERO);
     scene->getPhysicsWorld()->setSubsteps(10);
-    // scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 
     // 'Layer' is an autorelease object
     auto layer = GameView::create(level, bitmaskGame, bitmaskGN);
@@ -145,10 +144,7 @@ bool GameView::init()
         log("init navigator");
         initGameNavigator();
 
-//        if (UserData::playingBackgroundMusic){
-//            Audio::getInstance()->stopBackgroundMusic();
-//            Audio::getInstance()->playPart(Part::_3, true);
-//        }
+
     }
 
     if (bitmaskInitsGameLayer & InitBonus)
@@ -161,6 +157,8 @@ bool GameView::init()
         initLocalPlayer();
         snake[PLAYER2] = localPlayer;
     }
+
+    playingMusic();
 
     updateShaderPointsOfLevel();
 
@@ -207,10 +205,7 @@ void GameView::onEnterTransitionDidFinish()
 
                 if (snake[1])
                     snake[1]->opponent = snake[0];
-
             }
-
-
 
         }, 0.5, "onceSetWallsMap");
     }
@@ -625,7 +620,7 @@ std::function<void ()> GameView::getCallbackMusicButton() const
 {
     return [this] () -> void {
         if (UserData::playingBackgroundMusic)
-            Audio::getInstance()->playBackgroundMusic();
+            playingMusic();
 
         else Audio::getInstance()->pauseBackgroundMusic();
     };
@@ -638,6 +633,17 @@ std::function<void ()> GameView::getCallbackEffectButton() const
         if (!UserData::playingEffectSound)
             Audio::getInstance()->stopEffectExplosion();
     };
+}
+
+void GameView::playingMusic()
+{
+    if (UserData::playingBackgroundMusic && !Audio::getInstance()->isBackgroundMusicPlaying())
+        Audio::getInstance()->playBackgroundMusic();
+}
+
+void GameView::stopingMusic()
+{
+    Audio::getInstance()->stopBackgroundMusic();
 }
 
 void GameView::eatBonusBigScore(Node *node)

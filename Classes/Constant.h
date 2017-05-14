@@ -53,7 +53,7 @@ static const cocos2d::Size resolutionDisplay(1024, 600);
 
 static const int discret = 15;
 
-static const int countLevels = 10;
+static const int countLevels = 4;
 
 static const float delayBetweenBonusses = 40.f;    // задержка между бонусами
 static const float intervalShowingBonus = 10.f;    // время показа бонуса
