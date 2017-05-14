@@ -9,7 +9,7 @@
 
 USING_NS_CC;
 
-#define INIT_ALL ((bitmaskInits ^ InitGameNavigator) & InitGameNavigatorAll)
+#define INIT_ALL (bitmaskInits & InitGameNavigatorAll)
 
 using StringUtils::toString;
 
@@ -26,8 +26,8 @@ bool GameNavigatorLayer::init()
     log("Start init GN");
 
     pauseLayer = nullptr;
-    labelScoreBot = nullptr;
     labelScorePlayer = nullptr;
+    labelScoreBot = nullptr;
     labelEffectItemMenu = nullptr;
     labelMusicItemMenu = nullptr;
     labelTimer = nullptr;
@@ -50,6 +50,8 @@ bool GameNavigatorLayer::init()
         initPauseButton();
         initPausedLayer();
     }
+
+    log("first if");
 
     if (INIT_ALL || bitmaskInits & InitGNSoundMenu)
         initSoundButton();
@@ -92,8 +94,11 @@ void GameNavigatorLayer::setCallbackHome(const std::function<void ()> &value)
 
 void GameNavigatorLayer::setLanguageLabels(Locale locale)
 {
-    labelEffectItemMenu->setString(Language::get(locale, "Effect"));
-    labelMusicItemMenu->setString(Language::get(locale, "Music"));
+    if (labelEffectItemMenu)
+        labelEffectItemMenu->setString(Language::get(locale, "Effect"));
+
+    if (labelMusicItemMenu)
+        labelMusicItemMenu->setString(Language::get(locale, "Music"));
 }
 
 void GameNavigatorLayer::hideContextMenu(float lastTime)
@@ -148,13 +153,13 @@ void GameNavigatorLayer::initLabels()
     log("Init Labels");
 
     if (INIT_ALL || bitmaskInits & InitGNPlayer1Label)
-        initLabel(labelScorePlayer,
+        initLabel(labelScoreBot,
                   Vec2(AlignLabel, visibleSize.height * 0.95),
                   Vec2::ANCHOR_MIDDLE_LEFT,
                   UserData::playerName + ": 0");
 
     if (INIT_ALL || bitmaskInits & InitGNPlayer2Label)
-        initLabel(labelScoreBot,
+        initLabel(labelScorePlayer,
                   Vec2(visibleSize.width - AlignLabel, visibleSize.height * 0.95),
                   Vec2::ANCHOR_MIDDLE_RIGHT,
                   UserData::opponentName + ": 0");
@@ -162,6 +167,7 @@ void GameNavigatorLayer::initLabels()
     if (INIT_ALL || bitmaskInits & InitGNTimer)
         initTimer();
 
+    log("out");
 }
 
 void GameNavigatorLayer::initLabel(Label *&rPtr, const Vec2 &pos, const Vec2 &anchor, const std::string &text)
@@ -329,18 +335,18 @@ void GameNavigatorLayer::addScores(int value, const std::string &nameSnake)
 void GameNavigatorLayer::setScore(int value, const std::string &nameSnake)
 {
     if (nameSnake == NameBotOrOpponent) {
-        if (labelScoreBot) {
-            labelScoreBot->setString(UserData::opponentName + ": " + toString(value));
-            labelScoreBot->stopAllActions();
-            labelScoreBot->runAction(createAction());
+        if (labelScorePlayer) {
+            labelScorePlayer->setString(UserData::opponentName + ": " + toString(value));
+            labelScorePlayer->stopAllActions();
+            labelScorePlayer->runAction(createAction());
             countScoreBot = value;
         }
     }
     else if (nameSnake == NamePlayer) {
-        if (labelScorePlayer) {
-            labelScorePlayer->setString(UserData::playerName + ": " + toString(value));
-            labelScorePlayer->stopAllActions();
-            labelScorePlayer->runAction(createAction());
+        if (labelScoreBot) {
+            labelScoreBot->setString(UserData::playerName + ": " + toString(value));
+            labelScoreBot->stopAllActions();
+            labelScoreBot->runAction(createAction());
             countScorePlayer = value;
         }
     }

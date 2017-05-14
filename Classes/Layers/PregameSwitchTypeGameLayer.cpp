@@ -218,7 +218,7 @@ void PregameSwitchTypeGameLayer::initNavigationMenu()
             GameView::GoToGameView(GameData::currentLevel, InitAll ^ InitLocalPlayer ^ InitSecondPlayer ^ InitServer, InitGameNavigatorAll, UserData::isFirstPlaying);
 
         else if (text == Language::get(DataSetting::UserData_t::locale, ONLY_PLAYER))
-            GameView::GoToGameView(GameData::currentLevel, InitAll ^ InitLocalPlayer ^ InitBot ^ InitSecondPlayer ^ InitServer, UserData::isFirstPlaying);
+            GameView::GoToGameView(GameData::currentLevel, InitAll ^ InitLocalPlayer ^ InitBot ^ InitSecondPlayer ^ InitServer, InitGameNavigatorAll, UserData::isFirstPlaying);
 
         else if (text == Language::get(DataSetting::UserData_t::locale, ONLY_BOT))
             GameView::GoToGameView(GameData::currentLevel, InitAll ^ InitLocalPlayer ^ InitFirstPlayer ^ InitSecondPlayer ^ InitServer);

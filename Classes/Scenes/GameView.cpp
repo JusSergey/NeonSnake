@@ -422,10 +422,19 @@ void GameView::initGameServer()
 
 void GameView::initGameNavigator()
 {
-    log("init navigator");
+    log("init navigator: %d", bitmaskInitsGameNavigator);
+
     gameNavigatorLayer = GameNavigatorLayer::create(gameMode, bitmaskInitsGameNavigator);
 
     addChild(gameNavigatorLayer, Levels::LScore);
+
+    if (UserData::type == GameType::PlayerAlways)
+        gameNavigatorLayer->setVisibleLabelOpponent(false);
+
+    if (UserData::type == GameType::BotAlways)
+        gameNavigatorLayer->setVisibleLabelPlayer(false);
+
+
 
     gameNavigatorLayer->setCallbackPause(getCallbackPause());
     gameNavigatorLayer->setCallbackTimeout(getCallbackTimeout());
@@ -450,6 +459,8 @@ void GameView::initGameNavigator()
             gameNavigatorLayer->setStepSeconds(1);
         } break;
     }
+
+
 }
 
 void GameView::initLearnControl()

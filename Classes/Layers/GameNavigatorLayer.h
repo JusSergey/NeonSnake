@@ -32,8 +32,8 @@ private:
     PauseLayer *pauseLayer;
     cocos2d::MenuItemLabel *labelEffectItemMenu;
     cocos2d::MenuItemLabel *labelMusicItemMenu;
-    cocos2d::Label *labelScorePlayer;
     cocos2d::Label *labelScoreBot;
+    cocos2d::Label *labelScorePlayer;
     cocos2d::Label *labelTimer;
     std::function<void()> callbackPause;
     std::function<void()> callbackTimeout;
@@ -60,6 +60,7 @@ private:
     void initPausedLayer();
     void initSoundButton();
 
+
 private:
     void clickButtonEffect();
     void clickButtonMusic();
@@ -81,6 +82,9 @@ public:
     void setCallbackHome   (const std::function<void ()> &value);
 
     void setLanguageLabels(Locale locale);
+
+    void setVisibleLabelPlayer(bool visible) { if(labelScoreBot) labelScoreBot->setVisible(visible); }
+    void setVisibleLabelOpponent(bool visible) {  if(labelScorePlayer) labelScorePlayer->setVisible(visible);}
 
 public:
     void hideContextMenu(float lastTime);
