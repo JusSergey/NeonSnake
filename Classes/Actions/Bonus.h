@@ -24,7 +24,7 @@ public:
 
     virtual bool init();
 
-    inline void hide() { setPosition(Vec2::ZERO - getContentSize()); }
+    inline void hide() { setPosition(Vec2::ZERO - getContentSize()*3); }
 
     virtual bool isVisible() const;
 

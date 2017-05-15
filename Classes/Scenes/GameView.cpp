@@ -266,7 +266,7 @@ void GameView::initEat()
         eat->setCameraMask((unsigned int)CameraFlag::USER1);
         eat->setCallbackContact(getCallbackContactFunctionEat());
         eat->setCallbackVerifyPosition(getVerifyPositionFunc());
-        eat->setPosition(Vec2(-100, -100));
+        eat->setPosition(Vec2(-200, -200));
 
         if ((bitmaskInitsGameLayer & InitBot) && !(bitmaskInitsGameLayer & InitFirstPlayer)) {
 
@@ -283,7 +283,7 @@ void GameView::initEat()
 
     }
 }
-
+// BOT[35234816], PLAYER[41466368], EAT[33606096], BONUS[35298976]
 void GameView::initBotActor()
 {
     botActor = Bot::create();

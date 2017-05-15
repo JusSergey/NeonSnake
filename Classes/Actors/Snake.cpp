@@ -8,9 +8,6 @@
 static const char *scheduleRunningHeadName = "runningHead";
 static const char *pathSnakeBlock = "circle.png";
 
-static const int stepAddLength = 2;
-
-
 
 USING_NS_CC;
 static bool isFirstInit = true;
@@ -29,7 +26,6 @@ Snake::Snake() : Layer(),
     speedSnake(8 / _director->getContentScaleFactor()),
     isMovingHeadSnake(false),
     colorBlockSnake(Color3B::WHITE),
-    maxLengthSnake(5000),
     opponent(nullptr)
 {
     if (isFirstInit) {
@@ -48,7 +44,8 @@ bool Snake::init()
 
     log("initialize Snake");
 
-    addSnakeBlock(DefaultLenght);
+    initLight();
+    addSnakeBlock(DefaultLenghtSnake);
     head = snakeBlocks[0];
 
     indexBackBlock = snakeBlocks.size()-1;
@@ -57,12 +54,10 @@ bool Snake::init()
 
     initPhysicsBodyHead();
 
-    initLight();
-
     schedule([=](float){
         Snake::setSpeed(getSpeed() + 1);
         log("speed: %f", getSpeed());
-    }, 20, "addSpeed");
+    }, IntervalAddingSpeedSnake, "addSpeed");
 
     return true;
 }
@@ -124,11 +119,11 @@ void Snake::setRealLength(const size_t len)
 
 void Snake::setSpeed(float speed)
 {
-    if (speed >= MAX_SNAKE_SPEED)
-        speedSnake = MAX_SNAKE_SPEED;
+    if (speed >= MaxSnakeSpeed)
+        speedSnake = MaxSnakeSpeed;
 
-    else if (speed <= MIN_SNAKE_SPEED)
-        speedSnake = MIN_SNAKE_SPEED;
+    else if (speed <= MinSnakeSpeed)
+        speedSnake = MinSnakeSpeed;
 
     else speedSnake = speed;
 
@@ -158,7 +153,8 @@ void Snake::setOpponent(Snake *value)
 
 void Snake::setPosition(const Vec2 &newPosition)
 {
-    head->setPosition(newPosition);
+    for (auto obj : snakeBlocks)
+        obj->setPosition(newPosition);
 }
 
 const Vec2 &Snake::getPosition() const
@@ -168,15 +164,15 @@ const Vec2 &Snake::getPosition() const
 
 void Snake::addSnakeBlock(size_t add)
 {
-    if ((lenghtSnake + add*stepAddLength) > maxLengthSnake) {
-        add = maxLengthSnake - lenghtSnake;
+    if ((lenghtSnake + add*stepAddLengthSnake) > MaxLenSnake) {
+        add = MaxLenSnake - lenghtSnake;
         if (add <= 0)
             return;
     }
 
     lenghtSnake += add;
 
-    for (int i = 0; i < add*stepAddLength; i++) {
+    for (int i = 0; i < add*stepAddLengthSnake; i++) {
         addOneBlock();
     }
 
@@ -193,7 +189,7 @@ bool Snake::isContainer(const Point &point, float maxDistance) const
 
 void Snake::subSnake(int sublen)
 {
-    sublen *= stepAddLength;
+    sublen *= stepAddLengthSnake;
     for (int i = snakeBlocks.size()-1; i > 0 && sublen-- > 0; i--){
         removeChild(snakeBlocks[i]);
         snakeBlocks.pop_back();
@@ -205,15 +201,15 @@ void Snake::initLight()
 {
     static int light_id = 1;
 
-    Sprite *tmp = Sprite::create("light.png");
+    Sprite *light = Sprite::create("light.png");
 
-    tmp->setScale(0.35);
-    tmp->setCameraMask((unsigned int)CameraFlag::USER1);
+    light->setScale(0.40);
+    light->setCameraMask((unsigned int)CameraFlag::USER1);
 
-    addChild(tmp, LLight);
+    addChild(light, LLight);
 
     schedule([=](float){
-        tmp->setPosition(head->getPosition());
+        light->setPosition(head ? head->getPosition() : Vec2::ZERO - light->getContentSize());
     }, updateTimeMSec, (std::string("snakeLight") + StringUtils::toString(light_id)).c_str());
 
     light_id++;
@@ -248,7 +244,7 @@ void Snake::addOneBlock()
     auto block = createBlockSnake();
     block->setColor(colorBlockSnake);
 
-    block->setOpacity(0xff * .10f);
+    block->setOpacity(0xff * OpacitySnakePercent);
 
     block->setCameraMask((unsigned int)CameraFlag::USER1);
 

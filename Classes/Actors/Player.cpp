@@ -117,7 +117,10 @@ void Player::movingHead(float)
 {
     PhysicsBody *pBody = head->getPhysicsBody();
 
-    if (pBody)
-        pBody->setVelocity(DescriptionWay[directionSnakeHead] * speedSnake * discret);
+    if (pBody) {
+        Vec2 velocity = DescriptionWay[directionSnakeHead] * speedSnake * discret;
+        if (pBody->getVelocity() != velocity)
+            pBody->setVelocity(velocity);
+    }
 
 }

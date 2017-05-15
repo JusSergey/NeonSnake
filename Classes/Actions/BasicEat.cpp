@@ -68,11 +68,16 @@ void BasicEat::initContactListener()
     auto listener = EventListenerPhysicsContact::create();
     
     auto callbackContact = [this] (PhysicsContact &contact) -> void {
-        if (mode == Mode::Active && isContainer(getPhysicsBody(), contact) && isVisible()) {
+
+//        log("CONTACT_BASIC_EAT[%d][%d][%d]", getPhysicsBody(), contact.getShapeA()->getBody(), contact.getShapeB()->getBody());
+
+        if (isContainer(getPhysicsBody(), contact)/* && isVisible()*/) {
+//            log("INSIDE_IF");
             auto node = getANode(contact) == this ? getBNode(contact) : getANode(contact);
             eate(node);     // call virtual function
             callfunc(node); // call custom user function
         }
+//        else log("OUTSIDE_IF[%d]", isVisible());
     };
 
 

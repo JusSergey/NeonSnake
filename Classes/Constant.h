@@ -53,7 +53,7 @@ static const cocos2d::Size resolutionDisplay(1024, 600);
 
 static const int discret = 15;
 
-static const int countLevels = 4;
+static const int countLevels = 5;
 
 static const float delayBetweenBonusses = 40.f;    // задержка между бонусами
 static const float intervalShowingBonus = 10.f;    // время показа бонуса
@@ -61,6 +61,14 @@ static const float intervalShowingBonus = 10.f;    // время показа б
 static const std::string NameBotOrOpponent = "BotOrOpponent";
 static const std::string NamePlayer = "Player";
 static const std::string NameParticle = "Particle";
+
+static const float IntervalAddingSpeedSnake = 20;
+static const float OpacitySnakePercent = 0.30; // range [0..1]
+static const int DefaultLenghtSnake = 10;
+static const int stepAddLengthSnake = 3;
+static const int MaxSnakeSpeed = 30;
+static const int MinSnakeSpeed = 5;
+static const int MaxLenSnake = 1024;
 
 // for ScoreLayer
 static const int AlignLabel = 40;

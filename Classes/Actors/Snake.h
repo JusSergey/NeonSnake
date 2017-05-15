@@ -10,11 +10,9 @@ NS_CC_BEGIN
 
 using std::vector;
 
-#define MAX_SNAKE_SPEED 30
-#define MIN_SNAKE_SPEED 5
 
-static const int DefaultLenght = 10;
-static const int stepAddLength = 2;
+
+
 
 class Snake : public Layer {
 
@@ -34,7 +32,7 @@ protected:
     Direction directionSnakeHead;
     Color3B colorBlockSnake;
     size_t lenghtSnake;
-    size_t maxLengthSnake;
+//    size_t maxLengthSnake;
     float speedSnake;
     bool isMovingHeadSnake;
 
@@ -47,7 +45,7 @@ public:
 
     void setSpeed(float speedSnake);
 
-    inline void setMaxLength(size_t max_length) { this->maxLengthSnake = max_length; }
+//    inline void setMaxLength(size_t max_length) { this->maxLengthSnake = max_length; }
 
     /* Getter functions */
 public:

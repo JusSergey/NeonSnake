@@ -41,6 +41,7 @@ bool Bonus::init()
 bool Bonus::isVisible() const
 {
     const Size &sz = getContentSize();
+//    log("BONUS[%f, %f] sz[%f, %f]", getPositionX(), getPositionY(), sz.width, sz.height);
     return (getPositionX() > sz.width/2 && getPositionY() > sz.height/2);
 }
 

@@ -25,7 +25,7 @@ bool Bot::init()
     visibleSize = Director::getInstance()->getVisibleSize();
     origin = Director::getInstance()->getVisibleOrigin();
 
-    head->setPosition(300, 150);
+    setPosition({300, 150});
 
     setTag(TagBot);
 
