@@ -166,7 +166,7 @@ bool GameView::init()
 
     updateShaderPointsOfLevel();
 
-//    initGameOverLayer();
+//    initGameOverLayer()
 
     return true;
 }
