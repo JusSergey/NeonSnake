@@ -93,16 +93,48 @@ void Snake::setTag(int tag)
     head->setTag(tag);
 }
 
-void Snake::start()
+void Snake::startMovingHead()
 {
-    isMovingHeadSnake = true;
-    schedule(schedule_selector(Snake::movingHead), 1.f / speedSnake);
+    if (!isMovingHeadSnake) {
+        isMovingHeadSnake = true;
+        schedule(schedule_selector(Snake::movingHead), 1.f / speedSnake);
+    }
 }
 
-void Snake::stop()
+void Snake::stopMovingHead()
 {
-    isMovingHeadSnake = false;
-    unschedule(schedule_selector(Snake::movingHead));
+    if (isMovingHeadSnake) {
+        isMovingHeadSnake = false;
+        unschedule(schedule_selector(Snake::movingHead));
+    }
+}
+
+void Snake::startMovingBody()
+{
+    if (!isMovingBodySnake) {
+        isMovingBodySnake = true;
+        schedule(schedule_selector(Snake::movingSnakeBody), updateTimeMSec);
+    }
+}
+
+void Snake::stopMovingBody()
+{
+    if (isMovingBodySnake) {
+        isMovingBodySnake = false;
+        unschedule(schedule_selector(Snake::movingSnakeBody));
+    }
+}
+
+void Snake::startAll()
+{
+    startMovingHead();
+    startMovingBody();
+}
+
+void Snake::stopAll()
+{
+    stopMovingHead();
+    stopMovingBody();
 }
 
 void Snake::setRealLength(const size_t len)
@@ -128,8 +160,8 @@ void Snake::setSpeed(float speed)
     else speedSnake = speed;
 
     if (isMovingHeadSnake){
-        stop();
-        start();
+        stopMovingHead();
+        startMovingHead();
     }
 }
 

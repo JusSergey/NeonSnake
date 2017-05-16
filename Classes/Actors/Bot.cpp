@@ -89,11 +89,13 @@ void Bot::movingHead(float delta)
 
 }
 
-void Bot::start()
+void Bot::startMovingHead()
 {
-    isMovingHeadSnake = true;
-    int step = speedSnake / 5;
-    schedule(schedule_selector(Bot::movingHead), 1.f / speedSnake * (step > 0 ? step : 1));
+    if (!isMovingHeadSnake) {
+        isMovingHeadSnake = true;
+        int step = speedSnake / 5;
+        schedule(schedule_selector(Bot::movingHead), 1.f / speedSnake * (step > 0 ? step : 1));
+    }
 }
 
 

@@ -34,7 +34,7 @@ protected:
     void repaintDebug();
 
 public:
-    virtual void start();
+    virtual void startMovingHead();
 
 ////////////////////// AI CREATE PATH
 public:

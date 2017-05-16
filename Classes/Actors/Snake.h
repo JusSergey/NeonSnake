@@ -10,10 +10,6 @@ NS_CC_BEGIN
 
 using std::vector;
 
-
-
-
-
 class Snake : public Layer {
 
 public:
@@ -35,6 +31,7 @@ protected:
 //    size_t maxLengthSnake;
     float speedSnake;
     bool isMovingHeadSnake;
+    bool isMovingBodySnake;
 
     /* Setter functions */
 public:
@@ -63,11 +60,17 @@ public:
 
     /* else user functions */
 public:
-    virtual void start();
-    void stop();
+    virtual void startMovingHead();
+    virtual void stopMovingHead();
+    virtual void startMovingBody();
+    virtual void stopMovingBody();
+    virtual void startAll();
+    virtual void stopAll();
 
     void setRealLength (const size_t len);
     void addSnakeBlock (size_t add = 1);
+    inline bool isMovingHead() const { return isMovingHeadSnake; }
+    inline bool isMovingBody() const { return isMovingBodySnake; }
     bool isContainer   (const Point &point, float maxDistance) const;
     void subSnake      (int sublen = 1);
 

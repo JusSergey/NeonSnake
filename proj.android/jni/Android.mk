@@ -33,6 +33,7 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
   ../../Classes/Layers/LevelLayer.cpp \
   ../../Classes/Layers/NetworkSettingLayer.cpp \
   ../../Classes/Layers/PauseLayer.cpp \
+  ../../Classes/Layers/GameOverLayer.cpp \
   ../../Classes/Layers/PregameSettingLayer.cpp \
   ../../Classes/Layers/PregameSwitchTypeGameLayer.cpp \
  \

@@ -133,7 +133,7 @@ void Bonus::setRandomBonus()
     // set random type
     {
         const auto oldType = type;
-        while (oldType == (type = variable[random(0, int(sizeof(variable) / sizeof(variable[0]))-1)]));
+        while (oldType == (type = variable[random(0, int(sizeof(variable) / sizeof(variable[0]))-1)]));        
     }
 
     setBonusType(type);

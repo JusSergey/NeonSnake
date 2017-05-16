@@ -166,6 +166,8 @@ bool GameView::init()
 
     updateShaderPointsOfLevel();
 
+//    initGameOverLayer();
+
     return true;
 }
 
@@ -193,7 +195,7 @@ void GameView::onEnterTransitionDidFinish()
             if (botActor) {
 
                 botActor->setWallsMap(getBlockMapLevel());
-                botActor->start();
+                botActor->startMovingHead();
 
                 schedule([this](float){
                     botActor->setWallsMap(getBlockMapLevel());
@@ -316,7 +318,7 @@ void GameView::initLocalPlayer()
     localPlayer->setPosition({200, 200});
     localPlayer->setListen(playerActor);
     localPlayer->setSpeed(15);
-    localPlayer->start();
+    localPlayer->startMovingHead();
 
     addChild(localPlayer, LSnake);
     localPlayer->setName(NameBotOrOpponent);
@@ -342,7 +344,7 @@ void GameView::initPlayers(Player* &player, const std::string &name, const Color
 
         player->setPosition({100, 300});
 
-        player->start();
+        player->startMovingHead();
     }
 }
 
@@ -967,3 +969,12 @@ cocos2d::Bot::CreateWay::WallsMap GameView::getBlockMapLevel()
 
 }
 
+
+void GameView::initGameOverLayer()
+{
+    GOLayer = GameOverLayer::create();
+    if (GOLayer) {
+        GOLayer->setPosition(visibleSize / 2);
+        addChild(GOLayer, LTop + 1);
+    }
+}

@@ -9,6 +9,7 @@
 #include "Actions/NormalEat.h"
 #include "Actions/Bonus.h"
 #include "Layers/GameNavigatorLayer.h"
+#include "Layers/GameOverLayer.h"
 #include "Network/GameServer.h"
 #include "Constant.h"
 
@@ -42,6 +43,7 @@ protected:
     cocos2d::Snake* snake[2];
 
     GameNavigatorLayer *gameNavigatorLayer;
+    GameOverLayer   *GOLayer;
     NormalEat       *eat;
     cocos2d::Bonus  *bonus;
     cocos2d::Camera *camera;
@@ -68,7 +70,8 @@ private:
     void initCamera     ();
     void initGameServer ();
     void initGameNavigator();
-    void initLearnControl();
+    void initLearnControl ();
+    void initGameOverLayer();
 
     void initPlayers    (cocos2d::Player*       &player,
                          const std::string      &name,
