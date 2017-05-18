@@ -171,9 +171,9 @@ bool GameView::init()
     updateShaderPointsOfLevel();
 
     //////////////////
-    if (gameNavigatorLayer) {
-        gameNavigatorLayer->setTimeLevel(15);
-    }
+//    if (gameNavigatorLayer) {
+//        gameNavigatorLayer->setTimeLevel(15);
+//    }
 
 //    if (playerActor) {
 //        playerActor->addSnakeBlock(10);
