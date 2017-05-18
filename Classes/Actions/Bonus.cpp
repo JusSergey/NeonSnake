@@ -6,6 +6,12 @@ USING_NS_CC;
 static const char *schDelayBetweenBonusses = "schUB";
 static const char *schIntervalShowingBonus = "schDM";
 
+static const char *PATH_FANTAZY_SHADER = "Bonusses/FantazyShader.png";
+static const char *PATH_BOMBA          = "Bonusses/Bomba.png";
+static const char *PATH_5BALLS         = "Bonusses/5Balls.png";
+static const char *PATH_SPEED_PLUS     = "Bonusses/BonusSpeed+.png";
+static const char *PATH_SPEED_MINUS    = "Bonusses/BonusSpeed-.png";
+
 // on "init" you need to initialize your instance
 bool Bonus::init()
 {
@@ -45,6 +51,13 @@ bool Bonus::isVisible() const
     return (getPositionX() > sz.width/2 && getPositionY() > sz.height/2);
 }
 
+void Bonus::shutdown()
+{
+    unschedule(schDelayBetweenBonusses);
+    unschedule(schIntervalShowingBonus);
+    hide();
+}
+
 Bonus *Bonus::create()
 {
     Bonus *pRet = new(std::nothrow) Bonus();
@@ -63,12 +76,17 @@ Bonus *Bonus::create()
 
 void Bonus::setBonusType(TypeBonusMask type)
 {
+    if (particle) {
+        particle->removeFromParent();
+        particle = nullptr;
+    }
+
     switch (type) {
-    case TypeBonusMask::FantazyShader: setTexture(("Bonus.png"));  break;
-    case TypeBonusMask::BigScore:      setTexture(("5Balls.png")); break;
-    case TypeBonusMask::Bomba:         setTexture(("Bomba.png"));  break;
-    case TypeBonusMask::LowSnake:      setTexture(("BonusSpeed-.png")); break;
-    case TypeBonusMask::FastSnake:     setTexture(("BonusSpeed+.png")); break;
+    case TypeBonusMask::FantazyShader: setTexture(PATH_FANTAZY_SHADER);  break;
+    case TypeBonusMask::BigScore:      setTexture(PATH_5BALLS); break;
+    case TypeBonusMask::Bomba:         setTexture(PATH_BOMBA);  break;
+    case TypeBonusMask::LowSnake:      setTexture(PATH_SPEED_MINUS); break;
+    case TypeBonusMask::FastSnake:     setTexture(PATH_SPEED_PLUS); break;
     default: log("Bonus::setBonusType: <undefined bonus type>"); return;
     }
 

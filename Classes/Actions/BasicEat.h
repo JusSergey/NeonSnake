@@ -31,6 +31,8 @@ public:
     Mode getMode() const;
     void setMode(const Mode &value);
 
+    virtual void shutdown() = 0;
+
 protected:
     cocos2d::Size visibleSize;
     cocos2d::Vec2 origin;

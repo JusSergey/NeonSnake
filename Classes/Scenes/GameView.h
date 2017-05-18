@@ -54,6 +54,7 @@ protected:
     int bitmaskInitsGameNavigator;
     GameMode gameMode;
     int levelIndex;
+    bool isGameOver;
 
 protected:
     LevelLayer *layer;
@@ -70,8 +71,10 @@ private:
     void initCamera     ();
     void initGameServer ();
     void initGameNavigator();
-    void initLearnControl ();
-    void initGameOverLayer();
+
+    void showCoronaOnWinner();
+    void showLearnControl();
+    void showGameOver();
 
     void initPlayers    (cocos2d::Player*       &player,
                          const std::string      &name,
@@ -88,6 +91,7 @@ protected:
     virtual std::function<void()> getCallbackTimeout()  const;
     virtual std::function<void()> getCallbackRestart()  ;
     virtual std::function<void()> getCallbackHome()     const;
+    virtual std::function<void()> getCallbackNext()     ;
     virtual std::function<void()> getCallbackSoundButton()  const;
     virtual std::function<void()> getCallbackMusicButton()  const;
     virtual std::function<void()> getCallbackEffectButton() const;

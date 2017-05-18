@@ -150,6 +150,7 @@ set(GAME_SRC
   Classes/Layers/LevelLayer.cpp
   Classes/Layers/NetworkSettingLayer.cpp
   Classes/Layers/PauseLayer.cpp
+  Classes/Layers/GameOverLayer.cpp
   Classes/Layers/PregameSettingLayer.cpp
   Classes/Layers/PregameSwitchTypeGameLayer.cpp
   #Network
@@ -194,6 +195,7 @@ set(GAME_HEADERS
   Classes/Layers/LevelLayer.h
   Classes/Layers/NetworkSettingLayer.h
   Classes/Layers/PauseLayer.h
+  Classes/Layers/GameOverLayer.h
   Classes/Layers/PregameSettingLayer.h
   Classes/Layers/PregameSwitchTypeGameLayer.h
   #Network

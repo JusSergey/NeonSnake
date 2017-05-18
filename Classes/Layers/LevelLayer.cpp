@@ -168,7 +168,7 @@ void LevelLayer::shaderToSensitive(float time, float sensitive)
 {
     static const char *nameScheduler = "NameSchSenShader";
 
-    float step = (sensitive - shaderSensitive) * updateTimeMSec;
+    float step = (sensitive - shaderSensitive) * updateTimeMSec / time;
 
     bool is = sensitive > shaderSensitive;
 

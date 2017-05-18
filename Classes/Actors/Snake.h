@@ -4,7 +4,7 @@
 #include "cocos2d.h"
 #include <vector>
 #include <functional>
-
+#include "Constant.h"
 
 NS_CC_BEGIN
 
@@ -28,7 +28,7 @@ protected:
     Direction directionSnakeHead;
     Color3B colorBlockSnake;
     size_t lenghtSnake;
-//    size_t maxLengthSnake;
+    size_t countEatBonusses;
     float speedSnake;
     bool isMovingHeadSnake;
     bool isMovingBodySnake;
@@ -40,23 +40,29 @@ public:
     virtual void setName (const std::string &name);
     virtual void setTag (int tag);
 
+    void setCountBonusses(size_t n) { countEatBonusses = n; }
     void setSpeed(float speedSnake);
-
-//    inline void setMaxLength(size_t max_length) { this->maxLengthSnake = max_length; }
+    void setRealLength (const size_t len);
+    void setOpponent(Snake *value);
 
     /* Getter functions */
 public:
-    inline Direction getDirection () const { return directionSnakeHead;           }
-    inline size_t    getLength    () const { return snakeBlocks.size() - 1;       }
-    inline float     getHeadWidth () const { return head->getContentSize().width; }
-    inline float     getSpeed     () const { return speedSnake;                   }
+    inline Direction getDirection     () const { return directionSnakeHead; }
+    inline size_t    getLength        () const { return snakeBlocks.size() / stepAddLengthSnake; }
+    inline size_t    getCountBonusses () const { return countEatBonusses; }
+    inline float     getHeadWidth     () const { return head->getContentSize().width; }
+    inline float     getSpeed         () const { return speedSnake; }
 
     virtual const Vec2& getPosition () const;
+    virtual const std::string& getName() const;
     virtual float getPositionX() const { return head->getPositionX(); }
     virtual float getPositionY() const { return head->getPositionY(); }
 
-    virtual const std::string& getName() const;
     virtual int getTag() const;
+
+    Size getCircleSize();
+    Snake *getOpponent() const;
+    Sprite *getBlock();
 
     /* else user functions */
 public:
@@ -67,22 +73,20 @@ public:
     virtual void startAll();
     virtual void stopAll();
 
-    void setRealLength (const size_t len);
-    void addSnakeBlock (size_t add = 1);
     inline bool isMovingHead() const { return isMovingHeadSnake; }
     inline bool isMovingBody() const { return isMovingBodySnake; }
-    bool isContainer   (const Point &point, float maxDistance) const;
+    inline void eatBonus() { countEatBonusses++; }
+
+    void addSnakeBlock (size_t add = 1);
     void subSnake      (int sublen = 1);
 
-    Snake *getOpponent() const;
-    void setOpponent(Snake *value);
+    bool isContainer   (const Point &point, float maxDistance) const;
 
 protected:
     Snake();
     virtual bool init();
     virtual void movingHead(float delta) = 0;
 
-protected:
     void movingSnakeBody(float f);
     void initLight();
     void initPhysicsBodyHead();

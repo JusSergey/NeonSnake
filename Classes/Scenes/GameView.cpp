@@ -19,6 +19,8 @@
 
 USING_NS_CC;
 
+typedef GameOverLayer::ID_SNAKE ID_SNAKE;
+
 inline Vec2 scaledVec2(const Vec2 &vec, const Vec2 &scl) {
     return Vec2(vec.x * scl.x, vec.y * scl.y);
 }
@@ -99,6 +101,8 @@ bool GameView::init()
     bonus       = nullptr;
     server      = nullptr;
 
+    isGameOver = false;
+
     snake[0] = snake[1] = nullptr;
 
 
@@ -160,14 +164,21 @@ bool GameView::init()
     }
 
     if (showLearn)
-        initLearnControl();
+        showLearnControl();
 
     playingMusic();
 
     updateShaderPointsOfLevel();
 
-//    initGameOverLayer()
+    //////////////////
+    if (gameNavigatorLayer) {
+        gameNavigatorLayer->setTimeLevel(15);
+    }
 
+//    if (playerActor) {
+//        playerActor->addSnakeBlock(10);
+//    }
+    //////////////////
     return true;
 }
 
@@ -465,7 +476,30 @@ void GameView::initGameNavigator()
 
 }
 
-void GameView::initLearnControl()
+void GameView::showCoronaOnWinner()
+{
+    if (snake[0] && snake[1] && gameNavigatorLayer) {
+
+        Snake  *objSnake = (gameNavigatorLayer->getScore(snake[0]->getName()) >=
+                            gameNavigatorLayer->getScore(snake[1]->getName()) ? snake[0] : snake[1]);
+
+        Sprite *corona = Sprite::create("Corona.png");
+        corona->setCameraMask((unsigned short)CameraFlag::USER1);
+        corona->setPosition(objSnake->getPosition() + Vec2(0, objSnake->getCircleSize().height / 2));
+        addChild(corona, LSnake);
+
+        Sprite *fadeCorona = Sprite::create("Corona.png");
+        fadeCorona->setCameraMask((unsigned short)CameraFlag::USER1);
+        fadeCorona->setPosition(corona->getPosition());
+        addChild(fadeCorona, LSnake);
+
+        fadeCorona->runAction(Sequence::create(Spawn::create(ScaleBy::create(1, 2), FadeOut::create(1), nullptr),
+                                               CallFunc::create([fadeCorona]{ fadeCorona->removeFromParent(); }),
+                                               nullptr));
+    }
+}
+
+void GameView::showLearnControl()
 {
     Sprite *hand = Sprite::create("hand.png");
     float tenPercent = visibleSize.width * 0.10;
@@ -553,6 +587,8 @@ std::function<void (Node *node)> GameView::getCallbackContactFunctionBonus() con
         if(!(snake[0] && node == snake[0]->head) && !(snake[1] && node == snake[1]->head))
             return;
 
+        NODE_TO_SNAKE(node)->eatBonus();
+
         switch (bonus->getBonusType()) {
         case Bonus::TypeBonusMask::BigScore:        eatBonusBigScore(node);      break;
         case Bonus::TypeBonusMask::FantazyShader:   eatBonusFantazyShader(node); break;
@@ -607,9 +643,17 @@ std::function<void ()> GameView::getCallbackPause() const
 {
     return [this]() -> void {
         log("getCallbackPause");
+
+        if (isGameOver)
+            return
+
         layer->setAttribShaderSensitive(true);
-        if (gameNavigatorLayer)
+
+        if (gameNavigatorLayer) {
+            gameNavigatorLayer->showPauseLayer();
             gameNavigatorLayer->setVisibleContentSoundMenu(true, true);
+        }
+
         Director::getInstance()->pause();
         world->setSpeed(0);
         Audio::getInstance()->pauseEffectExplosion();
@@ -640,17 +684,10 @@ std::function<void ()> GameView::getCallbackTimeout() const
             MenuScene::GoToMenuScene();
         }
 
-        else {
-            size_t playerLength = playerActor->getLength();
-            size_t botLength = botActor->getLength();
-
-            if (playerLength >= botLength) {
-                nextlevel();
-            }
-            else {
-                gameover();
-            }
+        else if (snake[0] && snake[1]) {
+            showGameOver();
         }
+        else MenuScene::GoToMenuScene();
     };
 }
 
@@ -673,6 +710,14 @@ std::function<void ()> GameView::getCallbackHome() const
         log("Home");
         Director::getInstance()->resume();
         MenuScene::GoToMenuScene();
+    };
+}
+
+std::function<void ()> GameView::getCallbackNext()
+{
+    return [this]() -> void {
+        if (levelIndex + 1 <= countLevels)
+            GameView::GoToGameView(levelIndex + 1, bitmaskInitsGameLayer, bitmaskInitsGameNavigator, UserData::isFirstPlaying);
     };
 }
 
@@ -930,6 +975,7 @@ void GameView::shotTo(const Vec2 &in, const Vec2 &to)
 void GameView::setPositionEat(const Vec2 &pos)
 {
     if (eat) {
+        log("SET_POS_EAT!!!");
         eat->setPosition(pos);
     }
 }
@@ -970,11 +1016,82 @@ cocos2d::Bot::CreateWay::WallsMap GameView::getBlockMapLevel()
 }
 
 
-void GameView::initGameOverLayer()
-{
-    GOLayer = GameOverLayer::create();
-    if (GOLayer) {
+void GameView::showGameOver()
+{    
+    isGameOver = true;
+
+    for (Snake *objSnake : {snake[0], snake[1]})
+        if (objSnake)
+            objSnake->stopAll();
+
+    if (bonus)
+        bonus->shutdown();
+
+    if (eat)
+        eat->shutdown();
+
+    gameNavigatorLayer->hideLabels(1);
+
+    if (GOLayer = GameOverLayer::create())
+    {
+        GOLayer->setCallbackHome(getCallbackHome());
+        GOLayer->setCallbackRestart(getCallbackRestart());
+        GOLayer->setCallbackNext(getCallbackNext());
+
+        GOLayer->setSnakeName(ID_SNAKE::FIRST, UserData::playerName);
+        GOLayer->setSnakeName(ID_SNAKE::SECOND,UserData::opponentName);
+
+        for (ID_SNAKE id : {ID_SNAKE::FIRST, ID_SNAKE::SECOND}) {
+            GOLayer->setScore(id, 0);
+            GOLayer->setBonus(id, 0);
+        }
+
         GOLayer->setPosition(visibleSize / 2);
         addChild(GOLayer, LTop + 1);
+
+        GOLayer->setScore(ID_SNAKE::FIRST, gameNavigatorLayer->getScore(playerActor->getName()));
+
+        int score_0 = gameNavigatorLayer->getScore(snake[0]->getName());
+        int score_1 = gameNavigatorLayer->getScore(snake[1]->getName());
+
+        GOLayer->showDanceWin(score_0 > score_1 ? ID_SNAKE::FIRST : ID_SNAKE::SECOND);
+        GOLayer->showFireworks();
     }
+
+    showCoronaOnWinner();
+
+    layer->shaderToSensitive(5, 1);
+
+    const char *schRemoveSnakeBlocks = "schremblcks";
+
+    schedule([=](float){
+
+        bool run = false;
+
+        for (auto obj : {std::make_pair(snake[0], ID_SNAKE::FIRST),
+                         std::make_pair(snake[1], ID_SNAKE::SECOND)})
+        {
+            Snake *snk = obj.first;
+            ID_SNAKE id = obj.second;
+
+            int score = gameNavigatorLayer->getScore(snk->getName());
+            if (GOLayer->getScore(id) < score) {
+                run = true;
+//                gameNavigatorLayer->addScores(-1, snk->getName());
+                GOLayer->setScore(id, GOLayer->getScore(id) + 1);
+            }
+
+            int bonusses = snk->getCountBonusses();
+
+            if (GOLayer->getBonus(id) < bonusses) {
+                run = true;
+                GOLayer->setBonus(id, GOLayer->getBonus(id) + 1);
+//                snk->setCountBonusses(bonusses - 1);
+            }
+        }
+
+        if (!run)
+            unschedule(schRemoveSnakeBlocks);
+
+    }, 0.1, schRemoveSnakeBlocks);
 }

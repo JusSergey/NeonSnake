@@ -3,6 +3,8 @@
 
 USING_NS_CC;
 
+//static const char *nameSchedule = "InitswpPs";
+
 // on "init" you need to initialize your instance
 bool NormalEat::init()
 {
@@ -16,6 +18,7 @@ bool NormalEat::init()
     srand(time(0));
 
     isInitSwapPosition = false;
+    swapImageEat = nullptr;
 
     log("init eat");
 
@@ -32,10 +35,6 @@ bool NormalEat::init()
 
 void NormalEat::initSpriteSwapPosition()
 {
-    const char *nameSchedule = "initSwapPosition";
-
-    swapImageEat = nullptr;
-
     schedule([=](float){
 
         if (getParent() && swapImageEat == nullptr) {
@@ -43,15 +42,15 @@ void NormalEat::initSpriteSwapPosition()
             swapImageEat = Sprite::createWithTexture(getTexture());
             swapImageEat->setCameraMask((unsigned int)CameraFlag::USER1);
             swapImageEat->setPosition(getPosition());
-            swapImageEat->setScale(0.1);
+            swapImageEat->setScale(0);
             getParent()->addChild(swapImageEat);
 
-            unschedule(nameSchedule);
+            unschedule("schswpps");
 
             this->isInitSwapPosition = true;
         }
 
-    }, updateTimeMSec*10, nameSchedule);
+    }, updateTimeMSec*10, "schswpps");
 }
 
 void NormalEat::setPosition(const Vec2 &position)
@@ -63,12 +62,20 @@ void NormalEat::setPosition(const Vec2 &position)
         setScale(0.1);
 
         Node::setPosition(position);
-        runAction(ScaleTo::create(timeAnimationEat, 1));
+        runAction(ScaleTo::create(timeAnimationEat, 0.9));
 
         swapImageEat->setScale(1);
-        swapImageEat->runAction(Sequence::create(ScaleTo::create(timeAnimationEat, 0.1),
-                                                 CallFunc::create([this](){ swapImageEat->setPosition(getPosition());}),
-                                                 nullptr));
+
+        auto scale = ScaleTo::create(timeAnimationEat, 0);
+        swapImageEat->runAction(scale);
+
+        // swapImageEat->runAction(Sequence::create(scale, callfunc, nullptr)); - not stable working.
+        // it a fix this bug.
+
+        scheduleOnce([this](float){
+            swapImageEat->setPosition(getPosition());
+        }, timeAnimationEat, "tmanim");
+
     }
 }
 
@@ -82,17 +89,11 @@ void NormalEat::setPositionY(float y)
     setPosition(Vec2(getPositionX(), y));
 }
 
-//void NormalEat::setRandomPosition()
-//{
-
-//    Vec2 pos(rand() % (int)visibleSize.width, rand() % (int)visibleSize.height);
-
-//    while (getPosition().distance(pos) < 400)
-//        pos.set(rand() % (int)visibleSize.width, rand() % (int)visibleSize.height);
-
-//    setPosition(pos);
-
-//}
+void NormalEat::shutdown()
+{
+//    unschedule(nameSchedule);
+    setPosition(getContentSize() * -3);
+}
 
 void NormalEat::initPhysicsBody()
 {
@@ -109,6 +110,5 @@ void NormalEat::initPhysicsBody()
 
 void NormalEat::eate(Node *nodeContact)
 {
-
 }
 

@@ -124,3 +124,11 @@ void Player::movingHead(float)
     }
 
 }
+
+void Player::stopMovingHead()
+{
+    Snake::stopMovingHead();
+
+    if (head->getPhysicsBody())
+        head->getPhysicsBody()->setVelocity(Vec2::ZERO);
+}

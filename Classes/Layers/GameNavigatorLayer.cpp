@@ -31,6 +31,8 @@ bool GameNavigatorLayer::init()
     labelEffectItemMenu = nullptr;
     labelMusicItemMenu = nullptr;
     labelTimer = nullptr;
+    actionOpponent = nullptr;
+    actionPlayer = nullptr;
 
     callbackPause   = [](){};
     callbackTimeout = [](){};
@@ -99,6 +101,27 @@ void GameNavigatorLayer::setLanguageLabels(Locale locale)
 
     if (labelMusicItemMenu)
         labelMusicItemMenu->setString(Language::get(locale, "Music"));
+}
+
+void GameNavigatorLayer::showPauseLayer()
+{
+    pauseLayer->setVisible(true);
+//    callbackPause();
+}
+
+void GameNavigatorLayer::hideLabels(float duration)
+{
+    if (duration > 0.0f) {
+        auto fade = FadeOut::create(duration);
+        labelScoreBot->runAction(fade);
+        labelScorePlayer->runAction(fade->clone());
+        labelTimer->runAction(fade->clone());
+    }
+    else {
+        labelScoreBot->setVisible(false);
+        labelScorePlayer->setVisible(false);
+        labelTimer->setVisible(false);
+    }
 }
 
 void GameNavigatorLayer::hideContextMenu(float lastTime)
@@ -193,7 +216,6 @@ void GameNavigatorLayer::initPauseButton()
     button->setOpacity(0xff * .25);
 
     auto callback = [this](Ref*) -> void {
-        pauseLayer->setVisible(true);
         callbackPause();
     };
 
@@ -233,8 +255,8 @@ void GameNavigatorLayer::initSoundButton()
     buttonSound->setOpacity(0xff * 0.25);
 
     // init labels
-    auto labelEffect = Label::createWithTTF("Effect", "fonts/Bicubik.ttf", 24);
-    auto labelMusic  = Label::createWithTTF("Music", "fonts/Bicubik.ttf", 24);
+    auto labelEffect = Jus::createLabelTTF("Effect", "fonts/Bicubik.ttf", 24);
+    auto labelMusic  = Jus::createLabelTTF("Music", "fonts/Bicubik.ttf", 24);
     labelEffect->setAdditionalKerning(3);
     labelMusic->setAdditionalKerning(3);
     labelEffectItemMenu = MenuItemLabel::create(labelEffect, [this](Ref*){ clickButtonEffect(); });
@@ -337,16 +359,16 @@ void GameNavigatorLayer::setScore(int value, const std::string &nameSnake)
     if (nameSnake == NameBotOrOpponent) {
         if (labelScorePlayer) {
             labelScorePlayer->setString(UserData::opponentName + ": " + toString(value));
-            labelScorePlayer->stopAllActions();
-            labelScorePlayer->runAction(createAction());
+            labelScorePlayer->stopAction(actionPlayer);
+            labelScorePlayer->runAction(actionPlayer = createAction());
             countScoreBot = value;
         }
     }
     else if (nameSnake == NamePlayer) {
         if (labelScoreBot) {
             labelScoreBot->setString(UserData::playerName + ": " + toString(value));
-            labelScoreBot->stopAllActions();
-            labelScoreBot->runAction(createAction());
+            labelScoreBot->stopAction(actionOpponent);
+            labelScoreBot->runAction(actionOpponent = createAction());
             countScorePlayer = value;
         }
     }

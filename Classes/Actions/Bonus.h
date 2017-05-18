@@ -28,9 +28,12 @@ public:
 
     virtual bool isVisible() const;
 
+    virtual void shutdown();
+
     static Bonus* create();
 
 private:
+    cocos2d::ParticleSystemQuad *particle;
     cocos2d::Size visibleSize;
     cocos2d::Vec2 origin;
     TypeBonusMask type;

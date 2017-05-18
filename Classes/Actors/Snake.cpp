@@ -23,6 +23,7 @@ using namespace std;
 Snake::Snake() : Layer(),
     directionSnakeHead(Direction::Zero),
     lenghtSnake(0),
+    countEatBonusses(0),
     speedSnake(8 / _director->getContentScaleFactor()),
     isMovingHeadSnake(false),
     colorBlockSnake(Color3B::WHITE),
@@ -88,6 +89,11 @@ int Snake::getTag() const
     return head->getTag();
 }
 
+Size Snake::getCircleSize()
+{
+    return head->getContentSize();
+}
+
 void Snake::setTag(int tag)
 {
     head->setTag(tag);
@@ -103,7 +109,9 @@ void Snake::startMovingHead()
 
 void Snake::stopMovingHead()
 {
-    if (isMovingHeadSnake) {
+    head->stopAllActions();
+
+    if (isScheduled(schedule_selector(Snake::movingHead))) {
         isMovingHeadSnake = false;
         unschedule(schedule_selector(Snake::movingHead));
     }
@@ -119,7 +127,7 @@ void Snake::startMovingBody()
 
 void Snake::stopMovingBody()
 {
-    if (isMovingBodySnake) {
+    if (isScheduled(schedule_selector(Snake::movingSnakeBody))) {
         isMovingBodySnake = false;
         unschedule(schedule_selector(Snake::movingSnakeBody));
     }
@@ -181,6 +189,28 @@ Snake *Snake::getOpponent() const
 void Snake::setOpponent(Snake *value)
 {
     opponent = value;
+}
+
+Sprite *Snake::getBlock()
+{
+    int getIndex = snakeBlocks.size() - 1;
+    Sprite *retBlock = nullptr;
+
+    if (getIndex > 0 && !snakeBlocks.empty()) {
+        retBlock = snakeBlocks[getIndex];
+        snakeBlocks.pop_back();
+//        for (int i = indexBackBlock-1; i >= 0 && i > (indexBackBlock - stepAddLengthSnake); i--) {
+//            log("rin");
+//            snakeBlocks[i]->removeFromParent();
+//            log("rout");
+//            snakeBlocks.pop_back();
+//        }
+//        if (snakeBlocks.size() > 0)
+//            snakeBlocks.pop_back();
+
+    }
+
+    return retBlock;
 }
 
 void Snake::setPosition(const Vec2 &newPosition)

@@ -25,6 +25,7 @@ public:
 
 protected:
     virtual void movingHead(float);
+    virtual void stopMovingHead();
 
 private:
     virtual bool init();

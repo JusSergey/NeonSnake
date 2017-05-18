@@ -40,7 +40,7 @@ public:
     virtual void setPosition(const cocos2d::Vec2 &position);
     virtual void setPositionX(float x);
     virtual void setPositionY(float y);
-//    void setRandomPosition();
+    virtual void shutdown();
     void initPhysicsBody();
     virtual void eate(Node *nodeContact);
 

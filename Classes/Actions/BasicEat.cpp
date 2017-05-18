@@ -63,6 +63,11 @@ void BasicEat::setMode(const Mode &value) {
     mode = value;
 }
 
+void BasicEat::shutdown()
+{
+    removeFromParent();
+}
+
 void BasicEat::initContactListener()
 {
     auto listener = EventListenerPhysicsContact::create();

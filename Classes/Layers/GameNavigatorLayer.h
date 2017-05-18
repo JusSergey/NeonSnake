@@ -24,6 +24,8 @@ private:
     cocos2d::DrawNode *node;
     cocos2d::MenuItemSprite *spriteResume;
     cocos2d::MenuItemSprite *buttonSound;
+    cocos2d::Action *actionOpponent;
+    cocos2d::Action *actionPlayer;
 
 private:
     bool visibleSoundMenu;
@@ -87,6 +89,8 @@ public:
     void setVisibleLabelOpponent(bool visible) {  if(labelScorePlayer) labelScorePlayer->setVisible(visible);}
 
 public:
+    void showPauseLayer ();
+    void hideLabels     (float duration);
     void hideContextMenu(float lastTime);
     void addScores    (int value, const std::string &nameSnake);
     void setScore     (int value, const std::string &nameSnake);
