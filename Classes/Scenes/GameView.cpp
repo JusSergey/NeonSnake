@@ -6,7 +6,9 @@
 #include "math/MathUtil.h"
 #include "Sound/Audio.h"
 #include "Data/DataSetting.h"
+#include "Data/SendData.h"
 #include <iostream>
+
 
 #define PLAYER 0
 #define PLAYER1 0
@@ -77,7 +79,7 @@ GameView *GameView::create(int level, int bitmaskGame, int bitmaskGN, bool showL
     }
 }
 
-#include "Data/SendData.h"
+
 
 // on "init" you need to initialize your instance
 bool GameView::init()
@@ -171,9 +173,9 @@ bool GameView::init()
     updateShaderPointsOfLevel();
 
     //////////////////
-//    if (gameNavigatorLayer) {
-//        gameNavigatorLayer->setTimeLevel(15);
-//    }
+    if (gameNavigatorLayer) {
+        gameNavigatorLayer->setTimeLevel(5);
+    }
 
 //    if (playerActor) {
 //        playerActor->addSnakeBlock(10);
@@ -296,7 +298,7 @@ void GameView::initEat()
 
     }
 }
-// BOT[35234816], PLAYER[41466368], EAT[33606096], BONUS[35298976]
+
 void GameView::initBotActor()
 {
     botActor = Bot::create();
@@ -486,12 +488,12 @@ void GameView::showCoronaOnWinner()
         Sprite *corona = Sprite::create("Corona.png");
         corona->setCameraMask((unsigned short)CameraFlag::USER1);
         corona->setPosition(objSnake->getPosition() + Vec2(0, objSnake->getCircleSize().height / 2));
-        addChild(corona, LSnake);
+        addChild(corona, LLight);
 
         Sprite *fadeCorona = Sprite::create("Corona.png");
         fadeCorona->setCameraMask((unsigned short)CameraFlag::USER1);
         fadeCorona->setPosition(corona->getPosition());
-        addChild(fadeCorona, LSnake);
+        addChild(fadeCorona, LLight);
 
         fadeCorona->runAction(Sequence::create(Spawn::create(ScaleBy::create(1, 2), FadeOut::create(1), nullptr),
                                                CallFunc::create([fadeCorona]{ fadeCorona->removeFromParent(); }),
@@ -1034,6 +1036,9 @@ void GameView::showGameOver()
 
     gameNavigatorLayer->hideLabels(1);
 
+    const int score_0 = gameNavigatorLayer->getScore(snake[0]->getName());
+    const int score_1 = gameNavigatorLayer->getScore(snake[1]->getName());
+
     if (GOLayer = GameOverLayer::create())
     {
         GOLayer->setCallbackHome(getCallbackHome());
@@ -1053,16 +1058,21 @@ void GameView::showGameOver()
 
         GOLayer->setScore(ID_SNAKE::FIRST, gameNavigatorLayer->getScore(playerActor->getName()));
 
-        int score_0 = gameNavigatorLayer->getScore(snake[0]->getName());
-        int score_1 = gameNavigatorLayer->getScore(snake[1]->getName());
 
-        GOLayer->showDanceWin(score_0 > score_1 ? ID_SNAKE::FIRST : ID_SNAKE::SECOND);
-        GOLayer->showFireworks();
+
+        if (score_0 == score_1) {
+            GOLayer->showDanceWin(ID_SNAKE::NO_WINS);
+        }
+        else {
+            GOLayer->showDanceWin(score_0 > score_1 ? ID_SNAKE::FIRST : ID_SNAKE::SECOND);
+            GOLayer->showFireworks();
+        }
     }
 
-    showCoronaOnWinner();
+    if (score_0 != score_1)
+        showCoronaOnWinner();
 
-    layer->shaderToSensitive(5, 1);
+    layer->shaderToSensitive(5, 0.75);
 
     const char *schRemoveSnakeBlocks = "schremblcks";
 
@@ -1079,7 +1089,6 @@ void GameView::showGameOver()
             int score = gameNavigatorLayer->getScore(snk->getName());
             if (GOLayer->getScore(id) < score) {
                 run = true;
-//                gameNavigatorLayer->addScores(-1, snk->getName());
                 GOLayer->setScore(id, GOLayer->getScore(id) + 1);
             }
 
@@ -1088,7 +1097,6 @@ void GameView::showGameOver()
             if (GOLayer->getBonus(id) < bonusses) {
                 run = true;
                 GOLayer->setBonus(id, GOLayer->getBonus(id) + 1);
-//                snk->setCountBonusses(bonusses - 1);
             }
         }
 

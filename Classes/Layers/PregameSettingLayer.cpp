@@ -250,8 +250,9 @@ void PregameSettingLayer::initColors(SwitchColorContainer_t &sw, const std::func
 void PregameSettingLayer::initTextFields(const std::function<float (float)> &positioning, ui::TextField *&field, const std::string &name)
 {
     field = ui::TextField::create("Enter name", "fonts/Bicubic.ttf", (float)24 / _director->getContentScaleFactor());
+
     field->setPlaceHolderColor(Color3B::GRAY);
-    field->setMaxLength(20);
+    field->setMaxLength(15);
     field->setMaxLengthEnabled(true);
     field->setString(name);
     field->setPosition({visibleSize.width / 4, positioning(0.70)});

@@ -8,9 +8,15 @@ static const std::string TITLE_TEXT   = "Game Over";
 static const std::string PREFIX_SCORE = "score: ";
 static const std::string PREFIX_BONUS = "bonus: ";
 static const std::string PREFIX_EAT   = "eat:   ";
+static const std::string TITLE_NO_WINS= "Nobody wins";
+
+static const float   TIME_ACTION_FADE_IN = 0.25f;
+static const GLubyte NORMAL_OPACITY      = 0.35f * 0xff;
+static const Vec2    ANCHOR_LABEL        = Vec2::ANCHOR_MIDDLE_LEFT;
 
 static const int SZ_FONT_WIN = 32;
-static const int SZ_FONT_DEF = 24;
+static const int SZ_FONT_DEF = 20;
+static const int SZ_ADD_KERN = 2 ;
 
 // on "init" you need to initialize your instance
 bool GameOverLayer::init()
@@ -20,10 +26,14 @@ bool GameOverLayer::init()
     if(!Sprite::initWithFile("PregameMenu.png"))
         return false;
 
-    setOpacity(0xff * 0.35);
+    setOpacity(0);
 
     visibleSize = Director::getInstance()->getVisibleSize();
     origin = Director::getInstance()->getVisibleOrigin();
+
+    runFadeInMainBorder([this] {
+
+    });
 
     initLabels();
     initSeparator();
@@ -32,34 +42,43 @@ bool GameOverLayer::init()
     return true;
 }
 
+
 void GameOverLayer::initLabels()
 {
 
     labelTitle = Jus::createLabelTTF(TITLE_TEXT, FONT_NAME, SZ_FONT_WIN);
+    labelTitle->setAdditionalKerning(2);
     labelTitle->setPosition(Jus::getPointNode(this, Vec2(0.5, 1)) - Vec2(0, labelTitle->getContentSize().height / 2));
     addChild(labelTitle);
 
-    for (auto data : {std::make_pair((int)ID_SNAKE::FIRST, 0.f),
-                      std::make_pair((int)ID_SNAKE::SECOND, getContentSize().width / 2)})
+    const float topy = Jus::getPointNode(this, Vec2(0, 0.7)).y;
+
+    const float scl = _director->getContentScaleFactor();
+
+    for (const auto data : {std::make_pair((int)ID_SNAKE::FIRST, 0.f),
+                            std::make_pair((int)ID_SNAKE::SECOND, getContentSize().width / 2)})
     {
-        int id = data.first;
-        float offsetx = data.second;
+        const int id = data.first;
+        const float offsetx = data.second;
+
+        labelName[id] = Jus::createLabelTTF("", FONT_NAME, SZ_FONT_DEF);
+        labelName[id]->setAdditionalKerning(SZ_ADD_KERN);
+        labelName[id]->setAnchorPoint(ANCHOR_LABEL);
+        labelName[id]->setPosition(SZ_FONT_DEF + offsetx, topy);
+        addChild(labelName[id]);
 
         labelScore[id] = Jus::createLabelTTF(PREFIX_SCORE, FONT_NAME, SZ_FONT_DEF);
-        labelScore[id]->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
-        labelScore[id]->setPosition(SZ_FONT_DEF + offsetx, Jus::getPointNode(this, Vec2(0, 0.7)).y);
+        labelScore[id]->setAdditionalKerning(SZ_ADD_KERN);
+        labelScore[id]->setAnchorPoint(ANCHOR_LABEL);
+        labelScore[id]->setPosition(SZ_FONT_DEF + offsetx, topy - SZ_FONT_DEF - 10/scl);
         addChild(labelScore[id]);
 
         labelBonus[id] = Jus::createLabelTTF(PREFIX_BONUS, FONT_NAME, SZ_FONT_DEF);
-        labelBonus[id]->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
-        labelBonus[id]->setPosition(SZ_FONT_DEF + offsetx, Jus::getPointNode(this, Vec2(0, 0.5)).y);
+        labelBonus[id]->setAdditionalKerning(SZ_ADD_KERN);
+        labelBonus[id]->setAnchorPoint(ANCHOR_LABEL);
+        labelBonus[id]->setPosition(SZ_FONT_DEF + offsetx, topy - SZ_FONT_DEF*2 - 20/scl);
         addChild(labelBonus[id]);
 
-//        labelEat[id] = Jus::createLabelTTF(PREFIX_EAT, FONT_NAME, SZ_FONT_DEF);
-//        labelEat[id]->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
-//        labelEat[id]->setPosition(SZ_FONT_DEF + offsetx, Jus::getPointNode(this, Vec2(0, 0.3)).y);
-
-//        addChild(labelEat[id]);
     }
 
 }
@@ -98,13 +117,41 @@ void GameOverLayer::initMenu()
 
     addChild(menu);
 
-//    Sprite *spriteNext = Sprite::create("")
+    //    Sprite *spriteNext = Sprite::create("")
+}
+
+void GameOverLayer::initSpritesBonus()
+{
+    for (const auto data : {std::make_pair((int)ID_SNAKE::FIRST, 0.f),
+                            std::make_pair((int)ID_SNAKE::SECOND, getContentSize().width / 2)})
+    {
+        const int id = data.first;
+        const float offsetx = data.second;
+    }
+}
+
+void GameOverLayer::runFadeInMainBorder(std::function<void()> callfuntOfEnded)
+{
+    this->setScale(2);
+
+    auto actionNormalScale   = EaseIn::create(ScaleTo::create(TIME_ACTION_FADE_IN, 1), 3);
+    auto actionNormalOpacity = EaseIn::create(FadeTo::create(TIME_ACTION_FADE_IN, NORMAL_OPACITY), 6);
+
+    this->runAction(Spawn::create(actionNormalScale,
+                                  actionNormalOpacity,
+                                  CallFunc::create([=]{ callfuntOfEnded(); }),
+                                  nullptr));
 }
 
 void GameOverLayer::showDanceWin(ID_SNAKE id)
 {
-    std::string text /*= "Win "*/;
-    text += _name[id] + " WIN"/*+ " !!!"*/;
+    std::string text;
+    if (id == NO_WINS) {
+        text = TITLE_NO_WINS;
+    }
+    else {
+        text += "Win " + _name[id];
+    }
 
     std::string tmp = " ";
 
@@ -166,7 +213,7 @@ void GameOverLayer::showFireworks()
 
         if (getParent()) {
             ParticleSystemQuad *firework = ParticleSystemQuad::create("particle_texture.plist");
-            firework->setScale(0.3);
+            firework->setScale(cocos2d::rand_0_1() * 0.3f);
             firework->setPosition(cocos2d::random(visibleSize.width * 0.10, visibleSize.width * 0.90),
                                   cocos2d::random(visibleSize.height* 0.10, visibleSize.height* 0.90));
             getParent()->addChild(firework);
@@ -175,7 +222,7 @@ void GameOverLayer::showFireworks()
                                                  CallFunc::create([firework]{ firework->removeFromParent(); }),
                                                  nullptr));
         }
-    }, 0.7, "schfirewrks");
+    }, 0.85, "schfirewrks");
 }
 
 void GameOverLayer::setScore(GameOverLayer::ID_SNAKE id, int count)
@@ -205,6 +252,7 @@ void GameOverLayer::setEat(GameOverLayer::ID_SNAKE id, int count)
 void GameOverLayer::setSnakeName(GameOverLayer::ID_SNAKE id, const std::string &name)
 {
     _name[id] = name;
+    labelName[id]->setString(name);
 }
 
 void GameOverLayer::setCallbackRestart(const std::function<void()> &callback)
@@ -220,4 +268,31 @@ void GameOverLayer::setCallbackHome(const std::function<void()> &callback)
 void GameOverLayer::setCallbackNext(const std::function<void ()> &callback)
 {
     itemNext->setCallback([callback](Ref*){ callback(); });
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+
+void GameOverLayer::BonusSprite::initLabel()
+{
+    labelCountBonusses = Jus::createLabelTTF("0", FONT_NAME, SZ_FONT_DEF);
+    labelCountBonusses->setPosition(getContentSize() / 2);
+    addChild(labelCountBonusses);
+}
+
+void GameOverLayer::BonusSprite::setCountBonusses(int n)
+{
+    if (!labelCountBonusses)
+        initLabel();
+
+    labelCountBonusses->setString(StringUtils::toString(n));
+}
+
+void GameOverLayer::BonusSprite::addCountBonusses(int n)
+{
+    if (!labelCountBonusses)
+        initLabel();
+
+    const int c = Value(labelCountBonusses->getString()).asInt();
+    labelCountBonusses->setString(StringUtils::toString(n + c));
 }
