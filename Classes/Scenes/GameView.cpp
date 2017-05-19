@@ -645,9 +645,9 @@ std::function<void ()> GameView::getCallbackPause() const
         log("getCallbackPause");
 
         if (isGameOver)
-            return
+            return;
 
-        layer->setAttribShaderSensitive(true);
+        layer->setAttribShaderSensitive(1);
 
         if (gameNavigatorLayer) {
             gameNavigatorLayer->showPauseLayer();
@@ -665,10 +665,12 @@ std::function<void ()> GameView::getCallbackPause() const
 std::function<void ()> GameView::getCalbackResume() const
 {
     return [this]() -> void {
-        log("getCalbackResume");
-        layer->setAttribShaderSensitive(false);
+
+        layer->setAttribShaderSensitive(0);
+
         if (gameNavigatorLayer)
             gameNavigatorLayer->setVisibleContentSoundMenu(false, true);
+
         Director::getInstance()->resume();
         world->setSpeed(1);
         Audio::getInstance()->resumeEffectExplosion();

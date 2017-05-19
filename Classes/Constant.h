@@ -66,7 +66,7 @@ static const float IntervalAddingSpeedSnake = 20;
 static const float OpacitySnakePercent = 0.30; // range [0..1]
 static const int DefaultLenghtSnake = 10;
 static const int stepAddLengthSnake = 3;
-static const int MaxSnakeSpeed = 30;
+static const int MaxSnakeSpeed = 24;
 static const int MinSnakeSpeed = 5;
 static const int MaxLenSnake = 1024;
 
