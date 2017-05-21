@@ -6,12 +6,6 @@ USING_NS_CC;
 static const char *schDelayBetweenBonusses = "schUB";
 static const char *schIntervalShowingBonus = "schDM";
 
-static const char *PATH_FANTAZY_SHADER = "Bonusses/FantazyShader.png";
-static const char *PATH_BOMBA          = "Bonusses/Bomba.png";
-static const char *PATH_5BALLS         = "Bonusses/5Balls.png";
-static const char *PATH_SPEED_PLUS     = "Bonusses/BonusSpeed+.png";
-static const char *PATH_SPEED_MINUS    = "Bonusses/BonusSpeed-.png";
-
 // on "init" you need to initialize your instance
 bool Bonus::init()
 {

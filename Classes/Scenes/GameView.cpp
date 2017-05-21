@@ -173,9 +173,9 @@ bool GameView::init()
     updateShaderPointsOfLevel();
 
     //////////////////
-    if (gameNavigatorLayer) {
-        gameNavigatorLayer->setTimeLevel(5);
-    }
+//    if (gameNavigatorLayer) {
+//        gameNavigatorLayer->setTimeLevel(5);
+//    }
 
 //    if (playerActor) {
 //        playerActor->addSnakeBlock(10);
@@ -683,15 +683,12 @@ std::function<void ()> GameView::getCallbackTimeout() const
 {
     return [this]() -> void {
 
-        if (!playerActor || !botActor) {
-            log("(!playerActor || !botActor) == true. go to menu.");
+        if (!snake[0] || !snake[1])
             MenuScene::GoToMenuScene();
-        }
 
-        else if (snake[0] && snake[1]) {
+        else
             showGameOver();
-        }
-        else MenuScene::GoToMenuScene();
+
     };
 }
 
@@ -1057,8 +1054,6 @@ void GameView::showGameOver()
         addChild(GOLayer, LTop + 1);
 
         GOLayer->setScore(ID_SNAKE::FIRST, gameNavigatorLayer->getScore(playerActor->getName()));
-
-
 
         if (score_0 == score_1) {
             GOLayer->showDanceWin(ID_SNAKE::NO_WINS);

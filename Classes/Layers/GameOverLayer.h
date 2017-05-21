@@ -6,6 +6,17 @@
 
 class GameOverLayer : public cocos2d::Sprite
 {
+private:
+    class BonusSprite : cocos2d::Sprite
+    {
+        cocos2d::Label *labelCountBonusses = nullptr;
+        void initLabel();
+    public:
+        void setCountBonusses(int n);
+        void addCountBonusses(int n);
+
+    };
+
 public:
     enum ID_SNAKE : int { FIRST = 0, SECOND = 1, NO_WINS = 2 };
 
@@ -29,6 +40,7 @@ private:
     cocos2d::Menu *menu;
 
     std::string _name[2];
+    BonusSprite _bonusSprite[2][5];
     int _score[2];
     int _bonus[2];
     int _eat[2];
@@ -57,16 +69,7 @@ public:
     inline int getBonus(ID_SNAKE id) const { return _bonus[id]; }
     inline int getEat(ID_SNAKE id)   const { return _eat[id];   }
 
-private:
-    class BonusSprite : cocos2d::Sprite
-    {
-        cocos2d::Label *labelCountBonusses = nullptr;
-        void initLabel();
-    public:
-        void setCountBonusses(int n);
-        void addCountBonusses(int n);
 
-    };
 
 };
 

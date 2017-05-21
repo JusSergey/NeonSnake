@@ -16,6 +16,7 @@ static const Vec2    ANCHOR_LABEL        = Vec2::ANCHOR_MIDDLE_LEFT;
 
 static const int SZ_FONT_WIN = 32;
 static const int SZ_FONT_DEF = 20;
+static const int SZ_OFFS_PSX = SZ_FONT_DEF;
 static const int SZ_ADD_KERN = 2 ;
 
 // on "init" you need to initialize your instance
@@ -64,19 +65,19 @@ void GameOverLayer::initLabels()
         labelName[id] = Jus::createLabelTTF("", FONT_NAME, SZ_FONT_DEF);
         labelName[id]->setAdditionalKerning(SZ_ADD_KERN);
         labelName[id]->setAnchorPoint(ANCHOR_LABEL);
-        labelName[id]->setPosition(SZ_FONT_DEF + offsetx, topy);
+        labelName[id]->setPosition(SZ_OFFS_PSX + offsetx, topy);
         addChild(labelName[id]);
 
         labelScore[id] = Jus::createLabelTTF(PREFIX_SCORE, FONT_NAME, SZ_FONT_DEF);
         labelScore[id]->setAdditionalKerning(SZ_ADD_KERN);
         labelScore[id]->setAnchorPoint(ANCHOR_LABEL);
-        labelScore[id]->setPosition(SZ_FONT_DEF + offsetx, topy - SZ_FONT_DEF - 10/scl);
+        labelScore[id]->setPosition(SZ_OFFS_PSX + offsetx, topy - SZ_OFFS_PSX - 10/scl);
         addChild(labelScore[id]);
 
         labelBonus[id] = Jus::createLabelTTF(PREFIX_BONUS, FONT_NAME, SZ_FONT_DEF);
         labelBonus[id]->setAdditionalKerning(SZ_ADD_KERN);
         labelBonus[id]->setAnchorPoint(ANCHOR_LABEL);
-        labelBonus[id]->setPosition(SZ_FONT_DEF + offsetx, topy - SZ_FONT_DEF*2 - 20/scl);
+        labelBonus[id]->setPosition(SZ_OFFS_PSX + offsetx, topy - SZ_OFFS_PSX*2 - 20/scl);
         addChild(labelBonus[id]);
 
     }
@@ -120,13 +121,33 @@ void GameOverLayer::initMenu()
     //    Sprite *spriteNext = Sprite::create("")
 }
 
+#include "Actions/Bonus.h"
+
 void GameOverLayer::initSpritesBonus()
 {
     for (const auto data : {std::make_pair((int)ID_SNAKE::FIRST, 0.f),
                             std::make_pair((int)ID_SNAKE::SECOND, getContentSize().width / 2)})
     {
-        const int id = data.first;
-        const float offsetx = data.second;
+//        const int id = data.first;
+        const float globalOffsetx = data.second;
+//        const float posy = Jus::getPointNode(this, Vec2(0.3)).y;
+
+        float offx = SZ_FONT_DEF;
+
+        for (const std::string &path : {PATH_5BALLS,
+                                        PATH_BOMBA,
+                                        PATH_FANTAZY_SHADER,
+                                        PATH_SPEED_MINUS,
+                                        PATH_SPEED_PLUS})
+        {
+            Sprite *bonus = Sprite::create(path);
+            bonus->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
+//            bonus->setPosition(SZ_OFFS_PSX + globalOffsetx + offx, posy);
+            addChild(bonus);
+
+            offx += bonus->getContentSize().width * 1.1;
+        }
+
     }
 }
 
@@ -209,18 +230,39 @@ void GameOverLayer::showDanceWin(ID_SNAKE id)
 
 void GameOverLayer::showFireworks()
 {
+    log("SHOW_FIREWORKS");
     schedule([this](float){
 
         if (getParent()) {
-            ParticleSystemQuad *firework = ParticleSystemQuad::create("particle_texture.plist");
-            firework->setScale(cocos2d::rand_0_1() * 0.3f);
-            firework->setPosition(cocos2d::random(visibleSize.width * 0.10, visibleSize.width * 0.90),
-                                  cocos2d::random(visibleSize.height* 0.10, visibleSize.height* 0.90));
-            getParent()->addChild(firework);
 
-            firework->runAction(Sequence::create(DelayTime::create(5),
-                                                 CallFunc::create([firework]{ firework->removeFromParent(); }),
-                                                 nullptr));
+            ParticleFire *fire = ParticleFire::createWithTotalParticles(256);
+            fire->setScale(0.08);
+            fire->setLife(0.7);
+            fire->setPosition(cocos2d::random(visibleSize.width * 0.10, visibleSize.width * 0.90), fire->getContentSize().height);
+            getParent()->addChild(fire);
+
+            auto mov = MoveBy::create(1, Vec2(0, cocos2d::random(visibleSize.height * 0.10, visibleSize.height * 0.90)));
+
+            auto call= CallFunc::create([=]{
+
+                log("firework");
+
+                ParticleSystemQuad *firework = ParticleSystemQuad::create("particle_texture.plist");
+                firework->setScale(cocos2d::rand_0_1() * 0.3f);
+                firework->setPosition(fire->getPosition());
+                getParent()->addChild(firework);
+
+                firework->runAction(Sequence::create(DelayTime::create(5),
+                                                     CallFunc::create([firework]{ firework->removeFromParent(); }),
+                                                     nullptr));
+
+                runAction(Sequence::create(DelayTime::create(1.0),
+                                           CallFunc::create([fire]{ fire->removeFromParent(); }),
+                                           nullptr));
+            });
+
+            fire->runAction(Sequence::create(mov, call, nullptr));
+
         }
     }, 0.85, "schfirewrks");
 }
