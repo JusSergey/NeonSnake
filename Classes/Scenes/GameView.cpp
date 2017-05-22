@@ -341,6 +341,10 @@ void GameView::initLocalPlayer()
     localPlayer->setLevelLayer(layer);
     localPlayer->setGNLayer(gameNavigatorLayer);
     localPlayer->setIsRunningServer(bitmaskInitsGameLayer & InitServer);
+
+    schedule([this](float delay){
+        localPlayer->getGameClient()->loop(delay);
+    }, 0.01, "schLocPl");
 }
 
 void GameView::initPlayers(Player* &player, const std::string &name, const Color3B &color)
@@ -433,6 +437,9 @@ void GameView::initGameServer()
 {
     log("Init server");
     server = new GameServer(UserData::NetworkIp, UserData::NetworkPort);
+    schedule([this](float delay){
+        server->loop(delay);
+    }, 0.01, "schServ");
 }
 
 void GameView::initGameNavigator()
@@ -482,8 +489,16 @@ void GameView::showCoronaOnWinner()
 {
     if (snake[0] && snake[1] && gameNavigatorLayer) {
 
-        Snake  *objSnake = (gameNavigatorLayer->getScore(snake[0]->getName()) >=
-                            gameNavigatorLayer->getScore(snake[1]->getName()) ? snake[0] : snake[1]);
+        Snake  *objSnake = nullptr;
+
+        if (UserData::type == LocalGame && bitmaskInitsGameLayer & InitServer) {
+            objSnake = (gameNavigatorLayer->getScore(snake[0]->getName()) >
+                        gameNavigatorLayer->getScore(snake[1]->getName()) ? snake[1] : snake[0]);
+        }
+        else {
+            objSnake = (gameNavigatorLayer->getScore(snake[0]->getName()) >
+                        gameNavigatorLayer->getScore(snake[1]->getName()) ? snake[0] : snake[1]);
+        }
 
         Sprite *corona = Sprite::create("Corona.png");
         corona->setCameraMask((unsigned short)CameraFlag::USER1);
@@ -805,8 +820,8 @@ void GameView::eatBonusBomba(Node *node)
 
     static const char *nameSch = "ShotBomba";
 
-    if (server && localPlayer)
-        localPlayer->setStatusShot({true, node->getName()});
+//    if (server && localPlayer)
+//        localPlayer->setStatusShot({true, node->getName()});
 
     schedule([=](float){
 
@@ -1036,7 +1051,7 @@ void GameView::showGameOver()
     const int score_0 = gameNavigatorLayer->getScore(snake[0]->getName());
     const int score_1 = gameNavigatorLayer->getScore(snake[1]->getName());
 
-    if (GOLayer = GameOverLayer::create())
+    if (GOLayer = GameOverLayer::create(UserData::locale))
     {
         GOLayer->setCallbackHome(getCallbackHome());
         GOLayer->setCallbackRestart(getCallbackRestart());
@@ -1053,10 +1068,14 @@ void GameView::showGameOver()
         GOLayer->setPosition(visibleSize / 2);
         addChild(GOLayer, LTop + 1);
 
-        GOLayer->setScore(ID_SNAKE::FIRST, gameNavigatorLayer->getScore(playerActor->getName()));
+//        GOLayer->setScore(ID_SNAKE::FIRST, gameNavigatorLayer->getScore(playerActor->getName()));
 
         if (score_0 == score_1) {
             GOLayer->showDanceWin(ID_SNAKE::NO_WINS);
+        }
+        else if (UserData::type == LocalGame && bitmaskInitsGameLayer & InitServer) {
+            GOLayer->showDanceWin(score_0 > score_1 ? ID_SNAKE::SECOND : ID_SNAKE::FIRST);
+            GOLayer->showFireworks();
         }
         else {
             GOLayer->showDanceWin(score_0 > score_1 ? ID_SNAKE::FIRST : ID_SNAKE::SECOND);

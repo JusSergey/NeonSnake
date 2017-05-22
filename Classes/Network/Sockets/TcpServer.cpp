@@ -16,7 +16,7 @@ TcpServer::TcpServer(const std::string &ipServer, u_short port) :
 
     listen(fd, 5);
 
-    initThread();
+//    initThread();
 }
 
 TcpServer::~TcpServer()
@@ -25,8 +25,9 @@ TcpServer::~TcpServer()
         close(i);
 }
 
-void TcpServer::loop()
+void TcpServer::loop(const float delayMSec)
 {
+    TcpSocket::loop(delayMSec);
     if (timeListener > toMsec(UpdateListener)) {
         loopListener();
         timeListener = 0;

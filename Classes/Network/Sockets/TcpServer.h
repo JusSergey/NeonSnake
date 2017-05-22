@@ -22,8 +22,8 @@ class TcpServer : public TcpSocket
 {
     int tmpFd;
 
-protected:
-    virtual void loop() override;
+public:
+    virtual void loop(const float delayMSec) override;
 
 private:
     std::list<int> clients;

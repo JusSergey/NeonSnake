@@ -24,8 +24,6 @@ bool NormalEat::init()
 
     setTexture("eat.png");
 
-    setColor(Color3B::MAGENTA);
-
     initPhysicsBody();
 
     initSpriteSwapPosition();
@@ -93,6 +91,7 @@ void NormalEat::shutdown()
 {
 //    unschedule(nameSchedule);
     setPosition(getContentSize() * -3);
+    swapImageEat->setPosition(getPosition());
 }
 
 void NormalEat::initPhysicsBody()

@@ -11,9 +11,9 @@
 #include <future>
 #include <mutex>
 
-#define UpdateListener 20
-#define UpdateSender 20
-#define UpdateRecver (UpdateSender*1.5)
+#define UpdateListener 10
+#define UpdateSender 9
+#define UpdateRecver 9
 #define toMsec(count) (1.f / (count) * 1000)
 
 class TcpSocket {
@@ -38,8 +38,10 @@ protected:
 
 protected: /* user func */
     void unlockFD(int _fd);
-    void initThread();
-    virtual void loop() = 0;
+//    void initThread();
+
+public:
+    virtual void loop(const float delayMSec);
 
 protected: /* data info of thread */
     volatile bool statusThread;

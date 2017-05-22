@@ -37,6 +37,11 @@ const string &Language::get_ua(const string &text)
         make_pair("Only Player",       "Тільки гравець"),
         make_pair("Only Bot",          "Тільки бот"),
         make_pair("Start",             "Старт"),
+        make_pair("Game Over",         "Кінець гри"),
+        make_pair("Score",             "Балів"),
+        make_pair("Bonus",             "Бонусів"),
+        make_pair("Nobody wins",       "Нічия"),
+        make_pair("Win",               "Переміг"),
         //GameView
         make_pair("Music",             "Музика"),
         make_pair("Effect",            "Ефекти")
@@ -73,6 +78,11 @@ const string &Language::get_ru(const string &text)
         make_pair("Only Player",       "Только игрок"),
         make_pair("Only Bot",          "Только бот"),
         make_pair("Start",             "Старт"),
+        make_pair("Game Over",         "Конец игры"),
+        make_pair("Score",             "Очков"),
+        make_pair("Bonus",             "Бонусов"),
+        make_pair("Nobody wins",       "Ничья"),
+        make_pair("Win",               "Победил"),
         //GameView
         make_pair("Music",             "Музыка"),
         make_pair("Effect",            "Эффекты")

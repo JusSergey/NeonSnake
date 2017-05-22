@@ -307,12 +307,10 @@ void PregameSettingLayer::setLanguageLabels(Locale locale)
 
 bool SwitchColorSnake::init()
 {
-    if (!Sprite::init())
+    if (!Sprite::initWithFile("Color.png"))
         return false;
 
     callbackSelectColor = [](const Color3B &, int){};
-
-    setTexture("eat.png");
 
     auto listener = EventListenerTouchOneByOne::create();
 

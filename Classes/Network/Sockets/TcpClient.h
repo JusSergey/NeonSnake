@@ -23,8 +23,8 @@ public:
     TcpClient(const std::string &ip, u_short port);
    ~TcpClient();
 
-protected:
-    virtual void loop() override;
+public:
+    virtual void loop(const float delayMSec) override;
 
 public:
     virtual void read() = 0;

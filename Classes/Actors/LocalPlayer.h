@@ -43,7 +43,7 @@ public:
     virtual bool init();
 
     // implement the "static create()" method manually
-    CREATE_FUNC(LocalPlayer);
+    CREATE_FUNC(LocalPlayer)
 
     Snake *getListen() const;
 
@@ -63,6 +63,8 @@ public:
     void setStatusShot(const std::pair<bool, std::string> &value);
 
     void setCallbackShotBomba(const std::function<void (const Vec2 &in, const Vec2 &to)> &value);
+
+    GameClient *getGameClient() const;
 
 private:
     ExperimentalSendData *snd;

@@ -81,18 +81,20 @@ void LocalPlayer::initGameClient()
                 snd->dat.set(TypeData::POS_EAT, eat->getPosition() * sclFactor);
 
             if (bonus) {
-                snd->dat.set(TypeData::POS_BONUS, bonus->getPosition() * sclFactor);
-                snd->dat.set(TypeData::TYPE_BONUS, (int)bonus->getBonusType());
+                if (bonus->getBonusType() != Bonus::Bomba){
+                    snd->dat.set(TypeData::POS_BONUS, bonus->getPosition() * sclFactor);
+                    snd->dat.set(TypeData::TYPE_BONUS, (int)bonus->getBonusType());
+                }
             }
 
             if (levelLayer)
                 snd->dat.set(TypeData::TYPE_SHADER, levelLayer->getAttribMaskColor());
 
-            if (statusShot.first) {
-                snd->dat.set(TypeData::SHOT_BOMBA, statusShot.second);
-                statusShot.first = false;
-                log("SEND SHOT BOMBA");
-            }
+//            if (statusShot.first) {
+//                snd->dat.set(TypeData::SHOT_BOMBA, statusShot.second);
+//                statusShot.first = false;
+//                log("SEND SHOT BOMBA");
+//            }
         }
 
         gameClient->setMsgToSend(snd->toStr());
@@ -155,8 +157,8 @@ std::function<void (ExperimentalSendData::Dat data)> LocalPlayer::getCallback()
                     eat->setPosition(pos);
             });
 
-            acceptRecvData(bonus, TypeData::POS_BONUS, data, [this] (const std::string &source) {
-                Vec2 pos = ExperimentalSendData::toVec2(source);
+            acceptRecvData(bonus, TypeData::POS_BONUS, data, [=] (const std::string &source) {
+                Vec2 pos = ExperimentalSendData::toVec2(source) / sclFactor;
                 if (bonus->getPosition() != pos)
                     bonus->setPosition(pos);
             });
@@ -229,7 +231,9 @@ std::function<void (ExperimentalSendData::Dat data)> LocalPlayer::getCallback()
 
                     log("SHOT BOMBA");
 
-//                    callbackShotBomba({0, 0}, {400, 200});
+//                    callbackShotBomba(listen->getPosition(), listen->getOpponent()->getPosition());
+
+                    callbackShotBomba({0, 0}, {400, 200});
 
 //                    if (source == NamePlayer) {
 //                        callbackShotBomba(listen->getPosition(), listen->getOpponent()->getPosition());
@@ -283,6 +287,11 @@ void LocalPlayer::setStatusShot(const std::pair<bool, std::string> &value)
 void LocalPlayer::setCallbackShotBomba(const std::function<void (const Vec2 &in, const Vec2 &to)> &value)
 {
     callbackShotBomba = value;
+}
+
+GameClient *LocalPlayer::getGameClient() const
+{
+    return gameClient;
 }
 
 LocalPlayer::~LocalPlayer()

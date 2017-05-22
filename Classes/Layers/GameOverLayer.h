@@ -2,6 +2,7 @@
 #define __GAMEOVERLAYER_H__
 
 #include "cocos2d.h"
+#include "Language.h"
 #include <functional>
 
 class GameOverLayer : public cocos2d::Sprite
@@ -22,9 +23,27 @@ public:
 
 public:
     virtual bool init();
-    CREATE_FUNC(GameOverLayer)
+    static GameOverLayer* create(Locale loc)
+    {
+        GameOverLayer *pRet = new(std::nothrow) GameOverLayer();
+        if (pRet)
+            pRet->_locale = loc;
+
+        if (pRet && pRet->init())
+        {
+            pRet->autorelease();
+            return pRet;
+        }
+        else
+        {
+            delete pRet;
+            pRet = nullptr;
+            return nullptr;
+        }
+    }
 
 private:
+    Locale _locale;
     cocos2d::Size visibleSize;
     cocos2d::Vec2 origin;
 
@@ -47,7 +66,6 @@ private:
 
 private:
     void initLabels();
-    void initSeparator();
     void initMenu();
     void initSpritesBonus();
 
@@ -68,8 +86,6 @@ public:
     inline int getScore(ID_SNAKE id) const { return _score[id]; }
     inline int getBonus(ID_SNAKE id) const { return _bonus[id]; }
     inline int getEat(ID_SNAKE id)   const { return _eat[id];   }
-
-
 
 };
 

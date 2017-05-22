@@ -34,7 +34,7 @@ TcpSocket::TcpSocket(const std::string &ip, u_short port) :
 TcpSocket::~TcpSocket()
 {
     statusThread = false;
-    futureOfThread.wait();
+//    futureOfThread.wait();
     close(fd);
 }
 
@@ -49,20 +49,28 @@ void TcpSocket::unlockFD(int _fd)
     }
 }
 
-void TcpSocket::initThread()
+//void TcpSocket::initThread()
+//{
+////    futureOfThread = std::async(std::launch::async, [this](){
+////        while (true) {
+////            mut.lock();
+////            if (!statusThread) break;
+////            loop();
+////            mut.unlock();
+////            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+////            timeListener++;
+////            timeReceiver++;
+////            timeSender++;
+////            delayMsecRecv++;
+////            delayMsecSend++;
+////        }
+//    //    });
+//}
+
+void TcpSocket::loop(const float delayMSec)
 {
-    futureOfThread = std::async(std::launch::async, [this](){
-        while (true) {
-            mut.lock();
-            if (!statusThread) break;
-            loop();
-            mut.unlock();
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
-            timeListener++;
-            timeReceiver++;
-            timeSender++;
-            delayMsecRecv++;
-            delayMsecSend++;
-        }
-    });
+    const int msc = delayMSec * 1000;
+    timeListener += msc;
+    timeReceiver += msc;
+    timeSender   += msc;
 }

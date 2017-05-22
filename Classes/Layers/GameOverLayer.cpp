@@ -5,9 +5,9 @@ USING_NS_CC;
 
 static const std::string FONT_NAME    = "fonts/Bicubik.ttf";
 static const std::string TITLE_TEXT   = "Game Over";
-static const std::string PREFIX_SCORE = "score: ";
-static const std::string PREFIX_BONUS = "bonus: ";
-static const std::string PREFIX_EAT   = "eat:   ";
+static const std::string PREFIX_SCORE = "Score";
+static const std::string PREFIX_BONUS = "Bonus";
+static const std::string PREFIX_EAT   = "Eat";
 static const std::string TITLE_NO_WINS= "Nobody wins";
 
 static const float   TIME_ACTION_FADE_IN = 0.25f;
@@ -37,7 +37,6 @@ bool GameOverLayer::init()
     });
 
     initLabels();
-    initSeparator();
     initMenu();
 
     return true;
@@ -47,7 +46,7 @@ bool GameOverLayer::init()
 void GameOverLayer::initLabels()
 {
 
-    labelTitle = Jus::createLabelTTF(TITLE_TEXT, FONT_NAME, SZ_FONT_WIN);
+    labelTitle = Jus::createLabelTTF(Language::get(_locale, TITLE_TEXT), FONT_NAME, SZ_FONT_WIN);
     labelTitle->setAdditionalKerning(2);
     labelTitle->setPosition(Jus::getPointNode(this, Vec2(0.5, 1)) - Vec2(0, labelTitle->getContentSize().height / 2));
     addChild(labelTitle);
@@ -68,32 +67,22 @@ void GameOverLayer::initLabels()
         labelName[id]->setPosition(SZ_OFFS_PSX + offsetx, topy);
         addChild(labelName[id]);
 
-        labelScore[id] = Jus::createLabelTTF(PREFIX_SCORE, FONT_NAME, SZ_FONT_DEF);
+        labelScore[id] = Jus::createLabelTTF(Language::get(_locale, PREFIX_SCORE), FONT_NAME, SZ_FONT_DEF);
         labelScore[id]->setAdditionalKerning(SZ_ADD_KERN);
         labelScore[id]->setAnchorPoint(ANCHOR_LABEL);
-        labelScore[id]->setPosition(SZ_OFFS_PSX + offsetx, topy - SZ_OFFS_PSX - 10/scl);
+        labelScore[id]->setPosition(SZ_OFFS_PSX + offsetx, topy - SZ_OFFS_PSX - 20/scl);
         addChild(labelScore[id]);
 
-        labelBonus[id] = Jus::createLabelTTF(PREFIX_BONUS, FONT_NAME, SZ_FONT_DEF);
+        labelBonus[id] = Jus::createLabelTTF(Language::get(_locale, PREFIX_BONUS), FONT_NAME, SZ_FONT_DEF);
         labelBonus[id]->setAdditionalKerning(SZ_ADD_KERN);
         labelBonus[id]->setAnchorPoint(ANCHOR_LABEL);
-        labelBonus[id]->setPosition(SZ_OFFS_PSX + offsetx, topy - SZ_OFFS_PSX*2 - 20/scl);
+        labelBonus[id]->setPosition(SZ_OFFS_PSX + offsetx, topy - SZ_OFFS_PSX*2 - 40/scl);
         addChild(labelBonus[id]);
 
     }
 
 }
 
-void GameOverLayer::initSeparator()
-{
-    Sprite *separator = Sprite::create("Separator.png");
-    separator->setPosition(getContentSize() / 2);
-    separator->setScaleY(0.8);
-
-    log("init separator");
-
-    addChild(separator);
-}
 
 void GameOverLayer::initMenu()
 {
@@ -168,10 +157,10 @@ void GameOverLayer::showDanceWin(ID_SNAKE id)
 {
     std::string text;
     if (id == NO_WINS) {
-        text = TITLE_NO_WINS;
+        text = "";
     }
     else {
-        text += "Win " + _name[id];
+        text =_name[id];
     }
 
     std::string tmp = " ";
@@ -201,7 +190,7 @@ void GameOverLayer::showDanceWin(ID_SNAKE id)
 
         labels.push_back(label);
 
-        counter += label->getContentSize().width + 3;
+        counter += label->getContentSize().width + 5;
     }
 
     const char *schRunningDance = "schRunDance";
@@ -235,20 +224,26 @@ void GameOverLayer::showFireworks()
 
         if (getParent()) {
 
-            ParticleFire *fire = ParticleFire::createWithTotalParticles(256);
-            fire->setScale(0.08);
-            fire->setLife(0.7);
+            ParticleFire *fire = ParticleFire::createWithTotalParticles(1768);
+            fire->setStartColor(Color4F::BLUE);
+            fire->setEndColor(Color4F::RED);
+            fire->setEmitterMode(ParticleSystemQuad::Mode::RADIUS);
+            fire->setScale(0.1);
+            fire->setLife(0.9);
             fire->setPosition(cocos2d::random(visibleSize.width * 0.10, visibleSize.width * 0.90), fire->getContentSize().height);
             getParent()->addChild(fire);
 
-            auto mov = MoveBy::create(1, Vec2(0, cocos2d::random(visibleSize.height * 0.10, visibleSize.height * 0.90)));
+            const Vec2 to_pos = Vec2(0, cocos2d::random(visibleSize.height * 0.10, visibleSize.height * 0.90));
+            const float tm_moveby = fire->getPosition().distance(to_pos) / visibleSize.height * 2;
+
+            auto mov = MoveBy::create(tm_moveby, to_pos);
 
             auto call= CallFunc::create([=]{
 
                 log("firework");
 
                 ParticleSystemQuad *firework = ParticleSystemQuad::create("particle_texture.plist");
-                firework->setScale(cocos2d::rand_0_1() * 0.3f);
+                firework->setScale(cocos2d::rand_0_1() * 0.3f + 0.05);
                 firework->setPosition(fire->getPosition());
                 getParent()->addChild(firework);
 
@@ -263,6 +258,11 @@ void GameOverLayer::showFireworks()
 
             fire->runAction(Sequence::create(mov, call, nullptr));
 
+            auto mv1 = EaseBounceInOut::create((MoveBy::create(0.05, Vec2(visibleSize.width / 600, 0))));
+            auto mv2 = mv1->reverse()->clone();
+
+            fire->runAction(RepeatForever::create(Sequence::create(mv1, mv2, nullptr)));
+
         }
     }, 0.85, "schfirewrks");
 }
@@ -271,7 +271,7 @@ void GameOverLayer::setScore(GameOverLayer::ID_SNAKE id, int count)
 {
     if (labelScore[id]) {
         _score[id] = count;
-        labelScore[id]->setString(PREFIX_SCORE + StringUtils::toString(count));
+        labelScore[id]->setString(Language::get(_locale, PREFIX_SCORE) + ": " + StringUtils::toString(count));
     }
 }
 
@@ -279,7 +279,7 @@ void GameOverLayer::setBonus(GameOverLayer::ID_SNAKE id, int count)
 {
     if (labelBonus[id]) {
         _bonus[id] = count;
-        labelBonus[id]->setString(PREFIX_BONUS + StringUtils::toString(count));
+        labelBonus[id]->setString(Language::get(_locale, PREFIX_BONUS) + ": " + StringUtils::toString(count));
     }
 }
 

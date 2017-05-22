@@ -7,8 +7,8 @@
 static const char *PATH_FANTAZY_SHADER = "Bonusses/FantazyShader.png";
 static const char *PATH_BOMBA          = "Bonusses/Bomba.png";
 static const char *PATH_5BALLS         = "Bonusses/5Balls.png";
-static const char *PATH_SPEED_PLUS     = "Bonusses/BonusSpeed+.png";
-static const char *PATH_SPEED_MINUS    = "Bonusses/BonusSpeed-.png";
+static const char *PATH_SPEED_PLUS     = "Bonusses/Speed+.png";
+static const char *PATH_SPEED_MINUS    = "Bonusses/Speed-.png";
 
 NS_CC_BEGIN
 

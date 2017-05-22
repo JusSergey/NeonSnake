@@ -16,7 +16,7 @@ TcpClient::TcpClient(const std::string &ip, u_short port) :
 
     unlockFD(fd);
 
-    initThread();
+//    initThread();
 }
 
 TcpClient::~TcpClient()
@@ -24,8 +24,9 @@ TcpClient::~TcpClient()
 
 }
 
-void TcpClient::loop()
+void TcpClient::loop(const float delayMSec)
 {
+    TcpSocket::loop(delayMSec);
     if (timeReceiver > toMsec(UpdateRecver)) {
         loopReceiver();
         timeReceiver = 0;
