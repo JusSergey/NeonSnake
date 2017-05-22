@@ -26,6 +26,7 @@ Snake::Snake() : Layer(),
     countEatBonusses(0),
     speedSnake(8 / _director->getContentScaleFactor()),
     isMovingHeadSnake(false),
+    isMovingBodySnake(false),
     colorBlockSnake(Color3B::WHITE),
     opponent(nullptr)
 {
@@ -59,6 +60,8 @@ bool Snake::init()
         Snake::setSpeed(getSpeed() + 1);
         log("speed: %f", getSpeed());
     }, IntervalAddingSpeedSnake, "addSpeed");
+
+    startAll();
 
     return true;
 }

@@ -201,6 +201,10 @@ void PregameSettingLayer::initBlackBackground()
     blackBackground->setPosition(Jus::getCenter());
     blackBackground->setOpacity(0);
 
+
+
+    blackBackground->setScaleX(visibleSize.width / blackBackground->getContentSize().width);
+
     addChild(blackBackground, LDNode-1);
 }
 

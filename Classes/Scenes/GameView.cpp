@@ -174,7 +174,7 @@ bool GameView::init()
 
     //////////////////
 //    if (gameNavigatorLayer) {
-//        gameNavigatorLayer->setTimeLevel(5);
+//        gameNavigatorLayer->setTimeLevel(60);
 //    }
 
 //    if (playerActor) {

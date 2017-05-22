@@ -64,6 +64,11 @@ bool MenuScene::init()
 
     log("initialize MenuScene...");
 
+    itemExit = nullptr;
+    itemLocal = nullptr;
+    itemStart = nullptr;
+    itemSurvival = nullptr;
+
     initDrawNode();
     initTouches();
 //    initSnow();
@@ -205,10 +210,17 @@ std::function<void (Locale)> MenuScene::getCallbackClickChangeLanguage() const
 
 void MenuScene::setLanguageLabels(Locale locale)
 {
-    itemStart->setString(Language::get(locale, "Classic"));
-    itemSurvival->setString(Language::get(locale, "Survival"));
-    itemLocal->setString(Language::get(locale, "Local"));
-    itemExit->setString(Language::get(locale, "Exit"));
+    if (itemStart)
+        itemStart->setString(Language::get(locale, "Classic"));
+
+    if (itemSurvival)
+        itemSurvival->setString(Language::get(locale, "Survival"));
+
+    if (itemLocal)
+        itemLocal->setString(Language::get(locale, "Local"));
+
+    if (itemExit)
+        itemExit->setString(Language::get(locale, "Exit"));
 
     if (pregameSettingLayer)
         pregameSettingLayer->setLanguageLabels(locale);

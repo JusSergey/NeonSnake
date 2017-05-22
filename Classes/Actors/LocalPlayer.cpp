@@ -81,10 +81,8 @@ void LocalPlayer::initGameClient()
                 snd->dat.set(TypeData::POS_EAT, eat->getPosition() * sclFactor);
 
             if (bonus) {
-                if (bonus->getBonusType() != Bonus::Bomba){
-                    snd->dat.set(TypeData::POS_BONUS, bonus->getPosition() * sclFactor);
-                    snd->dat.set(TypeData::TYPE_BONUS, (int)bonus->getBonusType());
-                }
+                snd->dat.set(TypeData::POS_BONUS, bonus->getPosition() * sclFactor);
+                snd->dat.set(TypeData::TYPE_BONUS, (int)bonus->getBonusType());
             }
 
             if (levelLayer)
@@ -142,7 +140,7 @@ std::function<void (ExperimentalSendData::Dat data)> LocalPlayer::getCallback()
                        data, [&] (const std::string &source)
         {
             Vec2 pos = ExperimentalSendData::toVec2(source);
-            if (pos.x > -1 && pos.y > -1) {
+            if (pos.x > -1 && pos.y > -1 && ((Snake*)(head->getParent()))->isMovingAll()) {
                 currentPos = pos /= sclFactor;
                 head->runAction(MoveTo::create(1.1f / UpdateRecver, currentPos));
             }

@@ -105,7 +105,7 @@ void NetworkSettingLayer::initLabelLocalInfo()
 
 void NetworkSettingLayer::initTitle()
 {
-    auto l = Jus::createLabelSystem("LAN", "monospace", 42);
+    auto l = Jus::createLabelSystem("Local", "monospace", 42);
     l->setPosition(Jus::getDisplayPoint(0.5, 0.9) + offset);
     addChild(l, 2);
 

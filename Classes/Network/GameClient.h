@@ -6,11 +6,9 @@
 #include <functional>
 #include "PlayerData.h"
 #include "Data/SendData.h"
-#include <fstream>
 
 class GameClient : public TcpClient
 {
-    std::ofstream logClient;
 public:
     enum TypeData: char {
         Snake = 's',

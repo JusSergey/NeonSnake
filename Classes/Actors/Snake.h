@@ -75,6 +75,7 @@ public:
 
     inline bool isMovingHead() const { return isMovingHeadSnake; }
     inline bool isMovingBody() const { return isMovingBodySnake; }
+    inline bool isMovingAll()  const { return isMovingHeadSnake && isMovingBodySnake; }
     inline void eatBonus() { countEatBonusses++; }
 
     void addSnakeBlock (size_t add = 1);

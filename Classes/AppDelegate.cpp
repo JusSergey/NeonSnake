@@ -11,7 +11,7 @@ USING_NS_CC;
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 # define isFullScreen TRUE
 #else
-# define isFullScreen FALSE
+# define isFullScreen TRUE
 #endif
 
 #if isFullScreen
