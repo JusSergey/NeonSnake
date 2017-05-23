@@ -20,9 +20,14 @@ public:
     static void GoToTitleScene();
 
 private:
-//    std::future<void> PreloadSounds;
     cocos2d::Size visibleSize;
     cocos2d::Vec2 origin;
+    cocos2d::Label *devVK;
+    cocos2d::Sprite *title;
+
+private:
+    void initLabelsDev();
+    void initLabelsPresent();
 
 protected:
     virtual void onEnterTransitionDidFinish();

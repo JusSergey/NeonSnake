@@ -99,7 +99,6 @@ void LevelLayer::initShader(const Vec2 &p1, const Vec2 &p2)
     glProgramState = image->getGLProgramState();
 
     glProgramState->setUniformFloat("blackwhite", shaderSensitive = .0f);
-//    glProgramState->setUniformVec3("filter", Vec3(1, 0, 1));
     glProgramState->setUniformTexture("u_texture", image->getTexture());
     glProgramState->setUniformVec2("u_center1", p1);
     glProgramState->setUniformVec2("u_center2", p2);
@@ -107,22 +106,6 @@ void LevelLayer::initShader(const Vec2 &p1, const Vec2 &p2)
     glProgramState->setUniformFloat("scaleWidth", visibleSize.width / visibleSize.height);
     glProgramLevel->use();
 
-
-}
-
-void LevelLayer::initLevel()
-{
-
-    image = getSpriteLevel(levelIndex);
-    image->setAnchorPoint(Vec2(0.5, 0.5));
-    setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-    image->setPosition(visibleSize / 2);
-
-    image->setPhysicsBody(PhysicsBody::createBox(Size(50, 50)));
-
-    addChild(image);
-
-    image->getPhysicsBody()->setDynamic(false);
 
 }
 
@@ -160,7 +143,7 @@ float LevelLayer::getAttribMaskColor() const
     return colorShader;
 }
 
-float abs(float a){
+inline float abs(float a){
     return (a < 0 ? -a : a);
 }
 

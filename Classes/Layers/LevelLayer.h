@@ -33,7 +33,6 @@ public:
 
 private:
     void initShader(const cocos2d::Vec2 &p1, const cocos2d::Vec2 &p2);
-    void initLevel();
     void initFrame();
     void initPhysicsBodyLevel(int level); /* It is magic */
 

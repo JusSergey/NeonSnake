@@ -26,26 +26,26 @@ void main(void) {
     center_2.x *= scaleWidth;
 
     float dist1 = (1.0 - distance(vc, center_1));
-    dist1 *= dist1;
+    dist1 *= dist1 * 0.9;
     float dist2 = (1.0 - distance(vc, center_2));
-    dist2 *= dist2;
+    dist2 *= dist2 * 0.9;
 
     if (maskShader == 1.0) { //magenta
 
         if (dist1 > dist2) {
             float dist_pow_3 = dist1*dist1*dist1;
 
-            outColor.b = ((outColor.r * dist_pow_3*2.0) ) + (dist1 - 0.5) / 1.5;
+            outColor.b = ((outColor.r * dist_pow_3*2.0) ) + (dist1 - 0.55)/* / 1.5*/;
             outColor.g =  (outColor.g * dist_pow_3)                           * dist1;
-            outColor.r = ((outColor.b * dist_pow_3*2.0)       + cos(dist1) / 4.0) * dist1;
+            outColor.r = ((outColor.b * dist_pow_3*2.0)       + cos(dist1) / 4.0) * dist1 * 1.3;
 
         }
         else {
             float dist_pow_3 = dist2*dist2*dist2;
 
-            outColor.b = ((outColor.r * dist_pow_3*2.0)) + (dist2 - 0.5) / 1.5;
+            outColor.b = ((outColor.r * dist_pow_3*2.0)) + (dist2 - 0.55)/* / 1.5*/;
             outColor.g = ((outColor.g * dist_pow_3)) * dist2;
-            outColor.r = ((outColor.b * dist_pow_3*2.0) + cos(dist2) / 4.0) * dist2;
+            outColor.r = ((outColor.b * dist_pow_3*2.0) + cos(dist2) / 4.0) * dist2 * 1.3;
 
         }
 
@@ -55,14 +55,14 @@ void main(void) {
         if (dist1 > dist2) {
             float dist_pow_3 = dist1*dist1*dist1;
 
-            outColor.g = ((outColor.r * dist_pow_3 * 3.0) ) + (dist1 - 0.5) / 1.5;
+            outColor.g = ((outColor.r * dist_pow_3 * 3.0) ) + (dist1 - 0.45)/* / 1.5*/;
             outColor.b =  (outColor.g * dist_pow_3)                          * dist1;
             outColor.r = ((outColor.b * dist_pow_3)       + cos(dist1) / 4.0) * dist1;
         }
         else {
             float dist_pow_3 = dist2*dist2*dist2;
 
-            outColor.g = ((outColor.r * dist_pow_3 * 3.0)) + (dist2 - 0.5) / 1.5;
+            outColor.g = ((outColor.r * dist_pow_3 * 3.0)) + (dist2 - 0.45) /*/ 1.5*/;
             outColor.b = ((outColor.g * dist_pow_3)) * dist2;
             outColor.r = ((outColor.b * dist_pow_3) + cos(dist2) / 4.0) * dist2;
         }
@@ -72,14 +72,14 @@ void main(void) {
         if (dist1 > dist2) {
             float dist_pow_3 = dist1*dist1*dist1;
 
-            outColor.r = ((outColor.r * dist_pow_3 * 3.0) ) + (dist1 - 0.5) / 1.5;
+            outColor.r = ((outColor.r * dist_pow_3 * 3.0) ) + (dist1 - 0.45)/* / 1.5*/;
             outColor.g =  (outColor.g * dist_pow_3)                          * dist1;
             outColor.b = ((outColor.b * dist_pow_3)       + cos(dist1) / 4.0) * dist1;
         }
         else {
             float dist_pow_3 = dist2*dist2*dist2;
 
-            outColor.r = ((outColor.r * dist_pow_3 * 3.0)) + (dist2 - 0.5) / 1.5;
+            outColor.r = ((outColor.r * dist_pow_3 * 3.0)) + (dist2 - 0.45)/* / 1.5*/;
             outColor.g = ((outColor.g * dist_pow_3)) * dist2;
             outColor.b = ((outColor.b * dist_pow_3) + cos(dist2) / 4.0) * dist2;
         }

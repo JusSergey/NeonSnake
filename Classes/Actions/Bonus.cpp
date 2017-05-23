@@ -124,7 +124,7 @@ void Bonus::initRandoming()
 
     schedule([this](float){
 
-        if (++secondsOfUpdate > delayBetweenBonusses/4 && !isVisible()) {
+        if (++secondsOfUpdate > delayBetweenBonusses && !isVisible()) {
             setRandomPosition();
             setRandomBonus();
             secondsOfUpdate = 0;

@@ -55,7 +55,7 @@ static const int discret = 15;
 
 static const int countLevels = 5;
 
-static const float delayBetweenBonusses = 40.f;    // задержка между бонусами
+static const float delayBetweenBonusses = 30.f;    // задержка между бонусами
 static const float intervalShowingBonus = 10.f;    // время показа бонуса
 
 static const std::string NameBotOrOpponent = "BotOrOpponent";
