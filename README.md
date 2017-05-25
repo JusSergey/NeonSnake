@@ -5,4 +5,4 @@ testing on:
     
 All support, on platforms: linux, android.
 
-Else platforms: not support local game.
+Other platforms: not support local game.
